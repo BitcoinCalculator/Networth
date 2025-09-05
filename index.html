@@ -47,6 +47,10 @@
       background: #334155;
       color: #f8fafc;
     }
+    input.grayed {
+      background: #1e293b;
+      color: #64748b;
+    }
     button {
       margin-top: 20px;
       padding: 12px;
@@ -81,7 +85,6 @@
 <body>
   <div class="container">
     <div id="netWorth" class="networth">Net Worth: $0</div>
-
     <h1>Net Worth Tracker</h1>
 
     <label>Bitcoin Holdings (BTC):</label>
@@ -100,12 +103,11 @@
     <input type="number" id="otherInput">
 
     <button id="saveBtn">💾 Save Defaults</button>
-
     <div id="prices" class="prices">Loading live prices...</div>
   </div>
 
   <script>
-    const API_KEY = "PGHM2FVON57DHKMD"; // Your Alpha Vantage API key
+    const API_KEY = "PGHM2FVON57DHKMD"; // Alpha Vantage Key
 
     const btcInput = document.getElementById("btcInput");
     const mstrInput = document.getElementById("mstrInput");
@@ -119,41 +121,60 @@
     let btcPrice = 0;
     let mstrPrice = 0;
 
-    // Load saved values from localStorage
+    // Load saved values
     function loadSavedValues() {
-      btcInput.value = localStorage.getItem("btc") || 0;
-      mstrInput.value = localStorage.getItem("mstr") || 0;
-      realEstateInput.value = localStorage.getItem("realEstate") || 0;
-      k401Input.value = localStorage.getItem("k401") || 0;
-      otherInput.value = localStorage.getItem("other") || 0;
+      const inputs = [
+        {el: btcInput, key: "btc"},
+        {el: mstrInput, key: "mstr"},
+        {el: realEstateInput, key: "realEstate"},
+        {el: k401Input, key: "k401"},
+        {el: otherInput, key: "other"}
+      ];
+      let hasSaved = false;
+      inputs.forEach(i => {
+        const val = localStorage.getItem(i.key);
+        if (val !== null && val !== "") {
+          i.el.value = val;
+          i.el.classList.add("grayed");
+          hasSaved = true;
+        }
+      });
+      return hasSaved;
     }
 
-    // Save values to localStorage
+    // Save values
     function saveValues() {
-      localStorage.setItem("btc", btcInput.value);
-      localStorage.setItem("mstr", mstrInput.value);
-      localStorage.setItem("realEstate", realEstateInput.value);
-      localStorage.setItem("k401", k401Input.value);
-      localStorage.setItem("other", otherInput.value);
+      const inputs = [
+        {el: btcInput, key: "btc"},
+        {el: mstrInput, key: "mstr"},
+        {el: realEstateInput, key: "realEstate"},
+        {el: k401Input, key: "k401"},
+        {el: otherInput, key: "other"}
+      ];
+      inputs.forEach(i => {
+        localStorage.setItem(i.key, i.el.value);
+        i.el.classList.add("grayed");
+      });
+      calculateNetWorth();
       alert("✅ Saved as defaults!");
     }
 
-    // Fetch Bitcoin price from CoinGecko
+    // Fetch BTC from CoinGecko
     async function fetchBTC() {
-      let btcRes = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
-      let btcData = await btcRes.json();
-      btcPrice = btcData.bitcoin.usd;
+      const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
+      const data = await res.json();
+      btcPrice = data.bitcoin.usd;
     }
 
-    // Fetch MSTR price from Alpha Vantage
+    // Fetch MSTR from Alpha Vantage
     async function fetchMSTR() {
-      let url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSTR&apikey=${API_KEY}`;
-      let res = await fetch(url);
-      let data = await res.json();
-      mstrPrice = parseFloat(data["Global Quote"]["05. price"]);
+      const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSTR&apikey=${API_KEY}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      mstrPrice = parseFloat(data["Global Quote"]["05. price"]) || 0;
     }
 
-    // Update display
+    // Calculate net worth
     function calculateNetWorth() {
       const btcValue = (parseFloat(btcInput.value) || 0) * btcPrice;
       const mstrValue = (parseFloat(mstrInput.value) || 0) * mstrPrice;
@@ -165,7 +186,6 @@
       netWorthDisplay.textContent = `Net Worth: $${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
     }
 
-    // Fetch all prices + update
     async function fetchPrices() {
       try {
         await fetchBTC();
@@ -179,9 +199,12 @@
       }
     }
 
-    // Event listeners
+    // Input listeners
     [btcInput, mstrInput, realEstateInput, k401Input, otherInput].forEach(input => {
-      input.addEventListener("input", calculateNetWorth);
+      input.addEventListener("input", () => {
+        input.classList.remove("grayed"); // user edited
+        calculateNetWorth();
+      });
     });
 
     saveBtn.addEventListener("click", saveValues);
@@ -189,9 +212,7 @@
     // Initialize
     loadSavedValues();
     fetchPrices();
-
-    // Refresh prices every 2 minutes
-    setInterval(fetchPrices, 120000);
+    setInterval(fetchPrices, 120000); // refresh every 2 mins
   </script>
 </body>
 </html>
