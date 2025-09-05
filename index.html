@@ -47,10 +47,6 @@
       background: #334155;
       color: #f8fafc;
     }
-    input.hidden {
-      color: transparent;
-      text-shadow: 0 0 8px rgba(255,255,255,0.5);
-    }
     button {
       margin-top: 20px;
       padding: 12px;
@@ -66,6 +62,13 @@
     }
     button:hover {
       background: #0ea5e9;
+    }
+    #cancelBtn {
+      background: #f87171;
+      margin-top: 10px;
+    }
+    #cancelBtn:hover {
+      background: #ef4444;
     }
     .networth {
       font-size: 1.8em;
@@ -96,134 +99,135 @@
     <div id="netWorth" class="networth">Net Worth: $0</div>
     <h1>Net Worth Tracker</h1>
 
-    <label>Bitcoin Holdings (BTC):</label>
-    <input type="number" id="btcInput" step="0.0001">
+    <div id="inputsSection">
+      <label>Bitcoin Holdings (BTC):</label>
+      <input type="number" id="btcInput" step="0.0001">
 
-    <label>MSTR Shares:</label>
-    <input type="number" id="mstrInput" step="1">
+      <label>MSTR Shares:</label>
+      <input type="number" id="mstrInput" step="1">
 
-    <label>Real Estate Value ($):</label>
-    <input type="number" id="realEstateInput">
+      <label>Real Estate Value ($):</label>
+      <input type="number" id="realEstateInput">
 
-    <label>401K Value ($):</label>
-    <input type="number" id="k401Input">
+      <label>401K Value ($):</label>
+      <input type="number" id="k401Input">
 
-    <label>Other Investments ($):</label>
-    <input type="number" id="otherInput">
+      <label>Other Investments ($):</label>
+      <input type="number" id="otherInput">
 
-    <button id="saveBtn">💾 Save Defaults</button>
-
-    <div class="manual-price">
-      <label>Manual BTC Price Override ($):</label>
-      <input type="number" id="btcOverride" step="0.01" placeholder="Optional">
-      <label>Manual MSTR Price Override ($):</label>
-      <input type="number" id="mstrOverride" step="0.01" placeholder="Optional">
-      <button id="applyOverrideBtn">Apply Override</button>
+      <div class="manual-price">
+        <label>Manual BTC Price Override ($):</label>
+        <input type="number" id="btcOverride" step="0.01" placeholder="Optional">
+        <label>Manual MSTR Price Override ($):</label>
+        <input type="number" id="mstrOverride" step="0.01" placeholder="Optional">
+      </div>
     </div>
+
+    <button id="saveBtn">💾 Save</button>
+    <button id="cancelBtn">❌ Cancel</button>
+    <button id="editBtn">✏️ Edit Values</button>
 
     <div id="prices" class="prices">Loading live prices...</div>
   </div>
 
   <script>
-    const API_KEY = "PGHM2FVON57DHKMD";
-
     const btcInput = document.getElementById("btcInput");
     const mstrInput = document.getElementById("mstrInput");
     const realEstateInput = document.getElementById("realEstateInput");
     const k401Input = document.getElementById("k401Input");
     const otherInput = document.getElementById("otherInput");
     const saveBtn = document.getElementById("saveBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const editBtn = document.getElementById("editBtn");
     const netWorthDisplay = document.getElementById("netWorth");
     const pricesNote = document.getElementById("prices");
+    const inputsSection = document.getElementById("inputsSection");
 
     const btcOverrideInput = document.getElementById("btcOverride");
     const mstrOverrideInput = document.getElementById("mstrOverride");
-    const applyOverrideBtn = document.getElementById("applyOverrideBtn");
 
     let btcPrice = 0;
     let mstrPrice = 0;
 
-    function loadSavedValues() {
-      const inputs = [
-        {el: btcInput, key: "btc"},
-        {el: mstrInput, key: "mstr"},
-        {el: realEstateInput, key: "realEstate"},
-        {el: k401Input, key: "k401"},
-        {el: otherInput, key: "other"}
-      ];
-      let hasSaved = false;
-      inputs.forEach(i => {
-        const val = localStorage.getItem(i.key);
-        if (val !== null && val !== "") {
-          i.el.dataset.value = val;
-          i.el.value = "****";
-          i.el.classList.add("hidden");
-          hasSaved = true;
-        }
-      });
-      const btcSavedPrice = localStorage.getItem("btcPrice");
-      if(btcSavedPrice) btcPrice = parseFloat(btcSavedPrice);
-      const mstrSavedPrice = localStorage.getItem("mstrPrice");
-      if(mstrSavedPrice) mstrPrice = parseFloat(mstrSavedPrice);
+    const inputs = [
+      {el: btcInput, key: "btc"},
+      {el: mstrInput, key: "mstr"},
+      {el: realEstateInput, key: "realEstate"},
+      {el: k401Input, key: "k401"},
+      {el: otherInput, key: "other"}
+    ];
 
-      return hasSaved;
+    function loadSavedValues() {
+      inputs.forEach(i => {
+        i.el.value = localStorage.getItem(i.key) || '';
+      });
+      btcPrice = parseFloat(localStorage.getItem("btcPrice")) || 0;
+      mstrPrice = parseFloat(localStorage.getItem("mstrPrice")) || 0;
     }
 
     function saveValues() {
-      const inputs = [
-        {el: btcInput, key: "btc"},
-        {el: mstrInput, key: "mstr"},
-        {el: realEstateInput, key: "realEstate"},
-        {el: k401Input, key: "k401"},
-        {el: otherInput, key: "other"}
-      ];
       inputs.forEach(i => {
-        if(i.el.value !== "****") {
-          localStorage.setItem(i.key, i.el.value);
-          i.el.dataset.value = i.el.value;
-        }
-        i.el.value = "****";
-        i.el.classList.add("hidden");
+        localStorage.setItem(i.key, i.el.value);
       });
-      // Save fetched prices as defaults if override not used
-      localStorage.setItem("btcPrice", btcPrice);
-      localStorage.setItem("mstrPrice", mstrPrice);
+      const btcManual = parseFloat(btcOverrideInput.value);
+      if (!isNaN(btcManual) && btcManual > 0) {
+        btcPrice = btcManual;
+        localStorage.setItem("btcPrice", btcPrice);
+      }
+      const mstrManual = parseFloat(mstrOverrideInput.value);
+      if (!isNaN(mstrManual) && mstrManual > 0) {
+        mstrPrice = mstrManual;
+        localStorage.setItem("mstrPrice", mstrPrice);
+      }
+      btcOverrideInput.value = "";
+      mstrOverrideInput.value = "";
+      localStorage.setItem("defaultsSaved", "true");
       calculateNetWorth();
-      alert("✅ Saved as defaults! Numbers are hidden.");
+      hideEditMode();
+      alert("✅ Saved!");
+    }
+
+    function resetInputs() {
+      inputs.forEach(i => {
+        i.el.value = localStorage.getItem(i.key) || '';
+      });
+      btcOverrideInput.value = "";
+      mstrOverrideInput.value = "";
     }
 
     async function fetchBTC() {
       try {
         const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
         const data = await res.json();
-        if(data.bitcoin && data.bitcoin.usd) btcPrice = data.bitcoin.usd;
-        localStorage.setItem("btcPrice", btcPrice);
-      } catch(e) {
-        console.warn("BTC fetch failed, using last saved or override.");
+        if (data.bitcoin && data.bitcoin.usd) {
+          btcPrice = data.bitcoin.usd;
+          localStorage.setItem("btcPrice", btcPrice);
+        }
+      } catch (e) {
+        console.warn("BTC fetch failed, using last saved.", e);
       }
     }
 
     async function fetchMSTR() {
       try {
-        const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSTR&apikey=${API_KEY}`;
-        const res = await fetch(url);
+        const res = await fetch("https://query1.finance.yahoo.com/v8/finance/chart/MSTR?range=1d&interval=1d");
         const data = await res.json();
-        const price = parseFloat(data["Global Quote"]["05. price"]);
-        if(price) {
+        const price = data.chart.result[0].meta.regularMarketPrice;
+        if (price) {
           mstrPrice = price;
           localStorage.setItem("mstrPrice", mstrPrice);
         }
-      } catch(e) {
-        console.warn("MSTR fetch failed, using last saved or override.");
+      } catch (e) {
+        console.warn("MSTR fetch failed, using last saved.", e);
       }
     }
 
     function calculateNetWorth() {
-      const btcValue = (parseFloat(btcInput.dataset.value) || 0) * btcPrice;
-      const mstrValue = (parseFloat(mstrInput.dataset.value) || 0) * mstrPrice;
-      const realEstateValue = parseFloat(realEstateInput.dataset.value) || 0;
-      const k401Value = parseFloat(k401Input.dataset.value) || 0;
-      const otherValue = parseFloat(otherInput.dataset.value) || 0;
+      const btcValue = (parseFloat(btcInput.value) || 0) * btcPrice;
+      const mstrValue = (parseFloat(mstrInput.value) || 0) * mstrPrice;
+      const realEstateValue = parseFloat(realEstateInput.value) || 0;
+      const k401Value = parseFloat(k401Input.value) || 0;
+      const otherValue = parseFloat(otherInput.value) || 0;
 
       const total = btcValue + mstrValue + realEstateValue + k401Value + otherValue;
       netWorthDisplay.textContent = `Net Worth: $${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
@@ -236,45 +240,39 @@
       calculateNetWorth();
     }
 
-    // Manual override apply
-    applyOverrideBtn.addEventListener("click", () => {
-      const btcManual = parseFloat(btcOverrideInput.value);
-      const mstrManual = parseFloat(mstrOverrideInput.value);
-      if(!isNaN(btcManual)) {
-        btcPrice = btcManual;
-        localStorage.setItem("btcPrice", btcPrice);
-      }
-      if(!isNaN(mstrManual)) {
-        mstrPrice = mstrManual;
-        localStorage.setItem("mstrPrice", mstrPrice);
-      }
-      calculateNetWorth();
-      alert("✅ Override prices applied!");
-      btcOverrideInput.value = "";
-      mstrOverrideInput.value = "";
-    });
+    function hideEditMode() {
+      inputsSection.style.display = 'none';
+      saveBtn.style.display = 'none';
+      cancelBtn.style.display = 'none';
+      editBtn.style.display = 'block';
+    }
 
-    [btcInput, mstrInput, realEstateInput, k401Input, otherInput].forEach(input => {
-      input.addEventListener("focus", () => {
-        if(input.dataset.value) {
-          input.value = input.dataset.value;
-          input.classList.remove("hidden");
-        }
-      });
-      input.addEventListener("blur", () => {
-        if(input.dataset.value) {
-          input.value = "****";
-          input.classList.add("hidden");
-        }
-      });
-    });
-
-    saveBtn.addEventListener("click", saveValues);
+    function showEditMode() {
+      inputsSection.style.display = 'block';
+      saveBtn.style.display = 'block';
+      cancelBtn.style.display = 'block';
+      editBtn.style.display = 'none';
+    }
 
     // Initialize
     loadSavedValues();
+    const defaultsSaved = localStorage.getItem("defaultsSaved") === "true";
+    if (defaultsSaved) {
+      hideEditMode();
+    } else {
+      showEditMode();
+    }
     fetchPrices();
+    calculateNetWorth();
     setInterval(fetchPrices, 10 * 60 * 1000); // every 10 minutes
+
+    saveBtn.addEventListener("click", saveValues);
+    cancelBtn.addEventListener("click", () => {
+      resetInputs();
+      hideEditMode();
+    });
+    editBtn.addEventListener("click", showEditMode);
   </script>
 </body>
 </html>
+```​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
