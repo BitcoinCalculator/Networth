@@ -80,6 +80,15 @@
       color: #94a3b8;
       margin-top: 15px;
     }
+    .manual-price {
+      margin-top: 10px;
+      font-size: 0.85em;
+      color: #f87171;
+    }
+    .manual-price input {
+      width: 100%;
+      background: #475569;
+    }
   </style>
 </head>
 <body>
@@ -103,11 +112,20 @@
     <input type="number" id="otherInput">
 
     <button id="saveBtn">💾 Save Defaults</button>
+
+    <div class="manual-price">
+      <label>Manual BTC Price Override ($):</label>
+      <input type="number" id="btcOverride" step="0.01" placeholder="Optional">
+      <label>Manual MSTR Price Override ($):</label>
+      <input type="number" id="mstrOverride" step="0.01" placeholder="Optional">
+      <button id="applyOverrideBtn">Apply Override</button>
+    </div>
+
     <div id="prices" class="prices">Loading live prices...</div>
   </div>
 
   <script>
-    const API_KEY = "PGHM2FVON57DHKMD"; // Alpha Vantage Key
+    const API_KEY = "PGHM2FVON57DHKMD";
 
     const btcInput = document.getElementById("btcInput");
     const mstrInput = document.getElementById("mstrInput");
@@ -118,10 +136,13 @@
     const netWorthDisplay = document.getElementById("netWorth");
     const pricesNote = document.getElementById("prices");
 
+    const btcOverrideInput = document.getElementById("btcOverride");
+    const mstrOverrideInput = document.getElementById("mstrOverride");
+    const applyOverrideBtn = document.getElementById("applyOverrideBtn");
+
     let btcPrice = 0;
     let mstrPrice = 0;
 
-    // Load saved values
     function loadSavedValues() {
       const inputs = [
         {el: btcInput, key: "btc"},
@@ -134,16 +155,20 @@
       inputs.forEach(i => {
         const val = localStorage.getItem(i.key);
         if (val !== null && val !== "") {
-          i.el.dataset.value = val;  // store actual value
-          i.el.value = "****";        // hide input
+          i.el.dataset.value = val;
+          i.el.value = "****";
           i.el.classList.add("hidden");
           hasSaved = true;
         }
       });
+      const btcSavedPrice = localStorage.getItem("btcPrice");
+      if(btcSavedPrice) btcPrice = parseFloat(btcSavedPrice);
+      const mstrSavedPrice = localStorage.getItem("mstrPrice");
+      if(mstrSavedPrice) mstrPrice = parseFloat(mstrSavedPrice);
+
       return hasSaved;
     }
 
-    // Save values
     function saveValues() {
       const inputs = [
         {el: btcInput, key: "btc"},
@@ -153,42 +178,46 @@
         {el: otherInput, key: "other"}
       ];
       inputs.forEach(i => {
-        if (i.el.value !== "****") {
+        if(i.el.value !== "****") {
           localStorage.setItem(i.key, i.el.value);
           i.el.dataset.value = i.el.value;
         }
         i.el.value = "****";
         i.el.classList.add("hidden");
       });
+      // Save fetched prices as defaults if override not used
+      localStorage.setItem("btcPrice", btcPrice);
+      localStorage.setItem("mstrPrice", mstrPrice);
       calculateNetWorth();
       alert("✅ Saved as defaults! Numbers are hidden.");
     }
 
-    // Fetch BTC from CoinGecko
     async function fetchBTC() {
       try {
         const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
         const data = await res.json();
         if(data.bitcoin && data.bitcoin.usd) btcPrice = data.bitcoin.usd;
+        localStorage.setItem("btcPrice", btcPrice);
       } catch(e) {
-        console.warn("Could not fetch BTC price. Using previous or saved value.");
+        console.warn("BTC fetch failed, using last saved or override.");
       }
     }
 
-    // Fetch MSTR from Alpha Vantage
     async function fetchMSTR() {
       try {
         const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSTR&apikey=${API_KEY}`;
         const res = await fetch(url);
         const data = await res.json();
         const price = parseFloat(data["Global Quote"]["05. price"]);
-        if(price) mstrPrice = price;
+        if(price) {
+          mstrPrice = price;
+          localStorage.setItem("mstrPrice", mstrPrice);
+        }
       } catch(e) {
-        console.warn("Could not fetch MSTR price. Using previous or saved value.");
+        console.warn("MSTR fetch failed, using last saved or override.");
       }
     }
 
-    // Calculate net worth
     function calculateNetWorth() {
       const btcValue = (parseFloat(btcInput.dataset.value) || 0) * btcPrice;
       const mstrValue = (parseFloat(mstrInput.dataset.value) || 0) * mstrPrice;
@@ -198,26 +227,41 @@
 
       const total = btcValue + mstrValue + realEstateValue + k401Value + otherValue;
       netWorthDisplay.textContent = `Net Worth: $${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      pricesNote.textContent = `BTC: $${btcPrice.toLocaleString()} | MSTR: $${mstrPrice.toLocaleString()}`;
     }
 
     async function fetchPrices() {
       await fetchBTC();
       await fetchMSTR();
-      pricesNote.textContent = `BTC: $${btcPrice.toLocaleString()} | MSTR: $${mstrPrice.toLocaleString()}`;
       calculateNetWorth();
     }
 
-    // Input listeners
+    // Manual override apply
+    applyOverrideBtn.addEventListener("click", () => {
+      const btcManual = parseFloat(btcOverrideInput.value);
+      const mstrManual = parseFloat(mstrOverrideInput.value);
+      if(!isNaN(btcManual)) {
+        btcPrice = btcManual;
+        localStorage.setItem("btcPrice", btcPrice);
+      }
+      if(!isNaN(mstrManual)) {
+        mstrPrice = mstrManual;
+        localStorage.setItem("mstrPrice", mstrPrice);
+      }
+      calculateNetWorth();
+      alert("✅ Override prices applied!");
+      btcOverrideInput.value = "";
+      mstrOverrideInput.value = "";
+    });
+
     [btcInput, mstrInput, realEstateInput, k401Input, otherInput].forEach(input => {
       input.addEventListener("focus", () => {
-        // reveal actual value temporarily when editing
         if(input.dataset.value) {
           input.value = input.dataset.value;
           input.classList.remove("hidden");
         }
       });
       input.addEventListener("blur", () => {
-        // hide again if value is saved
         if(input.dataset.value) {
           input.value = "****";
           input.classList.add("hidden");
@@ -230,7 +274,7 @@
     // Initialize
     loadSavedValues();
     fetchPrices();
-    setInterval(fetchPrices, 120000); // refresh every 2 mins
+    setInterval(fetchPrices, 10 * 60 * 1000); // every 10 minutes
   </script>
 </body>
 </html>
