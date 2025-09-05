@@ -1,212 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Net Worth Tracker</title>
-<style>
-  body {
-    font-family: "Segoe UI", Roboto, Arial, sans-serif;
-    background: #0f172a;
-    color: #f1f5f9;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-  }
-  .container {
-    background: #1e293b;
-    margin-top: 40px;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-    width: 100%;
-    max-width: 500px;
-    text-align: center;
-  }
-  h1 {
-    font-size: 2.2em;
-    margin-bottom: 20px;
-    color: #38bdf8;
-  }
-  label {
-    display: block;
-    margin-top: 15px;
-    font-size: 0.95em;
-    color: #cbd5e1;
-  }
-  input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1em;
-    background: #334155;
-    color: #f8fafc;
-  }
-  button {
-    margin-top: 20px;
-    padding: 12px;
-    width: 100%;
-    background: #38bdf8;
-    color: #0f172a;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  button:hover { background: #0ea5e9; }
-  .networth {
-    font-size: 1.8em;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #fbbf24;
-  }
-  .prices {
-    font-size: 0.9em;
-    color: #94a3b8;
-    margin-top: 15px;
-  }
-  .hidden { display: none; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Net Worth Tracker</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .container {
+      background: #1e293b;
+      margin-top: 40px;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      width: 100%;
+      max-width: 500px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.2em;
+      margin-bottom: 20px;
+      color: #38bdf8;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 0.95em;
+      color: #cbd5e1;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      background: #334155;
+      color: #f8fafc;
+    }
+    .hidden-input {
+      display: none;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      background: #38bdf8;
+      color: #0f172a;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #0ea5e9;
+    }
+    .networth {
+      font-size: 1.8em;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #fbbf24;
+    }
+    .prices {
+      font-size: 0.9em;
+      text-align: center;
+      color: #94a3b8;
+      margin-top: 15px;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-  <div id="netWorth" class="networth">Net Worth: $0</div>
-  <h1>Net Worth Tracker</h1>
+  <div class="container">
+    <div id="netWorth" class="networth">Net Worth: $0</div>
+    <h1>Net Worth Tracker</h1>
 
-  <div id="inputs">
-    <label>Bitcoin Holdings (BTC):</label>
-    <input type="number" id="btcInput" step="0.0001">
+    <div id="inputs">
+      <label>Bitcoin Holdings (BTC):</label>
+      <input type="number" id="btcInput" step="0.0001">
 
-    <label>MSTR Shares:</label>
-    <input type="number" id="mstrInput" step="1">
+      <label>MSTR Shares:</label>
+      <input type="number" id="mstrInput" step="1">
 
-    <label>Real Estate Value ($):</label>
-    <input type="number" id="realEstateInput">
+      <label>Real Estate Value ($):</label>
+      <input type="number" id="realEstateInput">
 
-    <label>401K Value ($):</label>
-    <input type="number" id="k401Input">
+      <label>401K Value ($):</label>
+      <input type="number" id="k401Input">
 
-    <label>Other Investments ($):</label>
-    <input type="number" id="otherInput">
+      <label>Other Investments ($):</label>
+      <input type="number" id="otherInput">
 
-    <button id="saveBtn">💾 Save Defaults</button>
+      <button id="saveBtn">💾 Save Defaults</button>
+    </div>
+
+    <div id="prices" class="prices">Loading live prices...</div>
   </div>
 
-  <button id="editBtn" class="hidden">✏️ Change Inputs</button>
+  <script>
+    const API_KEY = "PGHM2FVON57DHKMD";
 
-  <div id="prices" class="prices">Loading live prices...</div>
-</div>
+    const btcInput = document.getElementById("btcInput");
+    const mstrInput = document.getElementById("mstrInput");
+    const realEstateInput = document.getElementById("realEstateInput");
+    const k401Input = document.getElementById("k401Input");
+    const otherInput = document.getElementById("otherInput");
+    const saveBtn = document.getElementById("saveBtn");
+    const netWorthDisplay = document.getElementById("netWorth");
+    const pricesNote = document.getElementById("prices");
+    const inputsDiv = document.getElementById("inputs");
 
-<script>
-const API_KEY = "PGHM2FVON57DHKMD"; // Alpha Vantage key
+    let btcPrice = parseFloat(localStorage.getItem("btcPrice")) || 0;
+    let mstrPrice = parseFloat(localStorage.getItem("mstrPrice")) || 0;
 
-const btcInput = document.getElementById("btcInput");
-const mstrInput = document.getElementById("mstrInput");
-const realEstateInput = document.getElementById("realEstateInput");
-const k401Input = document.getElementById("k401Input");
-const otherInput = document.getElementById("otherInput");
+    // Load saved user values
+    function loadSavedValues() {
+      const saved = [
+        {el: btcInput, key: "btc"},
+        {el: mstrInput, key: "mstr"},
+        {el: realEstateInput, key: "realEstate"},
+        {el: k401Input, key: "k401"},
+        {el: otherInput, key: "other"}
+      ];
+      let hasSaved = false;
+      saved.forEach(i => {
+        const val = localStorage.getItem(i.key);
+        if (val !== null && val !== "") {
+          i.el.value = val;
+          hasSaved = true;
+        }
+      });
+      if (hasSaved) hideInputs();
+    }
 
-const saveBtn = document.getElementById("saveBtn");
-const editBtn = document.getElementById("editBtn");
-const netWorthDisplay = document.getElementById("netWorth");
-const pricesNote = document.getElementById("prices");
-const inputsDiv = document.getElementById("inputs");
+    function hideInputs() {
+      inputsDiv.classList.add("hidden-input");
+    }
 
-let btcPrice = 0;
-let mstrPrice = 0;
+    function saveValues() {
+      const toSave = [
+        {el: btcInput, key: "btc"},
+        {el: mstrInput, key: "mstr"},
+        {el: realEstateInput, key: "realEstate"},
+        {el: k401Input, key: "k401"},
+        {el: otherInput, key: "other"}
+      ];
+      toSave.forEach(i => localStorage.setItem(i.key, i.el.value));
+      localStorage.setItem("btcPrice", btcPrice);
+      localStorage.setItem("mstrPrice", mstrPrice);
+      calculateNetWorth();
+      hideInputs();
+    }
 
-// Load saved values
-function loadSavedValues() {
-  let saved = localStorage.getItem("savedDefaults") === "true";
-  btcInput.value = localStorage.getItem("btc") || "";
-  mstrInput.value = localStorage.getItem("mstr") || "";
-  realEstateInput.value = localStorage.getItem("realEstate") || "";
-  k401Input.value = localStorage.getItem("k401") || "";
-  otherInput.value = localStorage.getItem("other") || "";
-  if(saved) { hideInputs(); }
-}
+    async function fetchBTC() {
+      try {
+        const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
+        const data = await res.json();
+        if (data.bitcoin && data.bitcoin.usd) btcPrice = data.bitcoin.usd;
+      } catch (e) { console.warn("BTC fetch failed, using previous price."); }
+    }
 
-// Save values
-function saveValues() {
-  localStorage.setItem("btc", btcInput.value);
-  localStorage.setItem("mstr", mstrInput.value);
-  localStorage.setItem("realEstate", realEstateInput.value);
-  localStorage.setItem("k401", k401Input.value);
-  localStorage.setItem("other", otherInput.value);
-  localStorage.setItem("savedDefaults", "true");
-  hideInputs();
-  calculateNetWorth();
-}
+    async function fetchMSTR() {
+      try {
+        const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSTR&apikey=${API_KEY}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data["Global Quote"] && data["Global Quote"]["05. price"]) {
+          mstrPrice = parseFloat(data["Global Quote"]["05. price"]);
+        }
+      } catch (e) { console.warn("MSTR fetch failed, using previous price."); }
+    }
 
-// Hide inputs for privacy
-function hideInputs() {
-  inputsDiv.classList.add("hidden");
-  editBtn.classList.remove("hidden");
-}
+    function calculateNetWorth() {
+      const btcValue = (parseFloat(localStorage.getItem("btc")) || 0) * btcPrice;
+      const mstrValue = (parseFloat(localStorage.getItem("mstr")) || 0) * mstrPrice;
+      const realEstateValue = parseFloat(localStorage.getItem("realEstate")) || 0;
+      const k401Value = parseFloat(localStorage.getItem("k401")) || 0;
+      const otherValue = parseFloat(localStorage.getItem("other")) || 0;
 
-// Show inputs to edit
-editBtn.addEventListener("click", () => {
-  inputsDiv.classList.remove("hidden");
-  editBtn.classList.add("hidden");
-});
+      const total = btcValue + mstrValue + realEstateValue + k401Value + otherValue;
+      netWorthDisplay.textContent = `Net Worth: $${total.toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}`;
+      pricesNote.textContent = `BTC: $${btcPrice.toLocaleString()} | MSTR: $${mstrPrice.toLocaleString()}`;
+    }
 
-// Fetch BTC price
-async function fetchBTC() {
-  let btcRes = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
-  let btcData = await btcRes.json();
-  btcPrice = btcData.bitcoin.usd;
-}
+    async function fetchPrices() {
+      await fetchBTC();
+      await fetchMSTR();
+      calculateNetWorth();
+    }
 
-// Fetch MSTR price
-async function fetchMSTR() {
-  let url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSTR&apikey=${API_KEY}`;
-  let res = await fetch(url);
-  let data = await res.json();
-  mstrPrice = parseFloat(data["Global Quote"]["05. price"]);
-}
+    saveBtn.addEventListener("click", saveValues);
 
-// Calculate net worth
-function calculateNetWorth() {
-  const btcValue = (parseFloat(btcInput.value) || 0) * btcPrice;
-  const mstrValue = (parseFloat(mstrInput.value) || 0) * mstrPrice;
-  const realEstateValue = parseFloat(realEstateInput.value) || 0;
-  const k401Value = parseFloat(k401Input.value) || 0;
-  const otherValue = parseFloat(otherInput.value) || 0;
-
-  const total = btcValue + mstrValue + realEstateValue + k401Value + otherValue;
-  netWorthDisplay.textContent = `Net Worth: $${total.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`;
-}
-
-// Fetch all prices
-async function fetchPrices() {
-  try {
-    await fetchBTC();
-    await fetchMSTR();
-    pricesNote.textContent = `BTC: $${btcPrice.toLocaleString()} | MSTR: $${mstrPrice.toLocaleString()}`;
-    calculateNetWorth();
-  } catch(e) {
-    pricesNote.textContent = "⚠️ Could not fetch live prices.";
-    calculateNetWorth();
-  }
-}
-
-// Event listeners
-[btcInput, mstrInput, realEstateInput, k401Input, otherInput].forEach(input => {
-  input.addEventListener("input", calculateNetWorth);
-});
-saveBtn.addEventListener("click", saveValues);
-
-// Initialize
-loadSavedValues();
-fetchPrices();
-setInterval(fetchPrices, 120000);
-</script>
+    // Initialize
+    loadSavedValues();
+    fetchPrices();
+    setInterval(fetchPrices, 120000); // refresh every 2 mins
+  </script>
 </body>
 </html>
