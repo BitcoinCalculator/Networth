@@ -1217,14 +1217,37 @@ function drop(e,p){
 // ──────────── THEME ────────────
 function toggleTheme(){setTheme(S.theme==='dark'?'light':'dark');}
 function setTheme(t){S.theme=t;applyTheme(t);save();refreshThemeBtns();}
+
+const THEMES = {
+  dark: {
+    '--bg':'#0f1117','--bg-panel':'#161b26','--bg-card':'#1c2233','--bg-hover':'#232b3e',
+    '--border':'#2c3550','--text':'#eef0f8','--text2':'#8e9abf','--text3':'#4e5a7a','--text4':'#2b3352',
+    '--topbar':'rgba(15,17,23,0.92)','--shadow':'0 4px 28px rgba(0,0,0,0.45)',
+    '--shadow-lg':'0 16px 64px rgba(0,0,0,0.6)','--glow':'rgba(99,102,241,0.18)'
+  },
+  light: {
+    '--bg':'#f2f5fb','--bg-panel':'#ffffff','--bg-card':'#ffffff','--bg-hover':'#edf1fa',
+    '--border':'#dce3f2','--text':'#111827','--text2':'#4b5580','--text3':'#9aa5c4','--text4':'#d0d8ee',
+    '--topbar':'rgba(242,245,251,0.94)','--shadow':'0 2px 14px rgba(50,60,100,0.10)',
+    '--shadow-lg':'0 12px 48px rgba(50,60,100,0.18)','--glow':'rgba(99,102,241,0.10)'
+  }
+};
+
 function applyTheme(t){
-  document.documentElement.setAttribute('data-theme',t);
-  const b=document.getElementById('tb');
-  b.textContent=t==='dark'?'☀️':'🌙';b.title=t==='dark'?'Switch to light mode':'Switch to dark mode';
+  // Set attribute on both html and body for maximum compatibility
+  document.documentElement.setAttribute('data-theme', t);
+  document.body.setAttribute('data-theme', t);
+  // Also inject CSS vars directly onto :root via a <style> tag for iframe environments
+  let styleEl = document.getElementById('theme-vars');
+  if (!styleEl) { styleEl = document.createElement('style'); styleEl.id = 'theme-vars'; document.head.appendChild(styleEl); }
+  const vars = THEMES[t] || THEMES.dark;
+  styleEl.textContent = `:root, html, body { ${Object.entries(vars).map(([k,v])=>`${k}:${v}`).join(';')} }`;
+  const b = document.getElementById('tb');
+  if(b){ b.textContent = t==='dark'?'☀️':'🌙'; b.title = t==='dark'?'Switch to light mode':'Switch to dark mode'; }
 }
 function refreshThemeBtns(){
-  document.getElementById('btn-dark')?.classList.toggle('on',S.theme==='dark');
-  document.getElementById('btn-light')?.classList.toggle('on',S.theme==='light');
+  document.getElementById('btn-dark')?.classList.toggle('on', S.theme==='dark');
+  document.getElementById('btn-light')?.classList.toggle('on', S.theme==='light');
 }
 
 // ──────────── NAV ────────────
