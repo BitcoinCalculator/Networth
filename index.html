@@ -168,6 +168,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .tag-birthday{background:var(--c-birthday-s); color:var(--c-birthday);}
 .tag-work    {background:var(--c-work-s);      color:var(--c-work);}
 .tag-renewal {background:var(--c-renewal-s);   color:var(--c-renewal);}
+.tag-car     {background:rgba(100,116,139,.15); color:#94a3b8;}
 .due-chip{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--bg-hover);color:var(--text3);}
 .due-chip.overdue{background:var(--urgent-soft);color:var(--urgent);}
 .due-chip.today  {background:var(--medium-soft);color:var(--medium);}
@@ -236,6 +237,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .ev-urgent  {background:rgba(240,74,107,0.18); color:#f04a6b; border-left:2px solid #f04a6b;}
 .ev-medium  {background:rgba(245,158,11,0.18); color:#f59e0b; border-left:2px solid #f59e0b;}
 .ev-low     {background:rgba(34,197,94,0.18);  color:#22c55e; border-left:2px solid #22c55e;}
+.ev-car     {background:rgba(100,116,139,0.2);color:#94a3b8; border-left:2px solid #64748b;}
 .ev-pill.ev-mid,.ev-pill.ev-end{border-left:none !important;}
 html.light-theme .ev-travel  {color:var(--c-travel);}
 html.light-theme .ev-birthday{color:var(--c-birthday);}
@@ -253,6 +255,122 @@ html.light-theme .ev-work    {color:var(--c-work);}
 .cal-ev-bar{width:4px;min-height:36px;border-radius:2px;flex-shrink:0;}
 .cal-ev-name{font-size:14px;font-weight:600;color:var(--text);}
 .cal-ev-meta{font-size:12px;color:var(--text3);margin-top:2px;}
+/* ── CATEGORY PAGES (Birthdays, Trips) ── */
+.cat-page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;gap:12px;flex-wrap:wrap;}
+.cat-page-title{font-family:'Instrument Serif',serif;font-size:28px;color:var(--text);}
+.cat-page-sub{font-size:13px;color:var(--text3);margin-top:3px;}
+.cat-section{margin-bottom:28px;}
+.cat-section-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.cat-section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.cat-card{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:8px;cursor:pointer;transition:all var(--tr);}
+.cat-card:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:var(--shadow);}
+.cat-card-icon{font-size:28px;flex-shrink:0;}
+.cat-card-body{flex:1;min-width:0;}
+.cat-card-name{font-size:15px;font-weight:700;color:var(--text);}
+.cat-card-meta{font-size:12px;color:var(--text3);margin-top:3px;}
+.cat-card-right{text-align:right;flex-shrink:0;}
+.cat-card-countdown{font-size:13px;font-weight:800;}
+.cat-card-date{font-size:11px;color:var(--text3);margin-top:2px;}
+.cat-card-acts{display:flex;gap:6px;margin-top:6px;}
+.cat-empty{text-align:center;padding:40px 20px;color:var(--text3);}
+.cat-empty-icon{font-size:44px;margin-bottom:12px;}
+.cat-empty-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;}
+
+/* Trip card */
+.trip-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:10px;overflow:hidden;transition:all var(--tr);}
+.trip-card:hover{border-color:var(--c-travel);box-shadow:var(--shadow);}
+.trip-card-header{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;}
+.trip-card-icon{font-size:28px;flex-shrink:0;}
+.trip-card-body{flex:1;min-width:0;}
+.trip-card-name{font-size:15px;font-weight:700;color:var(--text);}
+.trip-card-meta{font-size:12px;color:var(--text3);margin-top:3px;}
+.trip-card-badge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap;}
+.trip-upcoming{background:var(--c-travel-s);color:var(--c-travel);}
+.trip-past{background:var(--bg-hover);color:var(--text3);}
+.trip-active{background:rgba(34,197,94,.15);color:var(--low);}
+
+/* ════════════════════════════════════
+   GARAGE
+════════════════════════════════════ */
+.garage-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;gap:12px;flex-wrap:wrap;}
+.g-title{font-family:'Instrument Serif',serif;font-size:28px;color:var(--text);}
+.g-sub{font-size:13px;color:var(--text3);margin-top:3px;}
+
+/* Car tabs */
+.g-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+.g-tab{display:flex;align-items:center;gap:10px;padding:10px 18px;border-radius:var(--radius-lg);border:1.5px solid var(--border);background:var(--bg-card);cursor:pointer;transition:all var(--tr);position:relative;}
+.g-tab:hover{border-color:var(--accent);background:var(--bg-hover);}
+.g-tab.active{border-color:var(--accent);background:var(--accent-soft);}
+.g-tab-icon{font-size:22px;line-height:1;}
+.g-tab-name{font-size:13px;font-weight:700;color:var(--text);}
+.g-tab-sub{font-size:11px;color:var(--text3);margin-top:1px;}
+.g-tab-del{position:absolute;top:4px;right:4px;width:16px;height:16px;border-radius:50%;background:var(--urgent-soft);color:var(--urgent);font-size:10px;display:flex;align-items:center;justify-content:center;opacity:0;cursor:pointer;transition:opacity var(--tr);border:none;}
+.g-tab:hover .g-tab-del{opacity:1;}
+.g-add-tab{display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:var(--radius-lg);border:1.5px dashed var(--border);background:transparent;cursor:pointer;color:var(--text3);font-size:13px;font-weight:600;transition:all var(--tr);}
+.g-add-tab:hover{border-color:var(--accent);color:var(--accent);}
+
+/* Car sheet */
+.g-sheet-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.g-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:background .22s,border-color .22s;}
+.g-card.full{grid-column:span 2;}
+.g-card-hd{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);}
+.g-card-title{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);}
+.g-card-body{padding:16px 20px;}
+
+/* Car info strip */
+.g-car-strip{display:flex;align-items:center;gap:18px;padding:18px 22px;background:linear-gradient(135deg,var(--accent-soft),rgba(139,92,246,.08));border-radius:var(--radius-lg);border:1px solid rgba(99,102,241,.2);margin-bottom:18px;flex-wrap:wrap;}
+.g-car-icon{font-size:42px;line-height:1;}
+.g-car-info{flex:1;min-width:0;}
+.g-car-name{font-family:'Instrument Serif',serif;font-size:24px;color:var(--text);line-height:1.2;}
+.g-car-detail{font-size:13px;color:var(--text3);margin-top:4px;}
+.g-car-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.g-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--bg-hover);color:var(--text2);}
+
+/* Maintenance schedule */
+.maint-item{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--border);}
+.maint-item:last-child{border-bottom:none;}
+.maint-icon{font-size:20px;width:30px;text-align:center;flex-shrink:0;}
+.maint-body{flex:1;min-width:0;}
+.maint-name{font-size:14px;font-weight:600;color:var(--text);}
+.maint-due{font-size:12px;color:var(--text3);margin-top:2px;}
+.maint-status{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.maint-ok{background:var(--low);}
+.maint-soon{background:var(--medium);}
+.maint-overdue{background:var(--urgent);}
+.maint-unknown{background:var(--border);}
+.maint-acts{display:flex;gap:6px;flex-shrink:0;}
+.maint-log-btn{padding:5px 12px;border-radius:var(--radius-sm);border:1.5px solid var(--accent);background:var(--accent-soft);color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:all var(--tr);}
+.maint-log-btn:hover{background:var(--accent);color:#fff;}
+.maint-edit-btn{padding:5px 10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:none;color:var(--text3);font-size:11px;cursor:pointer;font-family:inherit;transition:all var(--tr);}
+.maint-edit-btn:hover{background:var(--bg-hover);color:var(--text);}
+
+/* History log */
+.log-item{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--border);position:relative;}
+.log-item:last-child{border-bottom:none;}
+.log-timeline{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:14px;}
+.log-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px;}
+.log-line{width:2px;flex:1;background:var(--border);margin-top:3px;}
+.log-body{flex:1;min-width:0;}
+.log-header{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.log-type{font-size:13px;font-weight:700;color:var(--text);}
+.log-date{font-size:11px;color:var(--text3);}
+.log-meta{font-size:12px;color:var(--text3);margin-top:3px;}
+.log-notes{font-size:12px;color:var(--text2);margin-top:4px;font-style:italic;}
+.log-acts{display:flex;gap:4px;margin-top:6px;}
+.log-act{padding:3px 9px;border-radius:var(--radius-sm);border:1px solid var(--border);background:none;color:var(--text3);font-size:11px;cursor:pointer;font-family:inherit;transition:all var(--tr);}
+.log-act:hover{background:var(--bg-hover);color:var(--text);}
+.log-act.del:hover{background:var(--urgent-soft);color:var(--urgent);}
+.log-empty{text-align:center;padding:24px 0;color:var(--text3);font-size:13px;}
+
+/* Garage modals */
+.g-section-lbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin:16px 0 8px;}
+
+/* Mobile */
+@media(max-width:768px){
+  .g-sheet-wrap{grid-template-columns:1fr;}
+  .g-card.full{grid-column:span 1;}
+}
+
 /* ── TASKS PAGE ── */
 .tasks-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
 .search-bar{display:flex;align-items:center;gap:8px;background:var(--bg-card);border:1.5px solid var(--border);border-radius:var(--radius);padding:9px 14px;flex:1;min-width:160px;max-width:320px;transition:border-color var(--tr);}
@@ -386,11 +504,13 @@ select.form-in option{background:var(--bg-panel);}
   <div class="nav-item" onclick="showPage('tasks',this)"><span class="nav-icon">✅</span>All Tasks</div>
   <div class="nav-item" onclick="showPage('calendar',this)"><span class="nav-icon">📅</span>Calendar</div>
   <div class="nav-label">Categories</div>
-  <div class="nav-item" onclick="goCat('birthday')"><span class="nav-icon">🎂</span>Birthdays</div>
-  <div class="nav-item" onclick="goCat('travel')"><span class="nav-icon">✈️</span>Trips & Travel</div>
-  <div class="nav-item" onclick="goCat('health')"><span class="nav-icon">🏥</span>Health</div>
-  <div class="nav-item" onclick="goCat('renewal')"><span class="nav-icon">🪪</span>Renewals</div>
-  <div class="nav-item" onclick="goCat('finance')"><span class="nav-icon">💰</span>Finance</div>
+  <div class="nav-item" onclick="showPage('birthdays',this)"><span class="nav-icon">🎂</span>Birthdays</div>
+  <div class="nav-item" onclick="showPage('trips',this)"><span class="nav-icon">✈️</span>Trips & Travel</div>
+  <div class="nav-item" onclick="goCat('health',this)"><span class="nav-icon">🏥</span>Health</div>
+  <div class="nav-item" onclick="goCat('renewal',this)"><span class="nav-icon">🪪</span>Renewals</div>
+  <div class="nav-item" onclick="goCat('finance',this)"><span class="nav-icon">💰</span>Finance</div>
+  <div class="nav-label">Garage 🚗</div>
+  <div class="nav-item" onclick="showPage('garage',this)"><span class="nav-icon">🚗</span>My Cars</div>
   <div class="nav-label">System</div>
   <div class="nav-item" onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span>Settings</div>
   <div class="sidebar-footer">
@@ -533,6 +653,47 @@ select.form-in option{background:var(--bg-panel);}
       </div>
     </div>
   </div>
+  <!-- BIRTHDAYS PAGE -->
+  <div class="page" id="page-birthdays">
+    <div class="cat-page-header">
+      <div>
+        <div class="cat-page-title">🎂 Birthdays</div>
+        <div class="cat-page-sub" id="bday-sub"></div>
+      </div>
+      <button class="new-btn" onclick="openCatAdd('birthday')">＋ Add Birthday</button>
+    </div>
+    <div id="bday-list"></div>
+  </div>
+
+  <!-- TRIPS PAGE -->
+
+  <div class="page" id="page-trips">
+    <div class="cat-page-header">
+      <div>
+        <div class="cat-page-title">✈️ Trips & Travel</div>
+        <div class="cat-page-sub" id="trips-sub"></div>
+      </div>
+      <button class="new-btn" onclick="openCatAdd('travel')">＋ Add Trip</button>
+    </div>
+    <div id="trips-list"></div>
+  </div>
+
+  <!-- GARAGE -->
+
+  <div class="page" id="page-garage">
+    <div class="garage-header">
+      <div>
+        <div class="g-title">My Garage</div>
+        <div class="g-sub" id="g-car-count">0 cars tracked</div>
+      </div>
+      <button class="new-btn" onclick="openCarModal()">＋ Add Car</button>
+    </div>
+    <!-- Car tabs -->
+    <div class="g-tabs" id="g-tabs"></div>
+    <!-- Car sheet (rendered by JS) -->
+    <div id="g-sheet"></div>
+  </div>
+
 </main>
 
 <!-- Mobile nav -->
@@ -543,7 +704,7 @@ select.form-in option{background:var(--bg-panel);}
     <div class="mni" id="mn-tasks"    onclick="showPage('tasks',null);setMN('tasks')"><span>✅</span><span>Tasks</span></div>
     <div class="mni" id="mn-add"      onclick="openAdd()"><span>➕</span><span>Add</span></div>
     <div class="mni" id="mn-calendar" onclick="showPage('calendar',null);setMN('calendar')"><span>📅</span><span>Calendar</span></div>
-    <div class="mni" id="mn-settings" onclick="showPage('settings',null);setMN('settings')"><span>⚙️</span><span>More</span></div>
+    <div class="mni" id="mn-garage"   onclick="showPage('garage',null);setMN('garage')"><span>🚗</span><span>Garage</span></div>
   </div>
 </nav>
 </div>
@@ -573,6 +734,7 @@ select.form-in option{background:var(--bg-panel);}
           <option value="birthday">🎂 Birthday</option>
           <option value="work">💼 Work</option>
           <option value="renewal">🪪 Renewal</option>
+          <option value="car">🚗 Car Service</option>
         </select>
       </div>
       <div class="form-g s2"><label class="form-lbl">Priority</label>
@@ -603,6 +765,101 @@ select.form-in option{background:var(--bg-panel);}
   </div>
 </div>
 
+<!-- CAR MODAL -->
+
+<div class="modal-overlay" id="car-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="car-mtitle">Add Car</div>
+      <button class="modal-close" onclick="closeCarModal()">✕</button>
+    </div>
+    <div class="form-row">
+      <div class="form-g"><label class="form-lbl">Year</label><input class="form-in" id="cm-year" type="number" placeholder="2022" min="1900" max="2099"></div>
+      <div class="form-g"><label class="form-lbl">Make</label><input class="form-in" id="cm-make" placeholder="Toyota"></div>
+      <div class="form-g"><label class="form-lbl">Model</label><input class="form-in" id="cm-model" placeholder="Camry"></div>
+      <div class="form-g"><label class="form-lbl">Trim / Package</label><input class="form-in" id="cm-trim" placeholder="XSE V6"></div>
+      <div class="form-g"><label class="form-lbl">Color</label><input class="form-in" id="cm-color" placeholder="Midnight Black"></div>
+      <div class="form-g"><label class="form-lbl">License Plate</label><input class="form-in" id="cm-plate" placeholder="ABC-1234"></div>
+      <div class="form-g s2"><label class="form-lbl">VIN (optional)</label><input class="form-in" id="cm-vin" placeholder="1HGBH41JXMN109186"></div>
+      <div class="form-g"><label class="form-lbl">Current Mileage</label><input class="form-in" id="cm-miles" type="number" placeholder="42000"></div>
+      <div class="form-g"><label class="form-lbl">Purchase Date</label><input class="form-in" id="cm-bought" type="date"></div>
+    </div>
+    <div class="modal-acts">
+      <button class="btn-ghost" onclick="closeCarModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveCar()">Save Car</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAINTENANCE LOG MODAL -->
+
+<div class="modal-overlay" id="log-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="log-mtitle">Log Service</div>
+      <button class="modal-close" onclick="closeLogModal()">✕</button>
+    </div>
+    <div class="form-row">
+      <div class="form-g s2">
+        <label class="form-lbl">Service Type</label>
+        <select class="form-in" id="lm-type" onchange="onLogTypeChange()">
+          <option value="Oil Change">🛢 Oil Change</option>
+          <option value="Tire Rotation">🔄 Tire Rotation</option>
+          <option value="Air Filter">💨 Air Filter</option>
+          <option value="Cabin Filter">🌬 Cabin Filter</option>
+          <option value="Brakes">🛑 Brakes</option>
+          <option value="Battery">🔋 Battery</option>
+          <option value="Transmission">⚙️ Transmission Fluid</option>
+          <option value="Coolant">🌡 Coolant Flush</option>
+          <option value="Wiper Blades">🌧 Wiper Blades</option>
+          <option value="Spark Plugs">⚡ Spark Plugs</option>
+          <option value="Tires">🏎 New Tires</option>
+          <option value="Alignment">📐 Wheel Alignment</option>
+          <option value="Inspection">📋 State Inspection</option>
+          <option value="Detail">✨ Full Detail</option>
+          <option value="Other">🔧 Other</option>
+        </select>
+      </div>
+      <div class="form-g s2" id="lm-custom-wrap" style="display:none">
+        <label class="form-lbl">Custom Service Name</label>
+        <input class="form-in" id="lm-custom" placeholder="Describe the service…">
+      </div>
+      <div class="form-g"><label class="form-lbl">Date</label><input class="form-in" id="lm-date" type="date"></div>
+      <div class="form-g"><label class="form-lbl">Mileage at Service</label><input class="form-in" id="lm-miles" type="number" placeholder="42350"></div>
+      <div class="form-g"><label class="form-lbl">Cost</label><input class="form-in" id="lm-cost" placeholder="$49.99"></div>
+      <div class="form-g"><label class="form-lbl">Shop / Location</label><input class="form-in" id="lm-shop" placeholder="Jiffy Lube on Main St"></div>
+      <div class="form-g s2"><label class="form-lbl">Next Due — Mileage</label><input class="form-in" id="lm-next-miles" type="number" placeholder="e.g. 47350 (in 5,000 miles)"></div>
+      <div class="form-g s2"><label class="form-lbl">Next Due — Date</label><input class="form-in" id="lm-next-date" type="date"></div>
+      <div class="form-g s2"><label class="form-lbl">Notes</label><textarea class="form-in" id="lm-notes" rows="3" placeholder="Parts used, observations, warranty info…" style="resize:vertical;"></textarea></div>
+    </div>
+    <div class="modal-acts">
+      <button class="btn-ghost" onclick="closeLogModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveLogEntry()">Save Log Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEDULE EDIT MODAL -->
+
+<div class="modal-overlay" id="sched-modal">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-head">
+      <div class="modal-title" id="sm-title">Edit Schedule</div>
+      <button class="modal-close" onclick="closeSchedModal()">✕</button>
+    </div>
+    <div class="form-row">
+      <div class="form-g"><label class="form-lbl">Interval — Miles <small>(0 = not mile-based)</small></label><input class="form-in" id="sm-miles" type="number" placeholder="e.g. 5000" min="0"></div>
+      <div class="form-g"><label class="form-lbl">Interval — Months <small>(0 = not time-based)</small></label><input class="form-in" id="sm-months" type="number" placeholder="e.g. 6" min="0"></div>
+      <div class="form-g"><label class="form-lbl">Next Due — Mileage</label><input class="form-in" id="sm-next-miles" type="number" placeholder="e.g. 47500"></div>
+      <div class="form-g"><label class="form-lbl">Next Due — Date</label><input class="form-in" id="sm-next-date" type="date"></div>
+    </div>
+    <div class="modal-acts">
+      <button class="btn-ghost" onclick="closeSchedModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveScheduleItem()">Save</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast-zone" id="tz"></div>
 
 <script>
@@ -611,7 +868,7 @@ select.form-in option{background:var(--bg-panel);}
 // ════════════════════════════════════
 const PRI   = ['urgent','medium','low'];
 const PLAB  = {urgent:'🔴 Urgent', medium:'🟡 Medium', low:'🟢 Low'};
-const TAGS  = {health:'🏥 Health', finance:'💰 Finance', travel:'✈️ Travel', personal:'👤 Personal', birthday:'🎂 Birthday', work:'💼 Work', renewal:'🪪 Renewal'};
+const TAGS  = {health:'🏥 Health', finance:'💰 Finance', travel:'✈️ Travel', personal:'👤 Personal', birthday:'🎂 Birthday', work:'💼 Work', renewal:'🪪 Renewal', car:'🚗 Car Service'};
 const MONTHS= ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DOW   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
@@ -634,12 +891,41 @@ let S = {
 // ════════════════════════════════════
 function save() { localStorage.setItem('lb6', JSON.stringify({tasks:S.tasks, name:S.name, theme:S.theme})); }
 function load() {
-  try {
-    const d = JSON.parse(localStorage.getItem('lb6')||'{}');
-    if (d.tasks) S.tasks = d.tasks;
-    if (d.name)  S.name  = d.name;
-    if (d.theme) S.theme = d.theme;
-  } catch(e) {}
+  // Try current key first, then migrate from older versions
+  const keys = ['lb6','lb5','lb4'];
+  let d = null;
+  for (const key of keys) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw) { d = JSON.parse(raw); break; }
+    } catch(e) {}
+  }
+  if (!d) return;
+  if (d.tasks) S.tasks = d.tasks.map(migrateTask);
+  if (d.name)  S.name  = d.name;
+  if (d.theme) S.theme = d.theme;
+  save(); // re-save under lb6 so migration only happens once
+}
+
+// Migrate tasks from old formats to current schema
+function migrateTask(t) {
+  // Old recur was a plain string like 'yearly','monthly','weekly'
+  if (t.recur && !t.recurN) {
+    const map = {yearly:'years', monthly:'months', weekly:'weeks', yearly2:'years', yearly3:'years', yearly4:'years'};
+    const nMap = {yearly:1, monthly:1, weekly:1};
+    t.recurN = nMap[t.recur] || 1;
+    t.recur  = map[t.recur]  || t.recur;
+  }
+  // Ensure all required fields exist
+  if (t.dateEnd  === undefined) t.dateEnd  = '';
+  if (t.recurN   === undefined) t.recurN   = 1;
+  if (t.recur    === undefined) t.recur    = '';
+  if (t.notes    === undefined) t.notes    = '';
+  if (t.time     === undefined) t.time     = '';
+  if (t.tag      === undefined) t.tag      = '';
+  if (t.done     === undefined) t.done     = false;
+  if (t.priority === undefined) t.priority = 'medium';
+  return t;
 }
 
 // ════════════════════════════════════
@@ -677,7 +963,19 @@ function uid() { return Date.now().toString(36)+Math.random().toString(36).slice
 // RENDER ALL
 // ════════════════════════════════════
 function renderAll() {
-  renderStats(); renderDash(); renderTP(); renderUpcoming(); renderCalendar();
+  try { renderStats();    } catch(e) { console.error('renderStats',e); }
+  try { renderDash();     } catch(e) { console.error('renderDash',e); }
+  try { renderTP();       } catch(e) { console.error('renderTP',e); }
+  try { renderUpcoming(); } catch(e) { console.error('renderUpcoming',e); }
+  try { renderCalendar(); } catch(e) { console.error('renderCalendar',e); }
+  // Re-render active category pages if visible
+  const active = document.querySelector('.page.active');
+  if (active) {
+    const pg = active.id.replace('page-','');
+    if (pg==='birthdays') try { renderCategoryPage('birthday'); } catch(e) {}
+    if (pg==='trips')     try { renderCategoryPage('travel');   } catch(e) {}
+    if (pg==='garage')    try { renderGarage();                 } catch(e) {}
+  }
   updateBadge(); updateUserDisplay(); refreshThemeBtns();
 }
 
@@ -687,12 +985,16 @@ function renderAll() {
 function renderStats() {
   const a=S.tasks.filter(t=>!t.done), tot=a.length;
   const urg=a.filter(t=>t.priority==='urgent').length;
+  // Add garage overdue items to urgent count
+  let garageOverdue=0;
+  try{(GS.cars||[]).forEach(car=>{(car.schedule||[]).forEach(s=>{if(scheduleStatus(s,car.miles)==='overdue')garageOverdue++;});});}catch(e){}
+  const urgTotal = urg + garageOverdue;
   const td=fmtD(new Date()), dtd=a.filter(t=>t.date===td).length;
   const done=S.tasks.filter(t=>t.done).length;
   const pct=S.tasks.length?Math.round(done/S.tasks.length*100):0;
   document.getElementById('stats').innerHTML=`
     <div class="stat-card"><div class="stat-label">Active Tasks</div><div class="stat-value">${tot}</div><div class="stat-sub">across all priorities</div><div class="stat-bar"><div class="stat-bar-fill" style="width:${Math.min(tot*6,100)}%;background:var(--accent)"></div></div></div>
-    <div class="stat-card"><div class="stat-label">Urgent</div><div class="stat-value" style="color:var(--urgent)">${urg}</div><div class="stat-sub"><span class="stat-dot" style="background:var(--urgent)"></span>need attention</div><div class="stat-bar"><div class="stat-bar-fill" style="width:${tot?Math.round(urg/tot*100):0}%;background:var(--urgent)"></div></div></div>
+    <div class="stat-card"><div class="stat-label">Urgent</div><div class="stat-value" style="color:var(--urgent)">${urgTotal}</div><div class="stat-sub"><span class="stat-dot" style="background:var(--urgent)"></span>${garageOverdue?garageOverdue+' car overdue':''}${urg&&garageOverdue?' · ':''} ${urg?urg+' task'+( urg!==1?'s':'')+' urgent':''} ${!urg&&!garageOverdue?'all clear ✓':''}</div><div class="stat-bar"><div class="stat-bar-fill" style="width:${(urg+garageOverdue)?Math.min(100,Math.round((urg+garageOverdue)/(tot||1)*100+garageOverdue*10)):0}%;background:var(--urgent)"></div></div></div>
     <div class="stat-card"><div class="stat-label">Due Today</div><div class="stat-value" style="color:var(--medium)">${dtd}</div><div class="stat-sub"><span class="stat-dot" style="background:var(--medium)"></span>on today's list</div><div class="stat-bar"><div class="stat-bar-fill" style="width:${tot?Math.round(dtd/tot*100):0}%;background:var(--medium)"></div></div></div>
     <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-value" style="color:var(--low)">${done}</div><div class="stat-sub">${pct}% completion rate</div><div class="stat-bar"><div class="stat-bar-fill" style="width:${pct}%;background:var(--low)"></div></div></div>`;
   document.getElementById('dtotal').textContent = tot+' active';
@@ -791,7 +1093,33 @@ function toggleDoneSection() {
 // ════════════════════════════════════
 function renderUpcoming() {
   const today=new Date(); today.setHours(0,0,0,0);
-  const items=S.tasks.filter(t=>!t.done&&t.date).sort((a,b)=>new Date(a.date)-new Date(b.date)).slice(0,10);
+  // Regular tasks
+  let items=S.tasks.filter(t=>!t.done&&t.date).map(t=>({
+    id:t.id, text:t.text, date:t.date, time:t.time||'',
+    tag:t.tag||'', priority:t.priority,
+    col:t.priority==='urgent'?'var(--urgent)':t.priority==='medium'?'var(--medium)':'var(--low)',
+    onclick:`openEdit('${t.id}')`
+  }));
+  // Add garage overdue/upcoming next-due items not already in S.tasks
+  try {
+    (GS.cars||[]).forEach(car=>{
+      (car.schedule||[]).forEach(s=>{
+        if (!s.nextDate) return;
+        // Skip if already represented as a task in S.tasks
+        const alreadyTask = S.tasks.find(t=>t._garageLogId && t.date===s.nextDate && t.text.includes(s.type) && t._carId===car.id);
+        if (alreadyTask) return; // it's in the task list already
+        const carLabel=`${car.year||''} ${car.make} ${car.model}`.trim();
+        items.push({
+          id: null, text:`🚗 ${s.type} — ${carLabel}`,
+          date:s.nextDate, time:'', tag:'car', priority:'medium',
+          col:'#64748b',
+          onclick:`showPage('garage',null);setMN('garage')`
+        });
+      });
+    });
+  } catch(e){}
+  items.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  items=items.slice(0,12);
   const el=document.getElementById('ul');
   if(!items.length){el.innerHTML='<div class="empty-state">📭<br>No upcoming items</div>';return;}
   el.innerHTML=items.map(t=>{
@@ -799,9 +1127,8 @@ function renderUpcoming() {
     const d=Math.floor((due-today)/86400000);
     const cls=d<0?'d-red':d<=3?'d-red':d<=7?'d-amb':'d-grn';
     const lbl=d<0?`${Math.abs(d)}d overdue`:d===0?'Today':d===1?'Tomorrow':`${d} days`;
-    const col=t.priority==='urgent'?'var(--urgent)':t.priority==='medium'?'var(--medium)':'var(--low)';
-    return `<div class="upcoming-item" onclick="openEdit('${t.id}')">
-      <div class="upcoming-strip" style="background:${col}"></div>
+    return `<div class="upcoming-item" onclick="${t.onclick}">
+      <div class="upcoming-strip" style="background:${t.col}"></div>
       <div class="upcoming-body">
         <div class="upcoming-title">${esc(t.text)}</div>
         <div class="upcoming-sub">${t.date}${t.time?' · '+fmt12(t.time):''}${t.tag?' · '+(TAGS[t.tag]||t.tag):''}</div>
@@ -837,7 +1164,7 @@ function renderCalendar() {
 
   // Legend
   const usedTags=[...new Set(S.tasks.filter(t=>t.tag).map(t=>t.tag))];
-  const colorMap={travel:'#0ea5e9',birthday:'#f04a6b',renewal:'#f59e0b',health:'#22c55e',finance:'#a855f7',personal:'#8b5cf6',work:'#06b6d4'};
+  const colorMap={travel:'#0ea5e9',birthday:'#f04a6b',renewal:'#f59e0b',health:'#22c55e',finance:'#a855f7',personal:'#8b5cf6',work:'#06b6d4',car:'#64748b'};
   document.getElementById('cal-legend').innerHTML = usedTags.map(tag=>
     `<div class="cal-legend-item"><div class="cal-legend-dot" style="background:${colorMap[tag]||'var(--accent)'}"></div>${TAGS[tag]||tag}</div>`
   ).join('');
@@ -937,7 +1264,7 @@ function renderCalendar() {
     }
   });
 
-  const TAG_EV_CLS = {travel:'ev-travel',birthday:'ev-birthday',renewal:'ev-renewal',health:'ev-health',finance:'ev-finance',personal:'ev-personal',work:'ev-work'};
+  const TAG_EV_CLS = {travel:'ev-travel',birthday:'ev-birthday',renewal:'ev-renewal',health:'ev-health',finance:'ev-finance',personal:'ev-personal',work:'ev-work',car:'ev-car'};
 
   taskLayout.forEach(({task:t, row, startCol, endCol}) => {
     const topPx = row * ROW_H;
@@ -1001,7 +1328,7 @@ function renderCalDetail(ds) {
   });
   const el=document.getElementById('cal-ev-list');
   if(!items.length){el.innerHTML=`<div style="color:var(--text3);font-size:13px;padding:6px 0">No events on this day.</div>`;return;}
-  const colorMap={travel:'#0ea5e9',birthday:'#f04a6b',renewal:'#f59e0b',health:'#22c55e',finance:'#a855f7',personal:'#8b5cf6',work:'#06b6d4'};
+  const colorMap={travel:'#0ea5e9',birthday:'#f04a6b',renewal:'#f59e0b',health:'#22c55e',finance:'#a855f7',personal:'#8b5cf6',work:'#06b6d4',car:'#64748b'};
   el.innerHTML=items.map(t=>{
     const col=colorMap[t.tag]||(t.priority==='urgent'?'var(--urgent)':t.priority==='medium'?'var(--medium)':'var(--low)');
     const span=t.dateEnd&&t.dateEnd!==t.date?` · ${t.date} → ${t.dateEnd}`:'';
@@ -1049,7 +1376,9 @@ function parseNLP(raw) {
     flight:'travel',trip:'travel',hotel:'travel',travel:'travel',vacation:'travel',
     birthday:'birthday',bday:'birthday',
     passport:'renewal',license:'renewal',insurance:'renewal',renew:'renewal',renewal:'renewal',
-    work:'work',meeting:'work',office:'work'};
+    work:'work',meeting:'work',office:'work',
+    oil:'car','oil change':'car',tire:'car',brakes:'car',brake:'car',
+    service:'car',mechanic:'car',garage:'car',alignment:'car',battery:'car'};
   for(const[k,v]of Object.entries(TM)){if(new RegExp('\\b'+k+'\\b','i').test(text)){tag=v;break;}}
   const tm=text.match(/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/i);
   if(tm){let h=+tm[1],mn=tm[2]||'00',ap=tm[3].toLowerCase();if(ap==='pm'&&h!==12)h+=12;if(ap==='am'&&h===12)h=0;time=`${pad(h)}:${mn}`;text=text.replace(tm[0],'');}
@@ -1148,7 +1477,7 @@ function applyTheme(t) {
     document.documentElement.classList.remove('light-theme');
   }
   const btn = document.getElementById('tb');
-  if (btn) btn.textContent = t === 'dark' ? '☀️' : '🌙';
+  if (btn) { btn.textContent = t === 'dark' ? '☀️' : '🌙'; btn.title = t==='dark'?'Switch to Light Mode':'Switch to Dark Mode'; }
 }
 function toggleTheme(){setTheme(S.theme==='dark'?'light':'dark');}
 function setTheme(t){S.theme=t;applyTheme(t);save();refreshThemeBtns();}
@@ -1160,7 +1489,7 @@ function refreshThemeBtns(){
 // ════════════════════════════════════
 // NAV
 // ════════════════════════════════════
-const PTITLES={dashboard:'Dashboard',tasks:'All Tasks',calendar:'Calendar',settings:'Settings'};
+const PTITLES={dashboard:'Dashboard',tasks:'All Tasks',calendar:'Calendar',garage:'🚗 My Garage',birthdays:'🎂 Birthdays',trips:'✈️ Trips & Travel',settings:'Settings'};
 function showPage(name,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
@@ -1168,9 +1497,12 @@ function showPage(name,el){
   if(el)el.classList.add('active');
   document.getElementById('ptitle').textContent=PTITLES[name]||name;
   closeSidebar(); renderAll();
+  if(name==='garage') renderGarage();
+  if(name==='birthdays') renderCategoryPage('birthday');
+  if(name==='trips') renderCategoryPage('travel');
 }
-function goCat(tag){S.filter=tag;showPage('tasks',null);setMN('tasks');}
-function setMN(name){document.querySelectorAll('.mni').forEach(el=>el.classList.remove('on'));document.getElementById('mn-'+name)?.classList.add('on');}
+function goCat(tag,el){S.filter=tag;showPage('tasks',el||null);setMN('tasks');}
+function setMN(name){document.querySelectorAll('.mni').forEach(el=>el.classList.remove('on'));const mn=document.getElementById('mn-'+name);if(mn)mn.classList.add('on');}
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('on');document.getElementById('sob').classList.toggle('on');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('on');document.getElementById('sob').classList.remove('on');}
 function toggleBucket(id){document.getElementById(id)?.classList.toggle('collapsed');}
@@ -1227,11 +1559,705 @@ function fmt12(t){if(!t)return'';const[h,m]=t.split(':').map(Number),ap=h>=12?'p
 function dueClass(ds){if(!ds)return'';const t=new Date();t.setHours(0,0,0,0);const d=new Date(ds);d.setHours(0,0,0,0);const df=Math.floor((d-t)/86400000);if(df<0)return'overdue';if(df===0)return'today';if(df<=3)return'soon';return'';}
 function dueLabel(ds){if(!ds)return'';const t=new Date();t.setHours(0,0,0,0);const d=new Date(ds);d.setHours(0,0,0,0);const df=Math.floor((d-t)/86400000);if(df<0)return`${Math.abs(df)}d overdue`;if(df===0)return'Today';if(df===1)return'Tomorrow';if(df<=7)return`In ${df} days`;return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
 
+// ════════════════════════════════════════════════════════
+// GARAGE MODULE
+// ════════════════════════════════════════════════════════
+
+// Garage state (stored separately from tasks)
+const GS = { cars:[], editCarId:null, activeCar:null, editLogId:null, logCarId:null, logEditEntry:null };
+
+const MAINT_ICONS = {
+  'Oil Change':'🛢','Tire Rotation':'🔄','Air Filter':'💨','Cabin Filter':'🌬',
+  'Brakes':'🛑','Battery':'🔋','Transmission':'⚙️','Coolant':'🌡',
+  'Wiper Blades':'🌧','Spark Plugs':'⚡','Tires':'🏎','Alignment':'📐',
+  'Inspection':'📋','Detail':'✨','Other':'🔧'
+};
+
+// ── Save / Load ────────────────────────────────────────────────────────────
+function gSave() {
+  try { localStorage.setItem('lb6-garage', JSON.stringify({cars:GS.cars})); } catch(e){}
+}
+function gLoad() {
+  try {
+    const d = JSON.parse(localStorage.getItem('lb6-garage')||'{}');
+    if (d.cars) GS.cars = d.cars;
+    // Migrate: ensure log array exists on every car
+    GS.cars.forEach(c => { if (!c.log) c.log = []; if (!c.schedule) c.schedule = defaultSchedule(c.id); });
+  } catch(e) {}
+}
+
+function defaultSchedule(carId) {
+  return [
+    {id:suid(), carId, type:'Oil Change',     intervalMiles:5000,  intervalMonths:6,  lastMiles:null, lastDate:null, nextMiles:null, nextDate:null},
+    {id:suid(), carId, type:'Tire Rotation',  intervalMiles:7500,  intervalMonths:6,  lastMiles:null, lastDate:null, nextMiles:null, nextDate:null},
+    {id:suid(), carId, type:'Air Filter',     intervalMiles:15000, intervalMonths:12, lastMiles:null, lastDate:null, nextMiles:null, nextDate:null},
+    {id:suid(), carId, type:'Cabin Filter',   intervalMiles:15000, intervalMonths:12, lastMiles:null, lastDate:null, nextMiles:null, nextDate:null},
+    {id:suid(), carId, type:'Brakes',         intervalMiles:25000, intervalMonths:0,  lastMiles:null, lastDate:null, nextMiles:null, nextDate:null},
+    {id:suid(), carId, type:'Battery',        intervalMiles:0,     intervalMonths:48, lastMiles:null, lastDate:null, nextMiles:null, nextDate:null},
+    {id:suid(), carId, type:'Inspection',     intervalMiles:0,     intervalMonths:12, lastMiles:null, lastDate:null, nextMiles:null, nextDate:null},
+  ];
+}
+function suid() { return 'g'+Date.now().toString(36)+Math.random().toString(36).slice(2,4); }
+
+// ── Render Garage Page ─────────────────────────────────────────────────────
+function renderGarage() {
+  gLoad();
+  const count = GS.cars.length;
+  const el = document.getElementById('g-car-count');
+  if (el) el.textContent = count === 0 ? 'No cars yet — add your first' : `${count} car${count!==1?'s':''} tracked`;
+  renderCarTabs();
+  if (GS.cars.length === 0) {
+    document.getElementById('g-sheet').innerHTML = `
+      <div style="text-align:center;padding:48px 20px;color:var(--text3);">
+        <div style="font-size:52px;margin-bottom:14px;">🚗</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;">No cars in your garage yet</div>
+        <div style="font-size:13px;margin-bottom:20px;">Add your first car to start tracking maintenance & history</div>
+        <button class="btn-primary" onclick="openCarModal()">＋ Add My First Car</button>
+      </div>`;
+    return;
+  }
+  if (!GS.activeCar || !GS.cars.find(c=>c.id===GS.activeCar)) {
+    GS.activeCar = GS.cars[0].id;
+  }
+  renderCarSheet(GS.activeCar);
+}
+
+function renderCarTabs() {
+  const tabs = document.getElementById('g-tabs');
+  if (!tabs) return;
+  tabs.innerHTML = GS.cars.map(c => `
+    <div class="g-tab ${GS.activeCar===c.id?'active':''}" onclick="selectCar('${c.id}')">
+      <div class="g-tab-icon">🚗</div>
+      <div>
+        <div class="g-tab-name">${esc(c.year)} ${esc(c.make)} ${esc(c.model)}</div>
+        <div class="g-tab-sub">${c.color?esc(c.color):''} ${c.plate?'· '+esc(c.plate):''}</div>
+      </div>
+      <button class="g-tab-del" onclick="event.stopPropagation();deleteCar('${c.id}')" title="Remove car">✕</button>
+    </div>`).join('') +
+    `<div class="g-add-tab" onclick="openCarModal()">＋ Add Car</div>`;
+}
+
+function selectCar(id) {
+  GS.activeCar = id;
+  renderGarage();
+}
+
+function renderCarSheet(carId) {
+  const car = GS.cars.find(c=>c.id===carId);
+  if (!car) return;
+  const sheet = document.getElementById('g-sheet');
+
+  // Status summary
+  const overdueCount = (car.schedule||[]).filter(s=>scheduleStatus(s,car.miles)==='overdue').length;
+  const soonCount    = (car.schedule||[]).filter(s=>scheduleStatus(s,car.miles)==='soon').length;
+
+  sheet.innerHTML = `
+    <!-- Car info strip -->
+    <div class="g-car-strip">
+      <div class="g-car-icon">🚗</div>
+      <div class="g-car-info">
+        <div class="g-car-name">${car.year} ${esc(car.make)} ${esc(car.model)}${car.trim?' '+esc(car.trim):''}</div>
+        <div class="g-car-detail">${[car.color, car.plate, car.vin?'VIN: '+car.vin:''].filter(Boolean).map(esc).join(' · ')}</div>
+        <div class="g-car-badges">
+          ${car.miles?`<span class="g-badge">📍 ${Number(car.miles).toLocaleString()} mi</span>`:''}
+          ${car.bought?`<span class="g-badge">📅 Since ${car.bought}</span>`:''}
+          ${overdueCount?`<span class="g-badge" style="background:var(--urgent-soft);color:var(--urgent)">⚠ ${overdueCount} overdue</span>`:''}
+          ${soonCount?`<span class="g-badge" style="background:var(--medium-soft);color:var(--medium)">⏳ ${soonCount} coming up</span>`:''}
+        </div>
+      </div>
+      <button class="maint-edit-btn" style="align-self:flex-start;padding:7px 14px;" onclick="openCarModal('${carId}')">✏️ Edit Car</button>
+    </div>
+
+    <div class="g-sheet-wrap">
+      <!-- Maintenance Schedule -->
+      <div class="g-card">
+        <div class="g-card-hd">
+          <div class="g-card-title">🔧 Maintenance Schedule</div>
+          <button class="maint-edit-btn" onclick="addScheduleItem('${carId}')">＋ Add Service Type</button>
+        </div>
+        <div class="g-card-body" id="g-schedule-${carId}">
+          ${renderScheduleHTML(car)}
+        </div>
+      </div>
+
+      <!-- History Log -->
+      <div class="g-card">
+        <div class="g-card-hd">
+          <div class="g-card-title">📋 Service History</div>
+          <button class="maint-log-btn" onclick="openLogModal('${carId}',null)">＋ Log Service</button>
+        </div>
+        <div class="g-card-body" id="g-log-${carId}" style="max-height:520px;overflow-y:auto;">
+          ${renderLogHTML(car)}
+        </div>
+      </div>
+
+      <!-- Stats card -->
+      <div class="g-card full">
+        <div class="g-card-hd"><div class="g-card-title">💰 Cost Summary</div></div>
+        <div class="g-card-body">${renderCostSummary(car)}</div>
+      </div>
+    </div>`;
+}
+
+function renderScheduleHTML(car) {
+  const schedule = car.schedule || [];
+  if (!schedule.length) return `<div class="log-empty">No scheduled services yet.<br>Add service types above.</div>`;
+  return schedule.map(s => {
+    const status = scheduleStatus(s, car.miles);
+    const statusClass = {ok:'maint-ok', soon:'maint-soon', overdue:'maint-overdue', unknown:'maint-unknown'}[status];
+    const icon = MAINT_ICONS[s.type] || '🔧';
+    const dueText = scheduleDueText(s, car.miles);
+    return `<div class="maint-item">
+      <div class="maint-icon">${icon}</div>
+      <div class="maint-body">
+        <div class="maint-name">${esc(s.type)}</div>
+        <div class="maint-due">${dueText}</div>
+      </div>
+      <div class="maint-status ${statusClass}" title="${status}"></div>
+      <div class="maint-acts">
+        <button class="maint-log-btn" onclick="openLogModal('${car.id}','${s.type}')">Log ✓</button>
+        <button class="maint-edit-btn" onclick="editScheduleItem('${car.id}','${s.id}')">⚙</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderLogHTML(car) {
+  const log = [...(car.log||[])].sort((a,b)=>(b.date||'') < (a.date||'') ? -1 : 1);
+  if (!log.length) return `<div class="log-empty">No service history yet.<br>Log your first service above.</div>`;
+  return log.map((entry, i) => `
+    <div class="log-item">
+      <div class="log-timeline">
+        <div class="log-dot" style="background:${logColor(entry.type)}"></div>
+        ${i < log.length-1 ? '<div class="log-line"></div>' : ''}
+      </div>
+      <div class="log-body">
+        <div class="log-header">
+          <div class="log-type">${MAINT_ICONS[entry.type]||'🔧'} ${esc(entry.displayType||entry.type)}</div>
+          <div class="log-date">${entry.date||'No date'}</div>
+        </div>
+        <div class="log-meta">${[
+          entry.miles ? '📍 '+Number(entry.miles).toLocaleString()+' mi' : '',
+          entry.cost  ? '💵 '+esc(entry.cost) : '',
+          entry.shop  ? '📍 '+esc(entry.shop) : ''
+        ].filter(Boolean).join(' · ')}</div>
+        ${entry.nextMiles||entry.nextDate ? `<div class="log-meta" style="color:var(--medium)">Next due: ${[entry.nextMiles?Number(entry.nextMiles).toLocaleString()+' mi':'',entry.nextDate||''].filter(Boolean).join(' or ')}</div>` : ''}
+        ${entry.notes ? `<div class="log-notes">${esc(entry.notes)}</div>` : ''}
+        <div class="log-acts">
+          <button class="log-act" onclick="editLogEntry('${car.id}','${entry.id}')">✏️ Edit</button>
+          <button class="log-act del" onclick="deleteLogEntry('${car.id}','${entry.id}')">🗑 Delete</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderCostSummary(car) {
+  const log = car.log||[];
+  const total = log.reduce((sum,e) => sum + parseCost(e.cost), 0);
+  const byType = {};
+  log.forEach(e => {
+    const t = e.displayType||e.type||'Other';
+    byType[t] = (byType[t]||0) + parseCost(e.cost);
+  });
+  const sorted = Object.entries(byType).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  if (!log.length) return `<div style="color:var(--text3);font-size:13px;text-align:center;padding:12px 0">Log services to see cost breakdown</div>`;
+  return `<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Total Spent</div>
+      <div style="font-family:'Instrument Serif',serif;font-size:36px;color:var(--text)">$${total.toFixed(2)}</div>
+      <div style="font-size:12px;color:var(--text3)">${log.length} service record${log.length!==1?'s':''}</div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      ${sorted.map(([t,v])=>`<div style="background:var(--bg-hover);border-radius:var(--radius);padding:8px 14px;text-align:center">
+        <div style="font-size:11px;color:var(--text3)">${MAINT_ICONS[t]||'🔧'} ${t}</div>
+        <div style="font-size:15px;font-weight:700;color:var(--text);margin-top:2px">$${v.toFixed(0)}</div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function parseCost(c) {
+  if (!c) return 0;
+  const n = parseFloat(String(c).replace(/[^0-9.]/g,''));
+  return isNaN(n) ? 0 : n;
+}
+function logColor(type) {
+  const map={'Oil Change':'#f59e0b','Tire Rotation':'#0ea5e9','Brakes':'#f04a6b','Battery':'#22c55e','Inspection':'#8b5cf6'};
+  return map[type]||'var(--accent)';
+}
+
+// ── Schedule helpers ────────────────────────────────────────────────────────
+function scheduleStatus(s, currentMiles) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  let mileStatus = 'unknown', dateStatus = 'unknown';
+  if (s.nextMiles && currentMiles) {
+    const diff = Number(s.nextMiles) - Number(currentMiles);
+    if (diff < 0)        mileStatus = 'overdue';
+    else if (diff < 1000) mileStatus = 'soon';
+    else                  mileStatus = 'ok';
+  }
+  if (s.nextDate) {
+    const nd = new Date(s.nextDate+'T00:00:00');
+    const days = Math.floor((nd-today)/86400000);
+    if (days < 0)        dateStatus = 'overdue';
+    else if (days < 30)  dateStatus = 'soon';
+    else                 dateStatus = 'ok';
+  }
+  // Return worst status
+  for (const st of ['overdue','soon','ok']) {
+    if (mileStatus===st||dateStatus===st) return st;
+  }
+  return 'unknown';
+}
+
+function scheduleDueText(s, currentMiles) {
+  const parts = [];
+  if (s.lastDate) parts.push(`Last: ${s.lastDate}${s.lastMiles?' @ '+Number(s.lastMiles).toLocaleString()+' mi':''}`);
+  if (s.nextDate) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const nd = new Date(s.nextDate+'T00:00:00');
+    const days = Math.floor((nd-today)/86400000);
+    const lbl = days<0?`${Math.abs(days)}d overdue`:days===0?'Due today':days===1?'Due tomorrow':`Due in ${days} days`;
+    parts.push(`📅 ${lbl}`);
+  }
+  if (s.nextMiles && currentMiles) {
+    const diff = Number(s.nextMiles)-Number(currentMiles);
+    parts.push(diff<0?`⚠ ${Math.abs(diff).toLocaleString()} mi overdue`:`🔢 ${diff.toLocaleString()} mi away`);
+  } else if (s.nextMiles) {
+    parts.push(`🔢 Due at ${Number(s.nextMiles).toLocaleString()} mi`);
+  }
+  if (s.intervalMiles) parts.push(`Every ${Number(s.intervalMiles).toLocaleString()} mi`);
+  if (s.intervalMonths) parts.push(`Every ${s.intervalMonths} mo`);
+  return parts.length ? parts.join(' · ') : 'No schedule set — log a service to start tracking';
+}
+
+// ── Car CRUD ────────────────────────────────────────────────────────────────
+function openCarModal(carId) {
+  GS.editCarId = carId||null;
+  document.getElementById('car-mtitle').textContent = carId ? 'Edit Car' : 'Add Car';
+  const c = carId ? GS.cars.find(c=>c.id===carId) : null;
+  document.getElementById('cm-year').value  = c?.year||'';
+  document.getElementById('cm-make').value  = c?.make||'';
+  document.getElementById('cm-model').value = c?.model||'';
+  document.getElementById('cm-trim').value  = c?.trim||'';
+  document.getElementById('cm-color').value = c?.color||'';
+  document.getElementById('cm-plate').value = c?.plate||'';
+  document.getElementById('cm-vin').value   = c?.vin||'';
+  document.getElementById('cm-miles').value = c?.miles||'';
+  document.getElementById('cm-bought').value= c?.bought||'';
+  document.getElementById('car-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('cm-make').focus(),80);
+}
+function closeCarModal() { document.getElementById('car-modal').classList.remove('open'); }
+
+function saveCar() {
+  const make = document.getElementById('cm-make').value.trim();
+  const model= document.getElementById('cm-model').value.trim();
+  if (!make||!model) { toast('Please enter at least Make and Model','warn'); return; }
+  const id = GS.editCarId || suid();
+  const car = {
+    id, year:document.getElementById('cm-year').value,
+    make, model, trim:document.getElementById('cm-trim').value,
+    color:document.getElementById('cm-color').value,
+    plate:document.getElementById('cm-plate').value,
+    vin:document.getElementById('cm-vin').value,
+    miles:document.getElementById('cm-miles').value,
+    bought:document.getElementById('cm-bought').value,
+  };
+  if (GS.editCarId) {
+    const i = GS.cars.findIndex(c=>c.id===GS.editCarId);
+    if (i>=0) { car.log=GS.cars[i].log||[]; car.schedule=GS.cars[i].schedule||defaultSchedule(id); GS.cars[i]=car; }
+  } else {
+    car.log=[]; car.schedule=defaultSchedule(id);
+    GS.cars.push(car);
+  }
+  GS.activeCar=id;
+  gSave(); closeCarModal(); renderGarage();
+  toast((GS.editCarId?'Car updated':'Car added')+' ✓','success');
+}
+
+function deleteCar(id) {
+  const car = GS.cars.find(c=>c.id===id);
+  if (!car) return;
+  if (!confirm(`Remove ${car.year} ${car.make} ${car.model} and all its history?`)) return;
+  GS.cars = GS.cars.filter(c=>c.id!==id);
+  if (GS.activeCar===id) GS.activeCar=null;
+  gSave(); renderGarage();
+  toast('Car removed','info');
+}
+
+// ── Log Entry CRUD ──────────────────────────────────────────────────────────
+function openLogModal(carId, serviceType, editEntryId) {
+  GS.logCarId = carId;
+  GS.editLogId = editEntryId||null;
+  document.getElementById('log-mtitle').textContent = editEntryId ? 'Edit Log Entry' : 'Log Service';
+
+  const car = GS.cars.find(c=>c.id===carId);
+  let entry = null;
+  if (editEntryId && car) entry = car.log.find(e=>e.id===editEntryId);
+
+  // Pre-fill
+  document.getElementById('lm-type').value      = entry?.type || serviceType || 'Oil Change';
+  document.getElementById('lm-custom').value     = entry?.displayType && entry.type==='Other' ? entry.displayType : '';
+  document.getElementById('lm-date').value       = entry?.date  || fmtD(new Date());
+  document.getElementById('lm-miles').value      = entry?.miles || car?.miles || '';
+  document.getElementById('lm-cost').value       = entry?.cost  || '';
+  document.getElementById('lm-shop').value       = entry?.shop  || '';
+  document.getElementById('lm-notes').value      = entry?.notes || '';
+  document.getElementById('lm-next-miles').value = entry?.nextMiles || '';
+  document.getElementById('lm-next-date').value  = entry?.nextDate  || '';
+  onLogTypeChange();
+
+  // Auto-suggest next due for known service types
+  if (!editEntryId && serviceType) {
+    const sched = (car?.schedule||[]).find(s=>s.type===serviceType);
+    if (sched?.intervalMiles && car?.miles) {
+      document.getElementById('lm-next-miles').value = Number(car.miles)+Number(sched.intervalMiles);
+    }
+    if (sched?.intervalMonths) {
+      const d=new Date(); d.setMonth(d.getMonth()+sched.intervalMonths);
+      document.getElementById('lm-next-date').value = fmtD(d);
+    }
+  }
+
+  document.getElementById('log-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('lm-date').focus(),80);
+}
+function closeLogModal() { document.getElementById('log-modal').classList.remove('open'); }
+
+function onLogTypeChange() {
+  const t = document.getElementById('lm-type').value;
+  document.getElementById('lm-custom-wrap').style.display = t==='Other'?'grid':'none';
+}
+
+function saveLogEntry() {
+  const type        = document.getElementById('lm-type').value;
+  const customName  = document.getElementById('lm-custom').value.trim();
+  const date        = document.getElementById('lm-date').value;
+  if (!date) { toast('Please enter a date','warn'); return; }
+
+  const car = GS.cars.find(c=>c.id===GS.logCarId);
+  if (!car) return;
+
+  const displayType = type==='Other' ? (customName||'Custom Service') : type;
+
+  const entry = {
+    id:          GS.editLogId || suid(),
+    type,        displayType,
+    date,
+    miles:       document.getElementById('lm-miles').value,
+    cost:        document.getElementById('lm-cost').value,
+    shop:        document.getElementById('lm-shop').value,
+    notes:       document.getElementById('lm-notes').value,
+    nextMiles:   document.getElementById('lm-next-miles').value,
+    nextDate:    document.getElementById('lm-next-date').value,
+    loggedAt:    new Date().toISOString()
+  };
+
+  if (GS.editLogId) {
+    const i = car.log.findIndex(e=>e.id===GS.editLogId);
+    if (i>=0) car.log[i]=entry; else car.log.push(entry);
+    // Remove old calendar task for this log entry before recreating
+    removeGarageTask(GS.editLogId);
+  } else {
+    car.log.unshift(entry);
+  }
+
+  // Update schedule with last/next info
+  const sched = (car.schedule||[]).find(s=>s.type===type);
+  if (sched) {
+    if (entry.miles)     sched.lastMiles = entry.miles;
+    if (entry.date)      sched.lastDate  = entry.date;
+    if (entry.nextMiles) sched.nextMiles = entry.nextMiles;
+    if (entry.nextDate)  sched.nextDate  = entry.nextDate;
+  }
+
+  // Update car mileage if this log has higher mileage
+  if (entry.miles && (!car.miles || Number(entry.miles)>Number(car.miles))) {
+    car.miles = entry.miles;
+  }
+
+  // ── AUTO-CREATE CALENDAR TASK FOR NEXT DUE DATE ──────────────────────────
+  if (entry.nextDate) {
+    const carLabel = `${car.year||''} ${car.make} ${car.model}`.trim();
+    const taskText = `🚗 ${displayType} — ${carLabel}`;
+    const existing = S.tasks.find(t=>t._garageLogId===entry.id);
+    const garageTask = {
+      id:           existing ? existing.id : uid(),
+      _garageLogId: entry.id,          // link back so we can remove/update
+      _carId:       car.id,
+      text:         taskText,
+      priority:     'medium',
+      tag:          'car',
+      date:         entry.nextDate,
+      dateEnd:      '',
+      time:         '',
+      notes:        `Next ${displayType} due${entry.nextMiles ? ' @ '+Number(entry.nextMiles).toLocaleString()+' mi' : ''}${entry.shop ? ' · '+entry.shop : ''}`,
+      recur:        '',
+      recurN:       1,
+      done:         false
+    };
+    if (existing) {
+      const i = S.tasks.findIndex(t=>t.id===existing.id);
+      if (i>=0) S.tasks[i] = garageTask;
+    } else {
+      S.tasks.unshift(garageTask);
+    }
+    save();
+    toast('Service logged ✓ — next due added to calendar 📅','success');
+  } else {
+    toast('Service logged ✓','success');
+  }
+
+  gSave(); closeLogModal(); renderGarage(); renderAll();
+}
+
+// Remove a garage-linked calendar task by log entry id
+function removeGarageTask(logId) {
+  const before = S.tasks.length;
+  S.tasks = S.tasks.filter(t=>t._garageLogId !== logId);
+  if (S.tasks.length !== before) save();
+}
+
+function editLogEntry(carId, entryId) { openLogModal(carId, null, entryId); }
+
+function deleteLogEntry(carId, entryId) {
+  const car = GS.cars.find(c=>c.id===carId); if(!car)return;
+  const entry = car.log.find(e=>e.id===entryId);
+  if (!confirm(`Delete this ${entry?.displayType||entry?.type||'service'} log entry?`)) return;
+  car.log = car.log.filter(e=>e.id!==entryId);
+  // Also remove the linked calendar task
+  removeGarageTask(entryId);
+  gSave(); renderGarage(); renderAll();
+  toast('Entry deleted','info');
+}
+
+function addScheduleItem(carId) {
+  const type = prompt('Service type name (e.g. "Transmission Fluid", "Coolant Flush"):');
+  if (!type?.trim()) return;
+  const car = GS.cars.find(c=>c.id===carId); if(!car)return;
+  if (!car.schedule) car.schedule=[];
+  car.schedule.push({id:suid(),carId,type:type.trim(),intervalMiles:0,intervalMonths:0,lastMiles:null,lastDate:null,nextMiles:null,nextDate:null});
+  gSave(); renderGarage(); toast('Service type added','success');
+}
+
+function editScheduleItem(carId, schedId) {
+  const car = GS.cars.find(c=>c.id===carId); if(!car)return;
+  const s = (car.schedule||[]).find(sc=>sc.id===schedId); if(!s)return;
+  // Populate and show the schedule edit panel inline
+  GS._editSchedCarId  = carId;
+  GS._editSchedId     = schedId;
+  const overlay = document.getElementById('sched-modal');
+  document.getElementById('sm-title').textContent    = 'Edit: '+s.type;
+  document.getElementById('sm-miles').value          = s.intervalMiles||'';
+  document.getElementById('sm-months').value         = s.intervalMonths||'';
+  document.getElementById('sm-next-miles').value     = s.nextMiles||'';
+  document.getElementById('sm-next-date').value      = s.nextDate||'';
+  overlay.classList.add('open');
+}
+function saveScheduleItem() {
+  const carId   = GS._editSchedCarId;
+  const schedId = GS._editSchedId;
+  const car = GS.cars.find(c=>c.id===carId); if(!car)return;
+  const s   = (car.schedule||[]).find(sc=>sc.id===schedId); if(!s)return;
+  s.intervalMiles  = parseInt(document.getElementById('sm-miles').value)||0;
+  s.intervalMonths = parseInt(document.getElementById('sm-months').value)||0;
+  s.nextMiles      = document.getElementById('sm-next-miles').value||null;
+  s.nextDate       = document.getElementById('sm-next-date').value||null;
+  document.getElementById('sched-modal').classList.remove('open');
+  gSave(); renderGarage(); toast('Schedule updated ✓','success');
+}
+function closeSchedModal() {
+  document.getElementById('sched-modal').classList.remove('open');
+}
+
+// Init garage on load
+gLoad();
+
+// ════════════════════════════════════════════════════════
+// CATEGORY PAGES (Birthdays, Trips)
+// ════════════════════════════════════════════════════════
+
+function openCatAdd(tag) {
+  openAdd();
+  // Pre-select the category — use slightly longer delay to ensure modal DOM is ready
+  setTimeout(() => {
+    const sel = document.getElementById('mtag');
+    if (sel) { sel.value = tag; }
+  }, 100);
+}
+
+function renderCategoryPage(tag) {
+  if (tag === 'birthday') renderBirthdaysPage();
+  if (tag === 'travel')   renderTripsPage();
+}
+
+function renderBirthdaysPage() {
+  const tasks = S.tasks.filter(t => t.tag === 'birthday').sort((a,b) => {
+    // Sort by upcoming day-of-year
+    return daysUntilNextOccurrence(a.date) - daysUntilNextOccurrence(b.date);
+  });
+  const sub = document.getElementById('bday-sub');
+  if (sub) sub.textContent = tasks.length
+    ? `${tasks.length} birthday${tasks.length!==1?'s':''} tracked`
+    : 'No birthdays yet';
+
+  const container = document.getElementById('bday-list');
+  if (!container) return;
+
+  if (!tasks.length) {
+    container.innerHTML = `<div class="cat-empty">
+      <div class="cat-empty-icon">🎂</div>
+      <div class="cat-empty-title">No birthdays tracked yet</div>
+      <div style="font-size:13px;margin-bottom:16px">Add birthdays to get reminders before the big day</div>
+      <button class="btn-primary" onclick="openCatAdd('birthday')">＋ Add First Birthday</button>
+    </div>`;
+    return;
+  }
+
+  // Split into upcoming vs recent
+  const upcoming = tasks.filter(t => daysUntilNextOccurrence(t.date) >= 0);
+  const past     = tasks.filter(t => daysUntilNextOccurrence(t.date) < 0);
+
+  let html = '';
+
+  if (upcoming.length) {
+    html += `<div class="cat-section"><div class="cat-section-label">Upcoming</div>`;
+    html += upcoming.map(t => bdayCardHTML(t)).join('');
+    html += `</div>`;
+  }
+  if (past.length) {
+    html += `<div class="cat-section"><div class="cat-section-label">Recently Passed</div>`;
+    html += past.map(t => bdayCardHTML(t)).join('');
+    html += `</div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+function bdayCardHTML(t) {
+  const days  = daysUntilNextOccurrence(t.date);
+  const next  = nextOccurrenceDate(t.date);
+  const cls   = days <= 7 ? 'color:var(--urgent)' : days <= 30 ? 'color:var(--medium)' : 'color:var(--low)';
+  const lbl   = days === 0 ? '🎉 Today!' : days === 1 ? 'Tomorrow' : days < 0 ? `${Math.abs(days)}d ago` : `In ${days} days`;
+  // Try to show age if we have a year
+  const birthYear = t.date ? new Date(t.date+'T00:00:00').getFullYear() : null;
+  const age = birthYear ? new Date().getFullYear() - birthYear : null;
+  const ageTurning = age ? ` · Turning ${age}` : '';
+
+  return `<div class="cat-card" onclick="openEdit('${t.id}')">
+    <div class="cat-card-icon">🎂</div>
+    <div class="cat-card-body">
+      <div class="cat-card-name">${esc(t.text)}</div>
+      <div class="cat-card-meta">${t.date||'No date'}${ageTurning}${t.notes?' · '+esc(t.notes):''}</div>
+    </div>
+    <div class="cat-card-right">
+      <div class="cat-card-countdown" style="${cls}">${lbl}</div>
+      <div class="cat-card-date">${next ? next.toLocaleDateString('en-US',{month:'short',day:'numeric'}) : ''}</div>
+    </div>
+  </div>`;
+}
+
+function renderTripsPage() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const tasks = S.tasks.filter(t => t.tag === 'travel' && t.date).sort((a,b) => new Date(b.date)-new Date(a.date));
+
+  const sub = document.getElementById('trips-sub');
+  if (sub) sub.textContent = tasks.length ? `${tasks.length} trip${tasks.length!==1?'s':''} tracked` : 'No trips yet';
+
+  const container = document.getElementById('trips-list');
+  if (!container) return;
+
+  if (!tasks.length) {
+    container.innerHTML = `<div class="cat-empty">
+      <div class="cat-empty-icon">✈️</div>
+      <div class="cat-empty-title">No trips planned yet</div>
+      <div style="font-size:13px;margin-bottom:16px">Add trips with start and end dates to track them on the calendar</div>
+      <button class="btn-primary" onclick="openCatAdd('travel')">＋ Plan a Trip</button>
+    </div>`;
+    return;
+  }
+
+  const active   = tasks.filter(t => {
+    const s=new Date(t.date+'T00:00:00'), e=t.dateEnd?new Date(t.dateEnd+'T00:00:00'):s;
+    return today>=s && today<=e;
+  });
+  const upcoming = tasks.filter(t => new Date(t.date+'T00:00:00') > today);
+  const past     = tasks.filter(t => {
+    const e=t.dateEnd?new Date(t.dateEnd+'T00:00:00'):new Date(t.date+'T00:00:00');
+    return e < today;
+  });
+
+  let out = '';
+  if (active.length) {
+    out += `<div class="cat-section"><div class="cat-section-label">🟢 Happening Now</div>${active.map(tripCardHTML).join('')}</div>`;
+  }
+  if (upcoming.length) {
+    out += `<div class="cat-section"><div class="cat-section-label">Upcoming</div>${upcoming.map(tripCardHTML).join('')}</div>`;
+  }
+  if (past.length) {
+    out += `<div class="cat-section"><div class="cat-section-label">Past Trips</div>${past.map(tripCardHTML).join('')}</div>`;
+  }
+  container.innerHTML = out;
+}
+
+function tripCardHTML(t) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const start = t.date ? new Date(t.date+'T00:00:00') : null;
+  const end   = t.dateEnd ? new Date(t.dateEnd+'T00:00:00') : start;
+  const days  = start ? Math.floor((start-today)/86400000) : null;
+  const duration = (start && end) ? Math.round((end-start)/86400000)+1 : 1;
+
+  let badgeCls = 'trip-upcoming', badge = '';
+  if (days === null) { badge = 'No date'; badgeCls='trip-past'; }
+  else if (today >= start && today <= end) { badge = '🟢 Now'; badgeCls='trip-active'; }
+  else if (days > 0) { badge = `In ${days} day${days!==1?'s':''}`; }
+  else { badge = `${Math.abs(days)}d ago`; badgeCls='trip-past'; }
+
+  const dateRange = start
+    ? `${start.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}${end&&end!==start?' → '+end.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):''}`
+    : '';
+
+  return `<div class="trip-card" onclick="openEdit('${t.id}')">
+    <div class="trip-card-header">
+      <div class="trip-card-icon">✈️</div>
+      <div class="trip-card-body">
+        <div class="trip-card-name">${esc(t.text)}</div>
+        <div class="trip-card-meta">${dateRange} · ${duration} day${duration!==1?'s':''}${t.notes?' · '+esc(t.notes):''}</div>
+      </div>
+      <div class="trip-card-badge ${badgeCls}">${badge}</div>
+    </div>
+  </div>`;
+}
+
+// How many days until next occurrence of a date (ignores year, annual recurrence)
+function daysUntilNextOccurrence(ds) {
+  if (!ds) return 9999;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const orig  = new Date(ds+'T00:00:00');
+  // Next occurrence this year
+  let next = new Date(today.getFullYear(), orig.getMonth(), orig.getDate());
+  // If already passed this year, check next year
+  if (next < today) next = new Date(today.getFullYear()+1, orig.getMonth(), orig.getDate());
+  return Math.floor((next-today)/86400000);
+}
+function nextOccurrenceDate(ds) {
+  if (!ds) return null;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const orig  = new Date(ds+'T00:00:00');
+  let next = new Date(today.getFullYear(), orig.getMonth(), orig.getDate());
+  if (next < today) next = new Date(today.getFullYear()+1, orig.getMonth(), orig.getDate());
+  return next;
+}
+
 // ════════════════════════════════════
 // CLOSE HANDLERS + BOOT
 // ════════════════════════════════════
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+document.getElementById('car-modal').addEventListener('click',function(e){if(e.target===this)closeCarModal();});
+document.getElementById('log-modal').addEventListener('click',function(e){if(e.target===this)closeLogModal();});
+document.getElementById('sched-modal').addEventListener('click',function(e){if(e.target===this)closeSchedModal();});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); closeCarModal(); closeLogModal(); closeSchedModal(); }});
 init();
 </script>
 
