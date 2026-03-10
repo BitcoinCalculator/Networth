@@ -42,10 +42,36 @@
 }
 /* LIGHT theme — toggled by adding .light-theme to <html> */
 html.light-theme {
-  --bg:#f2f5fb; --bg-panel:#ffffff; --bg-card:#ffffff; --bg-hover:#edf1fa;
-  --border:#dce3f2; --text:#111827; --text2:#4b5580; --text3:#9aa5c4; --text4:#d0d8ee;
-  --topbar:rgba(242,245,251,0.94); --shadow:0 2px 14px rgba(50,60,100,0.10);
-  --shadow-lg:0 12px 48px rgba(50,60,100,0.18); --glow:rgba(99,102,241,0.10);
+  /* Warm off-white backgrounds — never pure white */
+  --bg:#f0ede8;          /* warm parchment page */
+  --bg-panel:#f7f4f0;    /* sidebar / panels — slightly lighter warm */
+  --bg-card:#faf8f5;     /* cards — softest warm white */
+  --bg-hover:#ece8e1;    /* hover state — muted warm */
+
+  /* Borders — warm gray, not cold blue */
+  --border:#ddd8d0;
+
+  /* Text — dark warm brown-gray, NOT near-black */
+  --text:#2c2825;        /* primary text — warm near-black, easy on eyes */
+  --text2:#6b6459;       /* secondary — warm medium gray */
+  --text3:#a89f94;       /* tertiary — muted warm */
+  --text4:#d5cfc8;       /* placeholder / disabled */
+
+  /* Topbar */
+  --topbar:rgba(240,237,232,0.95);
+
+  /* Shadows — warm tinted, not blue-cold */
+  --shadow:0 2px 12px rgba(80,60,40,0.10);
+  --shadow-lg:0 12px 44px rgba(80,60,40,0.16);
+  --glow:rgba(99,102,241,0.09);
+
+  /* Urgency / status colors stay vibrant but slightly warmed */
+  --urgent:#dc3558;
+  --urgent-soft:rgba(220,53,88,0.11);
+  --medium:#d97706;
+  --medium-soft:rgba(217,119,6,0.11);
+  --low:#16a34a;
+  --low-soft:rgba(22,163,74,0.11);
 }
 
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -572,15 +598,21 @@ select.form-in option{background:var(--bg-panel);}
 .t-btn:hover,.t-btn.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);}
 
 /* ── TOAST ── */
-.toast-zone{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
-.toast{background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:13px 16px;font-size:13px;color:var(--text);box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;min-width:230px;max-width:310px;pointer-events:auto;animation:tIn .28s ease both;}
+..toast-zone{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast{background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:13px;color:var(--text);box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;min-width:240px;max-width:340px;pointer-events:auto;animation:tIn .28s ease both;}
 @keyframes tIn{from{transform:translateX(110%);opacity:0}to{transform:none;opacity:1}}
 @keyframes tOut{to{transform:translateX(110%);opacity:0}}
-.toast.leaving{animation:tOut .22s ease both;}
-.t-ic{font-size:17px;flex-shrink:0;}
-.toast.t-s{border-left:3px solid var(--low);}
-.toast.t-i{border-left:3px solid var(--accent);}
-.toast.t-w{border-left:3px solid var(--medium);}
+.toast.leaving{animation:tOut .22s ease forwards;}
+.toast-body{flex:1;min-width:0;}
+.toast-msg{line-height:1.3;}
+.toast-undo{margin-top:5px;}
+.toast-undo-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:4px 12px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.03em;transition:opacity .15s;}
+.toast-undo-btn:hover{opacity:.85;}
+.toast-undo-btn:disabled{opacity:.4;cursor:default;}
+.t-s{border-left:3px solid var(--low);}
+.t-i{border-left:3px solid var(--accent);}
+.t-w{border-left:3px solid var(--medium);}
+.t-d{border-left:3px solid var(--urgent);}
 
 /* ── MOBILE NAV ── */
 .mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg-panel);border-top:1px solid var(--border);z-index:300;padding:6px 0 env(safe-area-inset-bottom,8px);}
@@ -625,6 +657,84 @@ select.form-in option{background:var(--bg-panel);}
 .cal-br-icons{display:flex;gap:2px;align-items:center;flex-shrink:0;}
 /* ── Priority hint text ─────────────────────────────────────── */
 #m-pri-hint{transition:opacity .3s;}
+
+/* ════════════════════════════════════════════
+   BIRTHDAY TINTS — soft overlays, readable
+   ════════════════════════════════════════════ */
+.bday-girl   { background: linear-gradient(135deg, rgba(255,182,213,.28) 0%, rgba(255,105,180,.18) 100%) !important; }
+.bday-boy    { background: linear-gradient(135deg, rgba(173,216,255,.30) 0%, rgba(100,170,255,.20) 100%) !important; }
+.bday-both   { background: linear-gradient(135deg, rgba(255,182,213,.30) 0% 50%, rgba(173,216,255,.30) 50% 100%) !important; }
+.bday-neutral{ background: linear-gradient(135deg, rgba(200,180,255,.22) 0%, rgba(180,200,255,.18) 100%) !important; }
+
+/* darker tints for light-mode */
+html.light-theme .bday-girl    { background: linear-gradient(135deg, rgba(255,182,213,.38) 0%, rgba(255,105,180,.25) 100%) !important; }
+html.light-theme .bday-boy     { background: linear-gradient(135deg, rgba(173,216,255,.42) 0%, rgba(100,170,255,.28) 100%) !important; }
+html.light-theme .bday-both    { background: linear-gradient(135deg, rgba(255,182,213,.40) 0% 50%, rgba(173,216,255,.40) 50% 100%) !important; }
+html.light-theme .bday-neutral { background: linear-gradient(135deg, rgba(200,180,255,.30) 0%, rgba(180,200,255,.25) 100%) !important; }
+
+/* ════════════════════════════════════════════
+   HOLIDAY TINTS — themed, very subtle
+   ════════════════════════════════════════════ */
+.hol-newyear     { background: linear-gradient(135deg, rgba(255,215,0,.15) 0%, rgba(180,140,255,.12) 100%) !important; }
+.hol-valentine   { background: linear-gradient(135deg, rgba(255,100,130,.22) 0%, rgba(255,182,193,.18) 100%) !important; }
+.hol-stpatrick   { background: linear-gradient(135deg, rgba(34,197,94,.22) 0%, rgba(16,120,50,.14) 100%) !important; }
+.hol-easter      { background: linear-gradient(135deg, rgba(255,220,100,.18) 0%, rgba(160,255,160,.16) 50%, rgba(200,160,255,.16) 100%) !important; }
+.hol-july4       { background: linear-gradient(135deg, rgba(220,30,30,.18) 0% 33%, rgba(240,240,255,.10) 33% 66%, rgba(30,80,200,.18) 66% 100%) !important; }
+.hol-halloween   { background: linear-gradient(135deg, rgba(255,100,0,.24) 0%, rgba(30,0,40,.20) 100%) !important; }
+.hol-thanksgiving{ background: linear-gradient(135deg, rgba(200,120,30,.22) 0%, rgba(255,200,100,.16) 100%) !important; }
+.hol-christmas   { background: linear-gradient(135deg, rgba(200,20,20,.20) 0% 50%, rgba(20,140,20,.18) 50% 100%) !important; }
+.hol-memorial    { background: linear-gradient(135deg, rgba(180,20,20,.18) 0% 33%, rgba(245,245,255,.06) 33% 66%, rgba(30,60,200,.16) 66% 100%) !important; }
+.hol-mlk         { background: linear-gradient(135deg, rgba(180,120,20,.16) 0%, rgba(100,180,255,.14) 100%) !important; }
+.hol-juneteenth  { background: linear-gradient(135deg, rgba(20,180,80,.18) 0%, rgba(200,0,0,.14) 100%) !important; }
+.hol-mothers     { background: linear-gradient(135deg, rgba(255,160,200,.22) 0%, rgba(255,220,240,.16) 100%) !important; }
+.hol-fathers     { background: linear-gradient(135deg, rgba(100,160,255,.20) 0%, rgba(180,220,255,.14) 100%) !important; }
+.hol-labor       { background: linear-gradient(135deg, rgba(100,180,100,.18) 0%, rgba(200,240,200,.12) 100%) !important; }
+.hol-earth       { background: linear-gradient(135deg, rgba(30,200,100,.18) 0%, rgba(80,160,240,.14) 100%) !important; }
+.hol-presidents  { background: linear-gradient(135deg, rgba(200,180,100,.16) 0%, rgba(180,160,80,.12) 100%) !important; }
+.hol-indigenous  { background: linear-gradient(135deg, rgba(180,100,30,.18) 0%, rgba(80,160,80,.14) 100%) !important; }
+.hol-generic     { background: linear-gradient(135deg, rgba(120,180,255,.15) 0%, rgba(180,120,255,.12) 100%) !important; }
+
+/* ════════════════════════════════════════════
+   GENDER CHIPS
+   ════════════════════════════════════════════ */
+.gender-chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.gender-chip{padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg-hover);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;user-select:none;}
+.gender-chip.gf.on{background:rgba(255,182,213,.35);border-color:#ff69b4;color:#c0367a;}
+.gender-chip.gm.on{background:rgba(173,216,255,.40);border-color:#4db0f0;color:#1a6aaa;}
+.gender-chip.gn.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);}
+
+/* ════════════════════════════════════════════
+   UI POLISH — today ring, hover lift, selected pop
+   ════════════════════════════════════════════ */
+.cal-day:hover:not(.other-month){border-color:var(--accent2);box-shadow:0 2px 8px rgba(0,0,0,.18);z-index:1;}
+.cal-day.today{border-color:var(--accent);box-shadow:0 0 0 2px rgba(99,102,241,.25),inset 0 0 0 1px var(--accent);}
+.cal-day.selected{outline:2.5px solid var(--accent2);outline-offset:-2px;box-shadow:0 3px 12px rgba(0,0,0,.22);}
+/* Slight shimmer on birthday cells */
+.bday-girl,.bday-boy,.bday-both,.bday-neutral{border-color:rgba(255,182,213,.5) !important;}
+.bday-girl.today,.bday-boy.today,.bday-both.today,.bday-neutral.today{border-color:var(--accent) !important;}
+
+
+/* ── Light mode refinements ── */
+html.light-theme .sidebar        { background: var(--bg-panel); border-right-color: var(--border); }
+html.light-theme .stat-card      { background: var(--bg-card); box-shadow: 0 1px 6px rgba(80,60,40,.08); }
+html.light-theme .bucket         { background: var(--bg-card); border-color: var(--border); }
+html.light-theme .modal          { background: var(--bg-card); }
+html.light-theme .cal-day        { background: var(--bg-card); border-color: var(--border); }
+html.light-theme .cal-day:hover:not(.other-month) { background: #f5f1ec; border-color: #c8c0b5; }
+html.light-theme .form-in        { background: var(--bg); border-color: var(--border); color: var(--text); }
+html.light-theme .form-in:focus  { background: var(--bg-card); border-color: var(--accent); }
+html.light-theme .topbar         { background: var(--topbar); border-bottom: 1px solid var(--border); }
+html.light-theme .nav-item:hover { background: var(--bg-hover); }
+html.light-theme .nav-item.active{ background: var(--accent-soft); }
+html.light-theme .task-item      { background: var(--bg-card); border-color: var(--border); }
+html.light-theme .g-card         { background: var(--bg-card); border-color: var(--border); }
+html.light-theme .upcoming-item  { background: var(--bg-card); border-color: var(--border); }
+html.light-theme .cal-detail     { background: var(--bg-card); border-color: var(--border); }
+html.light-theme .s-card         { background: var(--bg-card); border-color: var(--border); }
+html.light-theme .worker-card    { background: var(--bg-card); border-color: var(--border); }
+/* Softer scrollbar in light */
+html.light-theme ::-webkit-scrollbar-thumb { background: var(--border); }
+
 </style>
 
 </head>
@@ -932,6 +1042,15 @@ select.form-in option{background:var(--bg-panel);}
     <div class="form-g full"><label class="form-lbl">Person's Name</label><input class="form-in" id="mb-name" placeholder="e.g. Mom, Dad, Sarah…" style="font-size:15px;font-weight:600;"></div>
     <div class="form-g"><label class="form-lbl">Birthday (month &amp; day)</label><input class="form-in" type="date" id="mb-date"></div>
     <div class="form-g"><label class="form-lbl">Birth Year <small style="color:var(--text3)">optional — shows age</small></label><input class="form-in" type="number" id="mb-year" placeholder="1990" min="1900" max="2025"></div>
+    <div class="form-g s2">
+      <label class="form-lbl">Gender <small style="color:var(--text3)">colors the calendar day</small></label>
+      <div class="gender-chip-row">
+        <div class="gender-chip gf on" data-g="f" onclick="selGender('f',this)">👧 Girl / Woman</div>
+        <div class="gender-chip gm" data-g="m" onclick="selGender('m',this)">👦 Boy / Man</div>
+        <div class="gender-chip gn" data-g="" onclick="selGender('',this)">🎂 Unspecified</div>
+      </div>
+      <input type="hidden" id="mb-gender" value="f">
+    </div>
     <div class="form-g s2"><label class="form-lbl">Notes <small style="color:var(--text3)">gift ideas, etc.</small></label><input class="form-in" id="mb-notes" placeholder="Chocolate cake, likes hiking…"></div>
   </div>
 </div>
@@ -1255,7 +1374,7 @@ function seed() {
   const now = new Date(), add = n => { const d=new Date(now); d.setDate(d.getDate()+n); return fmtD(d); };
   S.tasks = [
     {id:uid(), text:"Renew driver's license",   priority:'urgent', tag:'renewal',  date:add(12), dateEnd:'',     time:'', notes:'Bring proof of insurance + 2 IDs', recur:'years', recurN:4, done:false},
-    {id:uid(), text:"Mom's Birthday 🎂",         priority:'urgent', tag:'birthday', date:add(5),  dateEnd:'',     time:'', notes:'Order chocolate fudge cake',        recur:'years', recurN:1, done:false},
+    {id:uid(), text:"Mom's Birthday 🎂",         priority:'urgent', tag:'birthday', date:add(5),  dateEnd:'',     time:'', notes:'Order chocolate fudge cake',        recur:'years', recurN:1, gender:'f', done:false},
     {id:uid(), text:"Dentist appointment",        priority:'medium', tag:'health',   date:add(18), dateEnd:'',     time:'14:30', notes:'',                             recur:'months',recurN:6, done:false},
     {id:uid(), text:"Pay car insurance",          priority:'urgent', tag:'finance',  date:add(3),  dateEnd:'',     time:'', notes:'',                                  recur:'months',recurN:1, done:false},
     {id:uid(), text:"Summer trip to Europe ✈️",  priority:'medium', tag:'travel',   date:add(30), dateEnd:add(44),time:'', notes:'Paris → Rome → Barcelona',          recur:'',      recurN:1, done:false},
@@ -1590,20 +1709,56 @@ function renderCalendar() {
       : '';
 
     // ── Birthday icon — bottom right (tasks still tracked normally) ───────
-    const hasBday = S.tasks.some(t =>
+    // ── Birthday detection + gender tint ────────────────────────────────────
+    const bdayTasks = S.tasks.filter(t =>
       t.tag==='birthday' && !t.done && t.date &&
       new Date(t.date+'T00:00:00').getMonth()===new Date(ds+'T00:00:00').getMonth() &&
       new Date(t.date+'T00:00:00').getDate()===new Date(ds+'T00:00:00').getDate()
     );
+    const hasBday  = bdayTasks.length > 0;
+    const hasGirl  = bdayTasks.some(t => t.gender==='f' || (!t.gender && t.text.match(/mom|sister|daughter|grandma|aunt|girl|she|her/i)));
+    const hasBoy   = bdayTasks.some(t => t.gender==='m' || (!t.gender && t.text.match(/dad|brother|son|grandpa|uncle|boy|he|him/i)));
+    let bdayTint   = '';
+    if (hasBday) {
+      if (hasGirl && hasBoy) bdayTint = 'bday-both';   // diagonal split
+      else if (hasGirl)      bdayTint = 'bday-girl';
+      else if (hasBoy)       bdayTint = 'bday-boy';
+      else                   bdayTint = 'bday-neutral'; // unspecified / can't detect
+    }
     const bdayIcon = hasBday ? `<div class="cal-bday-icon" title="Birthday!">🎂</div>` : '';
 
-    // ── Car service icon — bottom right alongside birthday ────────────────
+    // ── Car service icon ───────────────────────────────────────────────────
     const hasCarSvc = S.tasks.some(t =>
       t.tag==='car' && !t.done && t.date && t.date===ds
     );
     const carIcon = hasCarSvc ? `<div class="cal-bday-icon" title="Car service due">🚗</div>` : '';
 
-    // Combined bottom-right icons (bday + car lined up horizontally)
+    // ── Holiday color tint ─────────────────────────────────────────────────
+    const HOL_TINTS = {
+      "New Year's Day":'hol-newyear', "New Year's Eve":'hol-newyear',
+      "Valentine's Day":'hol-valentine',
+      "St. Patrick's Day":'hol-stpatrick',
+      "Easter Sunday":'hol-easter', "Good Friday":'hol-easter',
+      "Independence Day":'hol-july4',
+      "Halloween":'hol-halloween',
+      "Thanksgiving":'hol-thanksgiving', "Black Friday":'hol-thanksgiving',
+      "Christmas Eve":'hol-christmas', "Christmas Day":'hol-christmas',
+      "Day After Christmas":'hol-christmas',
+      "Memorial Day":'hol-memorial', "Veterans Day":'hol-memorial',
+      "MLK Day":'hol-mlk', "Juneteenth":'hol-juneteenth',
+      "Mother's Day":'hol-mothers', "Father's Day":'hol-fathers',
+      "Labor Day":'hol-labor', "Earth Day":'hol-earth',
+      "Presidents' Day":'hol-presidents',
+      "Indigenous Peoples Day":'hol-indigenous',
+    };
+    const holTint = hols.length
+      ? (HOL_TINTS[hols[0].name] || 'hol-generic')
+      : '';
+
+    // Priority: birthday tint > holiday tint (birthday is more personal)
+    const cellTint = bdayTint || holTint;
+
+    // Combined bottom-right icons
     const brIcons = (hasBday || hasCarSvc)
       ? `<div class="cal-br-icons">${bdayIcon}${carIcon}</div>`
       : '';
@@ -1620,7 +1775,7 @@ function renderCalendar() {
       ? `<div class="cal-day-colors">${[...dayColors].map(c=>`<div class="cal-day-color-seg" style="background:${c}"></div>`).join('')}</div>`
       : '';
 
-    return `<div class="cal-day${isOther?' other-month':''}${isToday?' today':''}${isSel?' selected':''}" data-ds="${ds}"
+    return `<div class="cal-day${isOther?' other-month':''}${isToday?' today':''}${isSel?' selected':''}${!isOther&&cellTint?' '+cellTint:''}" data-ds="${ds}"
       onclick="if(!calDayClickSched('${ds}'))calSel('${ds}')"
       onmouseenter="showCalTooltip('${ds}',event.clientX,event.clientY)"
       onmousemove="showCalTooltip('${ds}',event.clientX,event.clientY)"
@@ -1830,9 +1985,28 @@ function parseNLP(raw) {
 // ════════════════════════════════════
 // CRUD
 // ════════════════════════════════════
-function toggleDone(id){const t=S.tasks.find(t=>t.id===id);if(t){t.done=!t.done;save();renderAll();}}
-function deleteTask(id){S.tasks=S.tasks.filter(t=>t.id!==id);save();renderAll();toast('Task deleted','info');}
-function confirmClear(){if(confirm('Delete ALL data? Cannot be undone.')){S.tasks=[];save();renderAll();toast('All data cleared','warn');}}
+function toggleDone(id){
+  const t=S.tasks.find(t=>t.id===id);
+  if(t){
+    pushUndo(t.done ? `Marked "${t.text.slice(0,30)}" incomplete` : `Completed "${t.text.slice(0,30)}"`);
+    t.done=!t.done; save(); renderAll();
+  }
+}
+function deleteTask(id){
+  const t=S.tasks.find(t=>t.id===id); if(!t)return;
+  const label=`Deleted "${t.text.slice(0,35)}"`;
+  pushUndo(label);
+  S.tasks=S.tasks.filter(t=>t.id!==id);
+  save(); renderAll();
+  toast(label, 'info', 0);
+}
+function confirmClear(){
+  if(confirm('Delete ALL data? You can undo this immediately after.')){
+    pushUndo('Cleared all tasks');
+    S.tasks=[]; save(); renderAll();
+    toast('All tasks cleared','warn', 0);
+  }
+}
 
 // ════════════════════════════════════
 // MODAL
@@ -1896,12 +2070,14 @@ function modalSetCat(cat, resetFields, editTask) {
       document.getElementById('mb-date').value  = '';
       document.getElementById('mb-year').value  = '';
       document.getElementById('mb-notes').value = '';
+      selGender('f', document.querySelector('.gender-chip[data-g="f"]'));
     } else if (t) {
       // Parse name from text like "Mom's Birthday" → "Mom"
       document.getElementById('mb-name').value  = t.text.replace(/'?s? ?birthday/i,'').replace(/🎂/,'').trim() || t.text;
       document.getElementById('mb-date').value  = t.date||'';
       document.getElementById('mb-year').value  = t.date ? new Date(t.date+'T00:00:00').getFullYear() : '';
       document.getElementById('mb-notes').value = t.notes||'';
+      selGender(t.gender||'f', document.querySelector(`.gender-chip[data-g="${t.gender||'f'}"]`));
     }
     setTimeout(()=>document.getElementById('mb-name').focus(),80);
 
@@ -2021,11 +2197,13 @@ function saveTask(){
     const storeDate = year
       ? `${year}-${date.slice(5)}`   // replace year part
       : date;
+    const gender = (document.getElementById('mb-gender')||{}).value || '';
     task = {
       id: S.editId||uid(), text: name+"'s Birthday 🎂",
-      priority: 'low',  // birthdays don't auto-escalate
+      priority: 'low',
       date: storeDate, dateEnd:'', time:'',
-      tag:'birthday', notes: document.getElementById('mb-notes').value,
+      tag:'birthday', gender,
+      notes: document.getElementById('mb-notes').value,
       recur:'years', recurN:1, done:false
     };
 
@@ -2095,7 +2273,10 @@ function saveTask(){
 
   if (S.editId) {
     const i = S.tasks.findIndex(t=>t.id===S.editId);
-    if (i>=0) { task.done=S.tasks[i].done; S.tasks[i]=task; }
+    if (i>=0) {
+      pushUndo(`Edited "${S.tasks[i].text.slice(0,35)}"`);
+      task.done=S.tasks[i].done; S.tasks[i]=task;
+    }
   } else {
     S.tasks.unshift(task);
   }
@@ -2107,6 +2288,11 @@ function selPri(p, manual=false){
   S.selPriority=p;
   document.querySelectorAll('.pri-pill').forEach(el=>{el.classList.remove('on');if(el.classList.contains(p))el.classList.add('on');});
 }
+function selGender(g, el) {
+  document.getElementById('mb-gender').value = g;
+  document.querySelectorAll('.gender-chip').forEach(c=>c.classList.remove('on'));
+  if (el) el.classList.add('on');
+}
 
 // ════════════════════════════════════
 // DRAG & DROP
@@ -2114,7 +2300,7 @@ function selPri(p, manual=false){
 let dragId=null;
 function dragStart(e,id){dragId=id;setTimeout(()=>{document.querySelector(`[data-id="${id}"]`)?.classList.add('dragging');},0);}
 function dragOver(e){e.preventDefault();}
-function drop(e,p){e.preventDefault();if(!dragId)return;const t=S.tasks.find(t=>t.id===dragId);if(t&&t.priority!==p){t.priority=p;save();renderAll();toast(`Moved to ${PLAB[p]}`,'info');}dragId=null;}
+function drop(e,p){e.preventDefault();if(!dragId)return;const t=S.tasks.find(t=>t.id===dragId);if(t&&t.priority!==p){pushUndo(`Moved "${t.text.slice(0,30)}" to ${PLAB[p]}`);t.priority=p;save();renderAll();toast(`Moved to ${PLAB[p]}`,'info');}dragId=null;}
 
 // ════════════════════════════════════
 // THEME  ← the only correct approach for GitHub Pages
@@ -2194,12 +2380,54 @@ function handleImport(e){
 // ════════════════════════════════════
 // TOAST
 // ════════════════════════════════════
-function toast(msg,type='info'){
-  const ic={success:'✅',info:'ℹ️',warn:'⚠️'};
-  const el=document.createElement('div'); el.className=`toast t-${type[0]}`;
-  el.innerHTML=`<span class="t-ic">${ic[type]||'ℹ️'}</span>${msg}`;
+// ════════════════════════════════════
+// UNDO STACK (up to 20 steps)
+// ════════════════════════════════════
+const UNDO_STACK = [];   // [{label, snapshot}]
+const MAX_UNDO   = 20;
+
+function pushUndo(label) {
+  // Deep-clone current tasks state
+  UNDO_STACK.push({ label, tasks: JSON.parse(JSON.stringify(S.tasks)) });
+  if (UNDO_STACK.length > MAX_UNDO) UNDO_STACK.shift();
+}
+
+function performUndo(btnEl) {
+  if (!UNDO_STACK.length) return;
+  if (btnEl) { btnEl.disabled = true; btnEl.textContent = 'Undone ✓'; }
+  const entry = UNDO_STACK.pop();
+  S.tasks = entry.tasks;
+  save(); renderAll();
+  toast(`↩ Undone: ${entry.label}`, 'success', 0);
+}
+
+function canUndo() { return UNDO_STACK.length > 0; }
+
+// ════════════════════════════════════
+// TOAST (with optional undo button)
+// ════════════════════════════════════
+function toast(msg, type='info', undoSteps=null) {
+  // undoSteps: null = no undo; 0 = show undo button referencing current stack top
+  const ic = {success:'✅', info:'ℹ️', warn:'⚠️', delete:'🗑️'};
+  const el = document.createElement('div');
+  el.className = `toast t-${type[0]}`;
+
+  const showUndo = undoSteps !== null && canUndo();
+  const undoHtml = showUndo
+    ? `<div class="toast-undo"><button class="toast-undo-btn" onclick="performUndo(this)">↩ Undo</button></div>`
+    : '';
+
+  el.innerHTML = `
+    <span class="t-ic">${ic[type]||'ℹ️'}</span>
+    <div class="toast-body">
+      <div class="toast-msg">${msg}</div>
+      ${undoHtml}
+    </div>`;
+
   document.getElementById('tz').appendChild(el);
-  setTimeout(()=>{el.classList.add('leaving');setTimeout(()=>el.remove(),250);},3200);
+  // Toasts with undo stay visible longer
+  const duration = showUndo ? 7000 : 3200;
+  setTimeout(()=>{ el.classList.add('leaving'); setTimeout(()=>el.remove(), 250); }, duration);
 }
 
 // ════════════════════════════════════
@@ -2815,8 +3043,9 @@ function bdayCardHTML(t) {
   const age = birthYear ? new Date().getFullYear() - birthYear : null;
   const ageTurning = age ? ` · Turning ${age}` : '';
 
+  const bdayCardIcon = t.gender==='f' ? '👧' : t.gender==='m' ? '👦' : '🎂';
   return `<div class="cat-card" onclick="openEdit('${t.id}')">
-    <div class="cat-card-icon">🎂</div>
+    <div class="cat-card-icon">${bdayCardIcon}</div>
     <div class="cat-card-body">
       <div class="cat-card-name">${esc(t.text)}</div>
       <div class="cat-card-meta">${t.date||'No date'}${ageTurning}${t.notes?' · '+esc(t.notes):''}</div>
