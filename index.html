@@ -1329,6 +1329,21 @@ function load() {
   save(); // re-save under lb6 so migration only happens once
 }
 
+// Recalculate priority for tasks where user hasn't manually locked it.
+// Called on every page load so tasks auto-escalate as days pass.
+function refreshTaskPriorities() {
+  let changed = false;
+  S.tasks.forEach(t => {
+    if (t.done || !t.date || t._manualPri || t.tag === 'birthday') return;
+    const correct = autoPriority(t.date);
+    if (t.priority !== correct) {
+      t.priority = correct;
+      changed = true;
+    }
+  });
+  if (changed) save();
+}
+
 // Migrate tasks from old formats to current schema
 function migrateTask(t) {
   // Old recur was a plain string like 'yearly','monthly','weekly'
@@ -1355,6 +1370,7 @@ function migrateTask(t) {
 // ════════════════════════════════════
 function init() {
   load();
+  refreshTaskPriorities();  // auto-escalate tasks as days pass
   wLoad();
   if (!S.tasks.length) seed();
   applyTheme(S.theme);
@@ -2083,6 +2099,7 @@ function modalSetCat(cat, resetFields, editTask) {
 
   } else if (cat === 'car') {
     document.getElementById('m-mode-car').style.display='';
+    S_priManual = false;  // always auto-compute for car tasks
     // Populate car dropdown from GS.cars
     const sel = document.getElementById('mc-car');
     sel.innerHTML = GS.cars.length
@@ -2261,6 +2278,7 @@ function saveTask(){
     task = {
       id: S.editId||uid(), text,
       priority: smartPri(date),
+      _manualPri: S_priManual || undefined,
       date, dateEnd: document.getElementById('md-end').value,
       time:    document.getElementById('mtime').value,
       tag:     cat,
@@ -2300,7 +2318,7 @@ function selGender(g, el) {
 let dragId=null;
 function dragStart(e,id){dragId=id;setTimeout(()=>{document.querySelector(`[data-id="${id}"]`)?.classList.add('dragging');},0);}
 function dragOver(e){e.preventDefault();}
-function drop(e,p){e.preventDefault();if(!dragId)return;const t=S.tasks.find(t=>t.id===dragId);if(t&&t.priority!==p){pushUndo(`Moved "${t.text.slice(0,30)}" to ${PLAB[p]}`);t.priority=p;save();renderAll();toast(`Moved to ${PLAB[p]}`,'info');}dragId=null;}
+function drop(e,p){e.preventDefault();if(!dragId)return;const t=S.tasks.find(t=>t.id===dragId);if(t&&t.priority!==p){pushUndo(`Moved "${t.text.slice(0,30)}" to ${PLAB[p]}`);t.priority=p;t._manualPri=true;save();renderAll();toast(`Moved to ${PLAB[p]} — priority locked 🔒`,'info');}dragId=null;}
 
 // ════════════════════════════════════
 // THEME  ← the only correct approach for GitHub Pages
@@ -2876,7 +2894,7 @@ function saveLogEntry() {
       _garageLogId: entry.id,          // link back so we can remove/update
       _carId:       car.id,
       text:         taskText,
-      priority:     'medium',
+      priority:     autoPriority(entry.nextDate),
       tag:          'car',
       date:         entry.nextDate,
       dateEnd:      '',
