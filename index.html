@@ -1629,23 +1629,20 @@ html.light-theme ::-webkit-scrollbar-thumb { background: var(--border); }
 </div>
 <script>
 
-// ════════════════════════════════════
-// CONSTANTS
-// ════════════════════════════════════
-const PRI   = [‘urgent’,‘medium’,‘low’];
-const PLAB  = {urgent:‘Urgent’, medium:‘Medium’, low:‘Low’};
-const TAGS  = {health:‘Health’, finance:‘Finance’, travel:‘Travel’, personal:‘Personal’, birthday:‘Birthday’, work:‘Work’, renewal:‘Renewal’, car:‘Car Service’};
-const MONTHS= [‘January’,‘February’,‘March’,‘April’,‘May’,‘June’,‘July’,‘August’,‘September’,‘October’,‘November’,‘December’];
-const DOW   = [‘Sun’,‘Mon’,‘Tue’,‘Wed’,‘Thu’,‘Fri’,‘Sat’];
+const PRI   = [“urgent”,“medium”,“low”];
+const PLAB  = {urgent:“Urgent”, medium:“Medium”, low:“Low”};
+const TAGS  = {health:“Health”, finance:“Finance”, travel:“Travel”, personal:“Personal”, birthday:“Birthday”, work:“Work”, renewal:“Renewal”, car:“Car Service”};
+const MONTHS= [“January”,“February”,“March”,“April”,“May”,“June”,“July”,“August”,“September”,“October”,“November”,“December”];
+const DOW   = [“Sun”,“Mon”,“Tue”,“Wed”,“Thu”,“Fri”,“Sat”];
 
-// Category → CSS class for calendar pills
+// Category -> CSS class for calendar pills
 const TAG_EV = {travel:‘ev-travel’, birthday:‘ev-birthday’, renewal:‘ev-renewal’, health:‘ev-health’, finance:‘ev-finance’, personal:‘ev-personal’, work:‘ev-work’};
 
-// Theme applied via CSS class on <html> — see html.light-theme in <style>
+// Theme applied via CSS class on <html> - see html.light-theme in <style>
 
-// ════════════════════════════════════
+// ====================================
 // STATE
-// ════════════════════════════════════
+// ====================================
 let S = {
 tasks:[], name:‘My Lifeboard’, theme:‘dark’,
 cY:new Date().getFullYear(), cM:new Date().getMonth(), cSel:null,
@@ -1653,9 +1650,9 @@ editId:null, selPriority:‘medium’, filter:null, showDone:false, notif:false,
 showHolidays:true
 };
 
-// ════════════════════════════════════
+// ====================================
 // PERSIST
-// ════════════════════════════════════
+// ====================================
 function save() { localStorage.setItem(‘lb6’, JSON.stringify({tasks:S.tasks, name:S.name, theme:S.theme, showHolidays:S.showHolidays})); }
 function load() {
 // Try current key first, then migrate from older versions
@@ -1727,7 +1724,7 @@ t.date = next.toISOString().split(‘T’)[0];
 return t;
 }
 
-// ── Inline confirm (confirm() is blocked in iframes) ─────────────────────
+// – Inline confirm (confirm() is blocked in iframes) ———————
 const *confirmCbs = {};
 function confirmAction(msg, onYes) {
 const key = ’cb*’ + Date.now();
@@ -1740,9 +1737,9 @@ tz.appendChild(el);
 setTimeout(()=>{ el.classList.add(‘leaving’); setTimeout(()=>{ el.remove(); delete _confirmCbs[key]; },250); }, 8000);
 }
 
-// ════════════════════════════════════
+// ====================================
 // INIT
-// ════════════════════════════════════
+// ====================================
 function init() {
 load();
 refreshTaskPriorities();  // auto-escalate tasks as days pass
@@ -1779,9 +1776,9 @@ save();
 }
 function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
 
-// ════════════════════════════════════
+// ====================================
 // RENDER ALL
-// ════════════════════════════════════
+// ====================================
 function renderAll() {
 try { renderStats();    } catch(e) { console.error(‘renderStats’,e); }
 try { renderDash();     } catch(e) { console.error(‘renderDash’,e); }
@@ -1801,9 +1798,9 @@ if (pg===‘workers’)   try { renderWorkers();                } catch(e) {}
 updateBadge(); updateUserDisplay(); refreshThemeBtns();
 }
 
-// ════════════════════════════════════
+// ====================================
 // STATS
-// ════════════════════════════════════
+// ====================================
 function renderStats() {
 const a=S.tasks.filter(t=>!t.done), tot=a.length;
 const urg=a.filter(t=>t.priority===‘urgent’).length;
@@ -1818,9 +1815,9 @@ document.getElementById(‘stats’).innerHTML=` <div class="stat-card"><div cla
 document.getElementById(‘dtotal’).textContent = tot+’ active’;
 }
 
-// ════════════════════════════════════
+// ====================================
 // BUCKETS
-// ════════════════════════════════════
+// ====================================
 function renderDash() { renderBuckets(‘db’, S.tasks.filter(t=>!t.done)); }
 
 function renderBuckets(cid, tasks) {
@@ -1831,9 +1828,9 @@ return `<div class="bucket bucket-${p}" id="${cid}-${p}"> <div class="bucket-hd"
 }).join(’’);
 }
 
-// ════════════════════════════════════
+// ====================================
 // TASK HTML
-// ════════════════════════════════════
+// ====================================
 function tHTML(t) {
 const dc=dueClass(t.date), dl=dueLabel(t.date);
 const tagH = t.tag    ? `<span class="tag tag-${t.tag}">${TAGS[t.tag]||t.tag}</span>` : ‘’;
@@ -1858,9 +1855,9 @@ ${nH}
   </div>`;
 }
 
-// ════════════════════════════════════
+// ====================================
 // TASKS PAGE
-// ════════════════════════════════════
+// ====================================
 function renderTP() {
 const q=(document.getElementById(‘si’)?.value||’’).toLowerCase();
 const sort=document.getElementById(‘ss’)?.value||‘priority’;
@@ -1891,9 +1888,9 @@ document.getElementById(‘dlist’).style.display=S.showDone?‘block’:‘non
 document.getElementById(‘dc2’).textContent=S.showDone?‘▼’:‘▶’;
 }
 
-// ════════════════════════════════════
+// ====================================
 // UPCOMING
-// ════════════════════════════════════
+// ====================================
 function renderUpcoming() {
 const today=new Date(); today.setHours(0,0,0,0);
 // Regular tasks
@@ -1947,9 +1944,9 @@ return `<div class="upcoming-item" onclick="${t.onclick}"> <div class="upcoming-
 }).join(’’);
 }
 
-// ════════════════════════════════════
+// ====================================
 // CALENDAR
-// ════════════════════════════════════
+// ====================================
 function renderCalendar() {
 const y=S.cY, m=S.cM;
 document.getElementById(‘cal-lbl’).textContent = MONTHS[m]+’ ‘+y;
@@ -1971,10 +1968,10 @@ visibleDates.forEach((ds,i) => dsToCol[ds]=i);
 const totalCols = visibleDates.length;
 const numRows   = totalCols / 7;
 
-// ── Holiday map ───────────────────────────────────────────────────────
+// – Holiday map —————————————————––
 const holidayMap = {}; // ds → [{name,icon}]
 if (S.showHolidays) {
-// Build for current year + adjacent (handles Dec→Jan wrap)
+// Build for current year + adjacent (handles Dec->Jan wrap)
 [y-1, y, y+1].forEach(yr => {
 getHolidays(yr).forEach(h => {
 if (!holidayMap[h.date]) holidayMap[h.date] = [];
@@ -1983,7 +1980,7 @@ holidayMap[h.date].push({name:h.name, icon:h.icon});
 });
 }
 
-// ── Legend ────────────────────────────────────────────────────────────────
+// – Legend ––––––––––––––––––––––––––––––––
 const usedTags  = […new Set(S.tasks.filter(t=>t.tag&&!t._workerId).map(t=>t.tag))];
 const colorMap  = {travel:’#0ea5e9’,birthday:’#f04a6b’,renewal:’#f59e0b’,health:’#22c55e’,finance:’#a855f7’,personal:’#8b5cf6’,work:’#06b6d4’,car:’#64748b’};
 const workerLeg = (WS.workers||[]).map(w=>
@@ -1993,7 +1990,7 @@ document.getElementById(‘cal-legend’).innerHTML = usedTags.map(tag=>
 `<div class="cal-legend-item"><div class="cal-legend-dot" style="background:${colorMap[tag]||'var(--accent)'}"></div>${TAGS[tag]||tag}</div>`
 ).join(’’) + workerLeg;
 
-// ── Slot allocation ───────────────────────────────────────────────────────
+// – Slot allocation —————————————————––
 const ROW_H   = 16;
 const MAX_ROWS= 5;
 const slotUsed = Array.from({length:totalCols}, ()=>[false,false,false]);
@@ -2050,7 +2047,7 @@ while (seg_s <= endCol) {
 
 });
 
-// ── Build cell HTML ───────────────────────────────────────────────────────
+// – Build cell HTML —————————————————––
 const tagColorMap = {travel:’#0ea5e9’,birthday:’#f04a6b’,renewal:’#f59e0b’,health:’#22c55e’,finance:’#a855f7’,personal:’#8b5cf6’,work:’#06b6d4’,car:’#64748b’};
 
 const cellsHtml = visibleDates.map((ds, col) => {
@@ -2063,7 +2060,7 @@ const dnEl    = isToday
 : `<div class="cal-dn">${dayNum}</div>`;
 
 ```
-// ── Workers on this day (dots go in top row) ─────────────────────────
+// -- Workers on this day (dots go in top row) -------------------------
 const workers = (WS.workers||[]).filter(w=>(w.shifts||[]).includes(ds));
 const workerDots = workers.map(w=>
   `<div class="shift-dot" style="background:${workerColor(w)}" title="${esc(workerFullName(w))}"
@@ -2071,14 +2068,14 @@ const workerDots = workers.map(w=>
 ).join('');
 const workerDotsHtml = workerDots ? `<div class="cal-top-workers">${workerDots}</div>` : '';
 
-// ── Holiday — bottom left ─────────────────────────────────────────────
+// -- Holiday - bottom left ---------------------------------------------
 const hols = holidayMap[ds] || [];
 const holHtml = hols.length
   ? `<div class="cal-hol-bl"><span class="cal-hol-icon">${hols[0].icon}${hols.length>1?'<span class="cal-hol-plus">+'+hols.length+'</span>':''}</span><span class="cal-hol-name">${hols.map(h=>h.name).join(', ')}</span></div>`
   : '';
 
-// ── Birthday icon — bottom right (tasks still tracked normally) ───────
-// ── Birthday detection + gender tint ────────────────────────────────────
+// -- Birthday icon - bottom right (tasks still tracked normally) -------
+// -- Birthday detection + gender tint ------------------------------------
 const bdayTasks = S.tasks.filter(t =>
   t.tag==='birthday' && !t.done && t.date &&
   new Date(t.date+'T00:00:00').getMonth()===new Date(ds+'T00:00:00').getMonth() &&
@@ -2096,19 +2093,19 @@ if (hasBday) {
 }
 const bdayIcon = hasBday ? `<div class="cal-bday-icon" title="Birthday!">🎂</div>` : '';
 
-// ── Car service icon ───────────────────────────────────────────────────
+// -- Car service icon ---------------------------------------------------
 const hasCarSvc = S.tasks.some(t =>
   t.tag==='car' && !t.done && t.date && t.date===ds
 );
 const carIcon = hasCarSvc ? `<div class="cal-bday-icon" title="Car service due">🚗</div>` : '';
 
-// ── Home maintenance icon ──────────────────────────────────────────────
+// -- Home maintenance icon ----------------------------------------------
 const hasHomeSvc = S.tasks.some(t =>
   t.tag==='home' && !t.done && t.date && t.date===ds
 );
 const homeIcon = hasHomeSvc ? `<div class="cal-bday-icon" title="Home maintenance due">🏠</div>` : '';
 
-// ── Holiday color tint ─────────────────────────────────────────────────
+// -- Holiday color tint -------------------------------------------------
 const HOL_TINTS = {
   "New Year's Day":'hol-newyear', "New Year's Eve":'hol-newyear',
   "Valentine's Day":'hol-valentine',
@@ -2138,7 +2135,7 @@ const brIcons = (hasBday || hasCarSvc || hasHomeSvc)
   ? `<div class="cal-br-icons">${bdayIcon}${carIcon}${homeIcon}</div>`
   : '';
 
-// ── Color strip ───────────────────────────────────────────────────────
+// -- Color strip -------------------------------------------------------
 const dayColors = new Set();
 S.tasks.filter(t=>{
   if(!t.date||t.done||t._workerId||t.tag==='birthday'||t.tag==='car') return false;
@@ -2166,7 +2163,7 @@ return `<div class="cal-day${isOther?' other-month':''}${isToday?' today':''}${i
 
 document.getElementById(‘cal-grid’).innerHTML = cellsHtml;
 
-// ── Overflow tracker ──────────────────────────────────────────────────────
+// – Overflow tracker ——————————————————
 const moreCount = {};
 tasks.forEach(t => {
 if (!taskLayout.find(l=>l.task===t)) {
@@ -2178,14 +2175,14 @@ if(chk>=tStart&&chk<=tEnd) moreCount[ds]=(moreCount[ds]||0)+1;
 }
 });
 
-// ── Inject pills as ABSOLUTE overlays on the grid ─────────────────────────
+// – Inject pills as ABSOLUTE overlays on the grid ———————––
 // Each pill is positioned relative to the grid wrapper, spanning across cells.
 // This is the only way to let a pill visually cross cell boundaries.
 const grid = document.getElementById(‘cal-grid’);
 const TAG_EV_CLS   = {travel:‘ev-travel’,birthday:‘ev-birthday’,renewal:‘ev-renewal’,health:‘ev-health’,finance:‘ev-finance’,personal:‘ev-personal’,work:‘ev-work’,car:‘ev-car’};
 const TAG_EV_ICONS = {travel:‘✈️’,birthday:‘🎂’,renewal:‘🪪’,health:‘🏥’,finance:‘💰’,personal:‘👤’,work:‘💼’,car:‘🚗’};
 
-// We need cell positions — measure after grid is in the DOM
+// We need cell positions - measure after grid is in the DOM
 requestAnimationFrame(() => {
 // Remove old pill overlay if any
 const oldOverlay = document.getElementById(‘cal-pill-overlay’);
@@ -2272,7 +2269,7 @@ return hm[ds]||[];
 if(!items.length && !workersToday_pre.length && !holidaysToday.length){el.innerHTML=`<div style="color:var(--text3);font-size:13px;padding:6px 0">Nothing scheduled.</div>`;return;}
 const _detColors={travel:’#0ea5e9’,birthday:’#f04a6b’,renewal:’#f59e0b’,health:’#22c55e’,finance:’#a855f7’,personal:’#8b5cf6’,work:’#06b6d4’,car:’#64748b’};
 const _detIcons  ={travel:‘✈️’,birthday:‘🎂’,renewal:‘🪪’,health:‘🏥’,finance:‘💰’,personal:‘👤’,work:‘💼’,car:‘🚗’};
-// Workers on this day (from WS, not tasks) — already checked above
+// Workers on this day (from WS, not tasks) - already checked above
 const workersToday = workersToday_pre;
 const workerRows = workersToday.map(w=>` <div class="cal-ev-row" style="cursor:default"> <div class="cal-ev-bar" style="background:${workerColor(w)}"></div> <div class="shift-det-avatar" style="background:${workerColor(w)}">${(w.first||'?')[0].toUpperCase()}</div> <div style="flex:1;min-width:0"> <div class="cal-ev-name">${esc(workerFullName(w))}</div> <div class="cal-ev-meta">${w.role?esc(w.role)+' · ':''}Work Shift</div> </div> <button class="cal-del-btn" onclick="deleteShift('${w.id}','${ds}')" title="Remove shift">✕</button> </div>`).join(’’);
 const taskRows = items.map(t=>{
@@ -2302,9 +2299,9 @@ renderCalDetail(S.cSel); document.getElementById(‘cal-detail’).style.display
 }
 function openAddForDate() { openAdd(); if(S.cSel) document.getElementById(‘md’).value=S.cSel; }
 
-// ════════════════════════════════════
+// ====================================
 // NLP QUICK ADD
-// ════════════════════════════════════
+// ====================================
 function quickAdd() {
 const inp=document.getElementById(‘qi’), raw=inp.value.trim();
 if(!raw){openAdd();return;}
@@ -2339,9 +2336,9 @@ for(const[p,fn]of dps){const m=text.match(p);if(m){date=fn(m);text=text.replace(
 return{id:uid(),text:text.replace(/\s+/g,’ ‘).trim()||raw,priority,tag,date,dateEnd:’’,time,notes:’’,recur:’’,recurN:1,done:false};
 }
 
-// ════════════════════════════════════
+// ====================================
 // CRUD
-// ════════════════════════════════════
+// ====================================
 function toggleDone(id){
 const t=S.tasks.find(t=>t.id===id);
 if(t){
@@ -2375,10 +2372,10 @@ toast(‘All data cleared — fresh start ✓’,‘info’);
 });
 }
 
-// ════════════════════════════════════
+// ====================================
 // MODAL
-// ════════════════════════════════════
-// ── Priority manual-override flag ─────────────────────────────────────────
+// ====================================
+// – Priority manual-override flag —————————————–
 let S_priManual = false;
 
 // Auto-priority from date: <7d=urgent, 7-30d=medium, >30d=low
@@ -2414,7 +2411,7 @@ document.getElementById(‘mtitle’).textContent=‘Edit’;
 document.getElementById(‘modal’).classList.add(‘open’);
 modalSetCat(t.tag||’’, false, t);
 }
-// ── Smart modal: show correct mode for category ──────────────────────────
+// – Smart modal: show correct mode for category –––––––––––––
 function modalSetCat(cat, resetFields, editTask) {
 // Update hidden input
 const tagInput = document.getElementById(‘mtag’);
@@ -2439,7 +2436,7 @@ document.getElementById(‘mb-year’).value  = ‘’;
 document.getElementById(‘mb-notes’).value = ‘’;
 selGender(‘f’, document.querySelector(’.gender-chip[data-g=“f”]’));
 } else if (t) {
-// Parse name from text like “Mom’s Birthday” → “Mom”
+// Parse name from text like “Mom’s Birthday” -> “Mom”
 document.getElementById(‘mb-name’).value  = t.text.replace(/’?s? ?birthday/i,’’).replace(/🎂/,’’).trim() || t.text;
 // mb-date: keep the MMDD but show in current year for the date picker
 const bdOrig = new Date((t.date||’’)+‘T00:00:00’);
@@ -2576,7 +2573,7 @@ function saveTask(){
 const cat = (document.getElementById(‘mtag’)||{}).value || ‘’;
 let task = null;
 
-// ── AUTO-PRIORITY helper (respects manual override) ──────────────────────
+// – AUTO-PRIORITY helper (respects manual override) –––––––––––
 function smartPri(dateStr) {
 if (S_priManual) return S.selPriority;
 return autoPriority(dateStr);
@@ -2741,21 +2738,21 @@ document.querySelectorAll(’.gender-chip’).forEach(c=>c.classList.remove(‘o
 if (el) el.classList.add(‘on’);
 }
 
-// ════════════════════════════════════
+// ====================================
 // DRAG & DROP
-// ════════════════════════════════════
+// ====================================
 let dragId=null;
 function dragStart(e,id){dragId=id;setTimeout(()=>{document.querySelector(`[data-id="${id}"]`)?.classList.add(‘dragging’);},0);}
 function dragOver(e){e.preventDefault();}
 function drop(e,p){e.preventDefault();if(!dragId)return;const t=S.tasks.find(t=>t.id===dragId);if(t&&t.priority!==p){pushUndo(`Moved "${t.text.slice(0,30)}" to ${PLAB[p]}`);t.priority=p;t._manualPri=true;save();renderAll();toast(`Moved to ${PLAB[p]} — priority locked 🔒`,‘info’);}dragId=null;}
 
-// ════════════════════════════════════
-// THEME  ← the only correct approach for GitHub Pages
-// Inject a <style> tag into <head> — runs before paint,
+// ====================================
+// THEME  ? the only correct approach for GitHub Pages
+// Inject a <style> tag into <head> - runs before paint,
 // survives CDN caching, iframes, and static hosts.
-// ════════════════════════════════════
+// ====================================
 function applyTheme(t) {
-// Pure class toggle on <html> — works on GitHub Pages, no CSP issues, no dynamic injection
+// Pure class toggle on <html> - works on GitHub Pages, no CSP issues, no dynamic injection
 if (t === ‘light’) {
 document.documentElement.classList.add(‘light-theme’);
 } else {
@@ -2771,9 +2768,9 @@ document.getElementById(‘btn-dark’)?.classList.toggle(‘on’,  S.theme===�
 document.getElementById(‘btn-light’)?.classList.toggle(‘on’, S.theme===‘light’);
 }
 
-// ════════════════════════════════════
+// ====================================
 // NAV
-// ════════════════════════════════════
+// ====================================
 const PTITLES={dashboard:‘Dashboard’,tasks:‘All Tasks’,calendar:‘Calendar’,garage:‘🚗 My Garage’,birthdays:‘🎂 Birthdays’,trips:‘✈️ Trips & Travel’,workers:‘👷 Workers’,settings:‘Settings’};
 function showPage(name,el){
 document.querySelectorAll(’.page’).forEach(p=>p.classList.remove(‘active’));
@@ -2801,18 +2798,18 @@ document.getElementById(‘av’).textContent=S.name.split(’ ‘).map(w=>w[0])
 const sn=document.getElementById(‘sname’); if(sn)sn.value=S.name;
 }
 
-// ════════════════════════════════════
+// ====================================
 // NOTIFICATIONS
-// ════════════════════════════════════
+// ====================================
 function toggleNotif(btn){
 if(!(‘Notification’in window)){toast(‘Notifications not supported’,‘warn’);return;}
 if(Notification.permission===‘granted’){btn.classList.toggle(‘on’);S.notif=btn.classList.contains(‘on’);}
 else Notification.requestPermission().then(p=>{if(p===‘granted’){btn.classList.add(‘on’);S.notif=true;toast(‘Notifications enabled ✓’,‘success’);}else toast(‘Permission denied’,‘warn’);});
 }
 
-// ════════════════════════════════════
+// ====================================
 // DATA
-// ════════════════════════════════════
+// ====================================
 function exportData(){
 const b=new Blob([JSON.stringify({tasks:S.tasks,name:S.name},null,2)],{type:‘application/json’});
 const a=document.createElement(‘a’);a.href=URL.createObjectURL(b);a.download=`lifeboard-${fmtD(new Date())}.json`;a.click();
@@ -2824,12 +2821,12 @@ const f=e.target.files[0];if(!f)return;
 const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(d.tasks){S.tasks=d.tasks;if(d.name)S.name=d.name;save();renderAll();toast(‘Data imported ✓’,‘success’);}else toast(‘Invalid file’,‘warn’);}catch{toast(‘Could not read file’,‘warn’);}};r.readAsText(f);
 }
 
-// ════════════════════════════════════
+// ====================================
 // TOAST
-// ════════════════════════════════════
-// ════════════════════════════════════
+// ====================================
+// ====================================
 // UNDO STACK (up to 20 steps)
-// ════════════════════════════════════
+// ====================================
 const UNDO_STACK = [];   // [{label, snapshot}]
 const MAX_UNDO   = 20;
 
@@ -2850,9 +2847,9 @@ toast(`↩ Undone: ${entry.label}`, ‘success’, 0);
 
 function canUndo() { return UNDO_STACK.length > 0; }
 
-// ════════════════════════════════════
+// ====================================
 // TOAST (with optional undo button)
-// ════════════════════════════════════
+// ====================================
 function toast(msg, type=‘info’, undoSteps=null) {
 // undoSteps: null = no undo; 0 = show undo button referencing current stack top
 const ic = {success:‘✅’, info:‘ℹ️’, warn:‘⚠️’, delete:‘🗑️’};
@@ -2872,9 +2869,9 @@ const duration = showUndo ? 7000 : 3200;
 setTimeout(()=>{ el.classList.add(‘leaving’); setTimeout(()=>el.remove(), 250); }, duration);
 }
 
-// ════════════════════════════════════
+// ====================================
 // HELPERS
-// ════════════════════════════════════
+// ====================================
 function fmtD(d){return d.toISOString().split(‘T’)[0];}
 function homeSchedStatus(s) {
 if (!s.nextDate) return ‘unknown’;
@@ -2903,9 +2900,9 @@ function fmt12(t){if(!t)return’’;const[h,m]=t.split(’:’).map(Number),ap=
 function dueClass(ds){if(!ds)return’’;const t=new Date();t.setHours(0,0,0,0);const d=new Date(ds+‘T00:00:00’);const df=Math.round((d-t)/86400000);if(df<0)return’overdue’;if(df===0)return’today’;if(df<=3)return’soon’;return’’;}
 function dueLabel(ds){if(!ds)return’’;const t=new Date();t.setHours(0,0,0,0);const d=new Date(ds+‘T00:00:00’);const df=Math.round((d-t)/86400000);if(df<0)return`${Math.abs(df)}d overdue`;if(df===0)return’Today’;if(df===1)return’Tomorrow’;if(df<=7)return`In ${df} days`;return d.toLocaleDateString(‘en-US’,{month:‘short’,day:‘numeric’});}
 
-// ════════════════════════════════════════════════════════
+// ========================================================
 // GARAGE MODULE
-// ════════════════════════════════════════════════════════
+// ========================================================
 
 // Garage state (stored separately from tasks)
 const GS = { cars:[], editCarId:null, activeCar:null, editLogId:null, logCarId:null, logEditEntry:null };
@@ -2917,7 +2914,7 @@ const MAINT_ICONS = {
 ‘Inspection’:‘📋’,‘Detail’:‘✨’,‘Other’:‘🔧’
 };
 
-// ── Save / Load ────────────────────────────────────────────────────────────
+// – Save / Load ————————————————————
 function gSave() {
 try { localStorage.setItem(‘lb6-garage’, JSON.stringify({cars:GS.cars})); } catch(e){}
 }
@@ -2943,7 +2940,7 @@ return [
 }
 function suid() { return ‘g’+Date.now().toString(36)+Math.random().toString(36).slice(2,4); }
 
-// ── Render Garage Page ─────────────────────────────────────────────────────
+// – Render Garage Page —————————————————–
 function renderGarage() {
 gLoad(); hLoad();
 const carCount   = GS.cars.length;
@@ -3022,7 +3019,7 @@ sheet.innerHTML = ` <div class="g-car-strip"> <div class="g-car-icon">🚗</div>
 
 function renderCarOverview(car) {
 const today = new Date(); today.setHours(0,0,0,0);
-// ── UPCOMING: schedule items that have a next due date ──────────────────
+// – UPCOMING: schedule items that have a next due date ——————
 const upcoming = (car.schedule||[])
 .filter(s => s.nextDate || s.nextMiles)
 .map(s => {
@@ -3039,7 +3036,7 @@ if (b._days === null) return -1;
 return a._days - b._days;
 });
 
-// ── HISTORY: past log entries, newest first ────────────────────────────
+// – HISTORY: past log entries, newest first ––––––––––––––
 const log = […(car.log||[])].sort((a,b)=>(b.date||’’)>(a.date||’’)?1:-1);
 
 let html = ‘’;
@@ -3090,14 +3087,14 @@ html = `<div class="log-empty" style="padding:24px 0">No maintenance logged yet.
 return html;
 }
 
-// Mark a car schedule item done — opens log modal pre-filled, then prompts to schedule next
+// Mark a car schedule item done - opens log modal pre-filled, then prompts to schedule next
 function markCarDone(carId, schedId) {
 const car = GS.cars.find(c=>c.id===carId); if(!car)return;
 const s   = (car.schedule||[]).find(x=>x.id===schedId); if(!s)return;
 GS._pendingSchedId = schedId;
 // Open log modal pre-filled with today’s date and this service type
 openLogModal(carId, s.type);
-// Store which schedId this is for — after saving log, we’ll offer to reschedule
+// Store which schedId this is for - after saving log, we’ll offer to reschedule
 GS._pendingSchedId = schedId;
 }
 
@@ -3150,7 +3147,7 @@ const map={‘Oil Change’:’#f59e0b’,‘Tire Rotation’:’#0ea5e9’,‘B
 return map[type]||‘var(–accent)’;
 }
 
-// ── Schedule helpers ────────────────────────────────────────────────────────
+// – Schedule helpers ––––––––––––––––––––––––––––
 function scheduleStatus(s, currentMiles) {
 const today = new Date(); today.setHours(0,0,0,0);
 let mileStatus = ‘unknown’, dateStatus = ‘unknown’;
@@ -3195,7 +3192,7 @@ if (s.intervalMonths) parts.push(`Every ${s.intervalMonths} mo`);
 return parts.length ? parts.join(’ · ’) : ‘No schedule set — log a service to start tracking’;
 }
 
-// ── Car CRUD ────────────────────────────────────────────────────────────────
+// – Car CRUD ––––––––––––––––––––––––––––––––
 function openCarModal(carId) {
 GS.editCarId = carId||null;
 document.getElementById(‘car-mtitle’).textContent = carId ? ‘Edit Car’ : ‘Add Car’;
@@ -3247,7 +3244,7 @@ gSave(); renderGarage();
 toast(‘Car removed’,‘info’);
 }
 
-// ── Log Entry CRUD ──────────────────────────────────────────────────────────
+// – Log Entry CRUD –––––––––––––––––––––––––––––
 function openLogModal(carId, serviceType, editEntryId) {
 GS.logCarId = carId;
 GS.editLogId = editEntryId||null;
@@ -3290,7 +3287,7 @@ const customName = document.getElementById(‘lm-custom’).value.trim();
 const date       = document.getElementById(‘lm-date’).value;
 if (!date) { toast(‘Please enter the date this was completed’,‘warn’); return; }
 
-// ── Future date warning ────────────────────────────────────────────────
+// – Future date warning ————————————————
 const today = new Date(); today.setHours(0,0,0,0);
 
 const entryDate = new Date(date+‘T00:00:00’);
@@ -3329,8 +3326,8 @@ if (entry.miles && (!car.miles || Number(entry.miles)>Number(car.miles))) car.mi
 gSave(); closeLogModal(); renderGarage(); renderAll();
 toast(‘Service logged ✓’,‘success’);
 
-// ── Offer to schedule next ─────────────────────────────────────────────
-// Use pending schedId if coming from ✓ Done button, else find by type
+// – Offer to schedule next ———————————————
+// Use pending schedId if coming from ? Done button, else find by type
 const schedId = GS._pendingSchedId || (sched ? sched.id : null);
 GS._pendingSchedId = null;
 if (schedId) {
@@ -3410,7 +3407,7 @@ function closeSchedModal() {
 document.getElementById(‘sched-modal’).classList.remove(‘open’);
 }
 
-// ── Schedule Next flow ────────────────────────────────────────────────────
+// – Schedule Next flow ––––––––––––––––––––––––––
 // Called after logging completed work. Opens the modal with pre-filled suggested date.
 let _snm = {}; // context for saveScheduleNext
 
@@ -3423,13 +3420,13 @@ const car = GS.cars.find(c=>c.id===entityId); if(!car)return;
 sched = (car.schedule||[]).find(s=>s.id===schedId); if(!sched)return;
 intervalMonths = sched.intervalMonths||0;
 type = sched.type;
-// Also check if there’s already a scheduled next date — don’t double-schedule
+// Also check if there’s already a scheduled next date - don’t double-schedule
 if (sched.nextDate) {
 const existing = new Date(sched.nextDate+‘T00:00:00’);
 const today = new Date(); today.setHours(0,0,0,0);
 if (existing > today) {
-// Already has a future date — ask if they want to replace it
-// already scheduled — overwrite with new date
+// Already has a future date - ask if they want to replace it
+// already scheduled - overwrite with new date
 }
 }
 } else {
@@ -3441,7 +3438,7 @@ if (sched.nextDate) {
 const existing = new Date(sched.nextDate+‘T00:00:00’);
 const today = new Date(); today.setHours(0,0,0,0);
 if (existing > today) {
-// already scheduled — overwrite with new date
+// already scheduled - overwrite with new date
 }
 }
 }
@@ -3533,7 +3530,7 @@ toast(‘Next service scheduled 📅’,‘success’);
 
 // Also update saveScheduleItem to use the schedule-next modal for setting initial next date
 function openSchedItemWithNext(mode, entityId, schedId) {
-// For setting next date directly on a schedule item (via ＋ Schedule button)
+// For setting next date directly on a schedule item (via ? Schedule button)
 _snm = {mode, entityId, schedId};
 let sched, type;
 if (mode === ‘car’) {
@@ -3556,7 +3553,7 @@ if(snmMiles.closest) snmMiles.closest(’.form-g’).style.display = mode===‘c
 document.getElementById(‘sched-next-modal’).classList.add(‘open’);
 }
 
-// ── Add Schedule Type Modal ────────────────────────────────────────────────
+// – Add Schedule Type Modal ————————————————
 let _asmMode = ‘car’, _asmEntityId = null;
 
 function onAsmTypeChange() {
@@ -3635,7 +3632,7 @@ dateEl.value = ‘’;
 }
 }
 
-// Called when dropdown changes — also update interval suggestion
+// Called when dropdown changes - also update interval suggestion
 document.addEventListener(‘change’, function(e) {
 if (e.target && e.target.id === ‘asm-type’) {
 fillAsmInterval(e.target.value, _asmMode);
@@ -3707,9 +3704,9 @@ toast(nextDate ? ‘Task scheduled ✓’ : ‘Task type added ✓’,‘success
 // Init garage on load
 gLoad();
 
-// ════════════════════════════════════════════════════════
+// ========================================================
 // CATEGORY PAGES (Birthdays, Trips)
-// ════════════════════════════════════════════════════════
+// ========================================================
 
 function openCatAdd(tag) {
 S.editId=null; S_priManual=false;
@@ -3874,9 +3871,9 @@ if (next < today) next = new Date(today.getFullYear()+1, orig.getMonth(), orig.g
 return next;
 }
 
-// ════════════════════════════════════════════════════════════════════════
+// ========================================================================
 // HOUSE / PROPERTY MODULE
-// ════════════════════════════════════════════════════════════════════════
+// ========================================================================
 
 const HS = { houses:[], editId:null, activeHouse:null, editLogId:null, logHouseId:null, _editSchedId:null };
 
@@ -3896,7 +3893,7 @@ const HOME_MAINT_ICONS = {
 ‘Flooring’:‘🪵’,‘Plumbing Repair’:‘🔩’,‘Other’:‘📋’
 };
 
-// Default maintenance schedule — interval in months, 0 = on-demand only
+// Default maintenance schedule - interval in months, 0 = on-demand only
 function defaultHomeSchedule(houseId) {
 const s = (type, intervalMonths, notes) => ({
 id: suid(), houseId, type, intervalMonths,
@@ -3924,7 +3921,7 @@ s(‘Driveway Seal’,     36,  ‘Re-seal asphalt driveway every 3 years’),
 ];
 }
 
-// ── Save / Load ────────────────────────────────────────────────────────────
+// – Save / Load ————————————————————
 function hSave() {
 try { localStorage.setItem(‘lb6-houses’, JSON.stringify({houses:HS.houses})); } catch(e){}
 }
@@ -3939,7 +3936,7 @@ if (!h.schedule) h.schedule = defaultHomeSchedule(h.id);
 } catch(e) {}
 }
 
-// ── Section switching (Cars ↔ Properties) ─────────────────────────────────
+// – Section switching (Cars ? Properties) ———————————
 function switchGarageSection(section) {
 const isCars = section === ‘cars’;
 document.getElementById(‘garage-cars-section’).style.display   = isCars ? ‘’ : ‘none’;
@@ -3949,7 +3946,7 @@ document.getElementById(‘gst-houses’).classList.toggle(‘on’, !isCars);
 if (!isCars) renderHouses();
 }
 
-// ── Render Properties Page ─────────────────────────────────────────────────
+// – Render Properties Page ———————————————––
 function renderHouses() {
 hLoad();
 renderHouseTabs();
@@ -4117,7 +4114,7 @@ return `<div style="display:flex;align-items:center;justify-content:space-betwee
   </div>`;
 }
 
-// ── House CRUD ─────────────────────────────────────────────────────────────
+// – House CRUD ———————————————————––
 function openHouseModal(id) {
 HS.editId = id||null;
 const h = id ? HS.houses.find(x=>x.id===id) : null;
@@ -4165,7 +4162,7 @@ save(); hSave(); renderHouses();
 toast(‘Property removed’,‘info’);
 }
 
-// ── Schedule editing ────────────────────────────────────────────────────────
+// – Schedule editing ––––––––––––––––––––––––––––
 function addHomeSchedItem(houseId) {
 openAddSchedModal(‘house’, houseId);
 }
@@ -4183,7 +4180,7 @@ const mw = document.getElementById(‘sm-miles-wrap’); if(mw) mw.style.display
 document.getElementById(‘sched-modal’).classList.add(‘open’);
 }
 
-// ── Log CRUD ────────────────────────────────────────────────────────────────
+// – Log CRUD ––––––––––––––––––––––––––––––––
 function openHlogModal(houseId, serviceType, editEntryId) {
 HS.logHouseId = houseId;
 HS.editLogId  = editEntryId||null;
@@ -4282,9 +4279,9 @@ if (el) { el.innerHTML = renderHomeOverview(h); }
 // Init houses on load
 hLoad();
 
-// ════════════════════════════════════════════════════════════════════════
+// ========================================================================
 // WORKERS MODULE
-// ════════════════════════════════════════════════════════════════════════
+// ========================================================================
 
 const WS = { workers:[], editId:null, schedMode:false, schedWorkers:[], schedDays:[] };
 const WORKER_COLORS = [’#6366f1’,’#f04a6b’,’#f59e0b’,’#22c55e’,’#0ea5e9’,’#a855f7’,’#06b6d4’,’#f97316’,’#14b8a6’,’#ec4899’,’#84cc16’,’#8b5cf6’];
@@ -4306,7 +4303,7 @@ return [w.first, w.last].filter(Boolean).join(’ ’) || w.name || ‘Worker’
 }
 function workerColor(w) { return w.color || WORKER_COLORS[0]; }
 
-// ── Workers Page ──────────────────────────────────────────────────────────
+// – Workers Page –––––––––––––––––––––––––––––
 function renderWorkers() {
 wLoad();
 const cnt = document.getElementById(‘w-count’);
@@ -4336,7 +4333,7 @@ return `<div class="worker-card"> <div class="worker-avatar" style="background:$
 }).join(’’);
 }
 
-// ── Worker CRUD ───────────────────────────────────────────────────────────
+// – Worker CRUD ———————————————————–
 function openWorkerModal(id) {
 WS.editId = id||null;
 const w = id ? WS.workers.find(x=>x.id===id) : null;
@@ -4392,7 +4389,7 @@ toast(‘Worker removed’,‘info’);
 });
 }
 
-// ── Schedule Mode ─────────────────────────────────────────────────────────
+// – Schedule Mode ———————————————————
 function scheduleWorker(workerId) {
 showPage(‘calendar’, null); setMN(‘calendar’);
 setTimeout(()=>{ toggleScheduleMode(workerId); }, 100);
@@ -4516,7 +4513,7 @@ save(); wSave(); exitScheduleMode(); renderAll();
 toast(`${added} shift${added!==1?'s':''} added to calendar ✓`,‘success’);
 }
 
-// ── Log sort helper ────────────────────────────────────────────────────────
+// – Log sort helper ––––––––––––––––––––––––––––
 function setLogSort(carId, mode) {
 // Overview is now a unified view; just re-render it
 const car = GS.cars.find(c=>c.id===carId); if(!car)return;
@@ -4525,7 +4522,7 @@ const el = document.getElementById(‘g-overview-’+carId);
 if (el) { el.innerHTML = renderCarOverview(car); }
 }
 
-// ── Calendar tooltip ───────────────────────────────────────────────────────
+// – Calendar tooltip —————————————————––
 let _tooltipTimer = null;
 const _tooltip = (() => {
 const el = document.createElement(‘div’);
@@ -4586,16 +4583,16 @@ _tooltipTimer = setTimeout(()=>_tooltip.classList.remove(‘visible’), 120);
 
 wLoad();
 
-// ════════════════════════════════════════════════════════════════════════
+// ========================================================================
 // HOLIDAYS
-// ════════════════════════════════════════════════════════════════════════
+// ========================================================================
 
 // Returns fixed-date holidays for a given year
 function getHolidays(year) {
 const h = [];
 const add = (date, name, icon) => h.push({date, name, icon});
 
-// ── Fixed-date holidays ──────────────────────────────────────────────
+// – Fixed-date holidays –––––––––––––––––––––––
 add(`${year}-01-01`, “New Year’s Day”,        ‘🎆’);
 add(`${year}-02-14`, “Valentine’s Day”,        ‘❤️’);
 add(`${year}-03-17`, “St. Patrick’s Day”,      ‘🍀’);
@@ -4608,33 +4605,33 @@ add(`${year}-12-25`, “Christmas Day”,          ‘🎁’);
 add(`${year}-12-26`, “Day After Christmas”,    ‘🎁’);
 add(`${year}-12-31`, “New Year’s Eve”,         ‘🥂’);
 
-// ── Floating holidays (calculated) ───────────────────────────────────
-// MLK Day — 3rd Monday of January
+// – Floating holidays (calculated) ———————————–
+// MLK Day - 3rd Monday of January
 add(nthWeekday(year, 0, 1, 3),  “MLK Day”,             ‘✊’);
-// Presidents Day — 3rd Monday of February
+// Presidents Day - 3rd Monday of February
 add(nthWeekday(year, 1, 1, 3),  “Presidents’ Day”,     ‘🏛️’);
-// Memorial Day — last Monday of May
+// Memorial Day - last Monday of May
 add(lastWeekday(year, 4, 1),    “Memorial Day”,        ‘🎗️’);
-// Juneteenth — June 19
+// Juneteenth - June 19
 add(`${year}-06-19`,            “Juneteenth”,          ‘✊’);
-// Labor Day — 1st Monday of September
+// Labor Day - 1st Monday of September
 add(nthWeekday(year, 8, 1, 1),  “Labor Day”,           ‘👷’);
-// Columbus / Indigenous Day — 2nd Monday of October
+// Columbus / Indigenous Day - 2nd Monday of October
 add(nthWeekday(year, 9, 1, 2),  “Indigenous Peoples Day”, ‘🌎’);
-// Thanksgiving — 4th Thursday of November
+// Thanksgiving - 4th Thursday of November
 add(nthWeekday(year, 10, 4, 4), “Thanksgiving”,        ‘🦃’);
-// Black Friday — day after Thanksgiving
+// Black Friday - day after Thanksgiving
 const tg = new Date(nthWeekday(year, 10, 4, 4)+‘T00:00:00’);
 tg.setDate(tg.getDate()+1);
 add(fmtD(tg),                   “Black Friday”,        ‘🛍️’);
-// Mother’s Day — 2nd Sunday of May
+// Mother’s Day - 2nd Sunday of May
 add(nthWeekday(year, 4, 0, 2),  “Mother’s Day”,        ‘💐’);
-// Father’s Day — 3rd Sunday of June
+// Father’s Day - 3rd Sunday of June
 add(nthWeekday(year, 5, 0, 3),  “Father’s Day”,        ‘👔’);
 
-// ── Easter (Computus algorithm) ───────────────────────────────────────
+// – Easter (Computus algorithm) —————————————
 add(getEaster(year), “Easter Sunday”, ‘🐣’);
-// Good Friday — 2 days before Easter
+// Good Friday - 2 days before Easter
 const easterD = new Date(getEaster(year)+‘T00:00:00’);
 easterD.setDate(easterD.getDate()-2);
 add(fmtD(easterD), “Good Friday”, ‘✝️’);
@@ -4642,7 +4639,7 @@ add(fmtD(easterD), “Good Friday”, ‘✝️’);
 return h;
 }
 
-// nth occurrence of weekday in a month (weekday: 0=Sun,1=Mon…6=Sat, n: 1-based)
+// nth occurrence of weekday in a month (weekday: 0=Sun,1=Mon?6=Sat, n: 1-based)
 function nthWeekday(year, month, weekday, n) {
 const d = new Date(year, month, 1);
 let count = 0;
@@ -4684,9 +4681,9 @@ const tog = document.getElementById(‘hol-toggle’);
 if (tog) tog.classList.toggle(‘on’, S.showHolidays);
 }
 
-// ════════════════════════════════════
+// ====================================
 // CLOSE HANDLERS + BOOT
-// ════════════════════════════════════
+// ====================================
 document.getElementById(‘modal’).addEventListener(‘click’,function(e){if(e.target===this)closeModal();});
 document.getElementById(‘car-modal’).addEventListener(‘click’,function(e){if(e.target===this)closeCarModal();});
 document.getElementById(‘log-modal’).addEventListener(‘click’,function(e){if(e.target===this)closeLogModal();});
