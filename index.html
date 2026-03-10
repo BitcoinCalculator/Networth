@@ -383,16 +383,57 @@ html.light-theme .ev-work    {color:var(--c-work);}
 .worker-sched-strip{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
 .ws-chip{font-size:11px;font-weight:600;padding:2px 8px;border-radius:12px;color:#fff;}
 
-/* Schedule mode panel */
-.sched-panel{position:fixed;right:20px;top:80px;width:260px;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;z-index:400;box-shadow:var(--shadow-lg);animation:mIn .25s ease both;}
-.sched-panel-inner{}
-.sched-panel-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.sched-worker-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:opacity var(--tr);}
-.sched-worker-row:last-child{border-bottom:none;}
-.sched-worker-row:hover{opacity:.8;}
-.sched-check{width:18px;height:18px;border-radius:5px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all var(--tr);}
-.sched-check.on{border-color:transparent;color:#fff;}
-.sched-worker-name{font-size:13px;font-weight:600;color:var(--text);}
+/* Schedule bar — inline below calendar, never overlaps */
+.sched-bar{
+  margin-top:16px;
+  background:var(--bg-panel);
+  border:1px solid var(--accent);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  animation:mIn .2s ease both;
+}
+.sched-bar-top{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;
+  background:var(--accent-soft);
+  border-bottom:1px solid var(--border);
+  flex-wrap:wrap;
+}
+.sched-bar-label{font-size:13px;font-weight:800;color:var(--text);letter-spacing:-.01em;}
+.sched-bar-hint{font-size:11px;color:var(--text3);flex:1;}
+.sched-bar-close{background:none;border:none;color:var(--text3);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;padding:3px 8px;border-radius:8px;transition:all var(--tr);}
+.sched-bar-close:hover{color:var(--urgent);background:var(--urgent-soft);}
+.sched-bar-body{
+  display:flex;align-items:center;gap:0;
+  padding:10px 16px;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.sched-bar-workers{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.sched-bar-divider{width:1px;height:36px;background:var(--border);flex-shrink:0;}
+.sched-bar-days-section{flex:1;min-width:120px;}
+.sched-bar-days-label{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;}
+.sched-bar-days{display:flex;flex-wrap:wrap;gap:4px;min-height:20px;}
+.sched-bar-actions{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+/* Worker chip in bar */
+.sched-worker-chip{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 12px 5px 6px;
+  border-radius:20px;
+  border:2px solid var(--border);
+  background:var(--bg-card);
+  cursor:pointer;
+  transition:all var(--tr);
+  font-size:12px;font-weight:600;color:var(--text);
+  user-select:none;
+}
+.sched-worker-chip:hover{border-color:var(--accent);}
+.sched-worker-chip.on{border-color:transparent;color:#fff;}
+.sched-worker-chip .chip-avatar{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;flex-shrink:0;}
+/* Compat: old class names still used in renderSchedPanel */
+.sched-worker-row{display:none;}
+.sched-check{display:none;}
+.sched-worker-name{display:none;}
 
 /* Calendar day — work shift badge */
 .cal-day.sched-mode{cursor:crosshair;}
@@ -440,9 +481,7 @@ html.light-theme .ev-work    {color:var(--c-work);}
 .cal-day-top .cal-dn{margin:0;}
 .cal-day-top .cal-dn-circle{margin:0;}
 
-@media(max-width:768px){
-  .sched-panel{right:8px;top:auto;bottom:72px;width:calc(100vw - 16px);}
-}
+/* sched-panel mobile: handled by inline flow */
 
 /* ── TASKS PAGE ── */
 .tasks-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
@@ -678,6 +717,30 @@ select.form-in option{background:var(--bg-panel);}
       </div>
       <div id="cal-ev-list"></div>
     </div>
+
+```
+<!-- SCHEDULE BAR — inline, never overlaps calendar -->
+<div class="sched-bar" id="sched-panel" style="display:none;">
+  <div class="sched-bar-top">
+    <div class="sched-bar-label">👷 Who's working?</div>
+    <div class="sched-bar-hint" id="sched-bar-hint">Select workers → tap days above</div>
+    <button class="sched-bar-close" onclick="exitScheduleMode()">✕ Cancel</button>
+  </div>
+  <div class="sched-bar-body">
+    <div class="sched-bar-workers" id="sched-worker-list"></div>
+    <div class="sched-bar-divider"></div>
+    <div class="sched-bar-days-section">
+      <div class="sched-bar-days-label">Selected days</div>
+      <div class="sched-bar-days" id="sched-day-chips"></div>
+    </div>
+    <div class="sched-bar-actions">
+      <button class="btn-ghost" style="font-size:12px;padding:7px 16px;" onclick="clearScheduleSel()">Clear</button>
+      <button class="btn-primary" style="font-size:12px;padding:7px 20px;" onclick="saveSchedule()">Save ✓</button>
+    </div>
+  </div>
+</div>
+```
+
   </div>
 
   <!-- SETTINGS -->
@@ -971,25 +1034,6 @@ select.form-in option{background:var(--bg-panel);}
     <div class="modal-acts">
       <button class="btn-ghost" onclick="closeWorkerModal()">Cancel</button>
       <button class="btn-primary" onclick="saveWorker()">Save Worker</button>
-    </div>
-  </div>
-</div>
-
-<!-- SCHEDULE MODE PANEL -->
-
-<div class="sched-panel" id="sched-panel" style="display:none;">
-  <div class="sched-panel-inner">
-    <div class="sched-panel-hd">
-      <div style="font-size:14px;font-weight:700;color:var(--text)">👷 Assign Work Days</div>
-      <button class="modal-close" onclick="exitScheduleMode()">✕</button>
-    </div>
-    <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">Select workers, then tap days on the calendar</div>
-    <div id="sched-worker-list"></div>
-    <div style="margin-top:12px;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;">Selected days</div>
-    <div id="sched-day-chips" style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px;min-height:24px;"></div>
-    <div style="display:flex;gap:8px;margin-top:14px;">
-      <button class="btn-ghost" style="flex:1;font-size:12px;" onclick="clearScheduleSel()">Clear</button>
-      <button class="btn-primary" style="flex:2;font-size:12px;" onclick="saveSchedule()">Save Schedule</button>
     </div>
   </div>
 </div>
@@ -1766,8 +1810,8 @@ function fmtD(d){return d.toISOString().split('T')[0];}
 function pad(n){return String(n).padStart(2,'0');}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function fmt12(t){if(!t)return'';const[h,m]=t.split(':').map(Number),ap=h>=12?'pm':'am',hr=h%12||12;return`${hr}:${pad(m)} ${ap}`;}
-function dueClass(ds){if(!ds)return'';const t=new Date();t.setHours(0,0,0,0);const d=new Date(ds);d.setHours(0,0,0,0);const df=Math.floor((d-t)/86400000);if(df<0)return'overdue';if(df===0)return'today';if(df<=3)return'soon';return'';}
-function dueLabel(ds){if(!ds)return'';const t=new Date();t.setHours(0,0,0,0);const d=new Date(ds);d.setHours(0,0,0,0);const df=Math.floor((d-t)/86400000);if(df<0)return`${Math.abs(df)}d overdue`;if(df===0)return'Today';if(df===1)return'Tomorrow';if(df<=7)return`In ${df} days`;return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+function dueClass(ds){if(!ds)return'';const t=new Date();t.setHours(0,0,0,0);const d=new Date(ds+'T00:00:00');const df=Math.round((d-t)/86400000);if(df<0)return'overdue';if(df===0)return'today';if(df<=3)return'soon';return'';}
+function dueLabel(ds){if(!ds)return'';const t=new Date();t.setHours(0,0,0,0);const d=new Date(ds+'T00:00:00');const df=Math.round((d-t)/86400000);if(df<0)return`${Math.abs(df)}d overdue`;if(df===0)return'Today';if(df===1)return'Tomorrow';if(df<=7)return`In ${df} days`;return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
 
 // ════════════════════════════════════════════════════════
 // GARAGE MODULE
@@ -2642,16 +2686,27 @@ function exitScheduleMode() {
 function renderSchedPanel() {
   const list = document.getElementById('sched-worker-list');
   if (!list) return;
-  list.innerHTML = WS.workers.map(w=>`
-    <div class="sched-worker-row" onclick="toggleSchedWorker('${w.id}',this)">
-      <div class="sched-check ${WS.schedWorkers.includes(w.id)?'on':''}" id="swc-${w.id}" style="${WS.schedWorkers.includes(w.id)?'background:'+workerColor(w):''}">${WS.schedWorkers.includes(w.id)?'✓':''}</div>
-      <div class="worker-avatar" style="width:28px;height:28px;font-size:11px;background:${workerColor(w)}">${workerInitials(w)}</div>
-      <div class="sched-worker-name">${esc(workerFullName(w))}</div>
-    </div>`).join('');
+  list.innerHTML = WS.workers.map(w => {
+    const on = WS.schedWorkers.includes(w.id);
+    const col = workerColor(w);
+    return `<div class="sched-worker-chip ${on?'on':''}"
+      style="${on?'background:'+col+';border-color:'+col:''}"
+      onclick="toggleSchedWorker('${w.id}',this)">
+      <div class="chip-avatar" style="background:${on?'rgba(255,255,255,.25)':col}">${workerInitials(w)}</div>
+      ${esc(workerFullName(w))}${on?' ✓':''}
+    </div>`;
+  }).join('');
+  // Update hint text
+  const hint = document.getElementById('sched-bar-hint');
+  if (hint) {
+    if (!WS.schedWorkers.length) hint.textContent = 'Select workers → tap days above';
+    else if (!WS.schedDays.length) hint.textContent = WS.schedWorkers.length+' worker'+(WS.schedWorkers.length!==1?'s':'')+' selected — now tap days on the calendar';
+    else hint.textContent = WS.schedDays.length+' day'+(WS.schedDays.length!==1?'s':'')+' selected';
+  }
   renderSchedDayChips();
 }
 
-function toggleSchedWorker(id, row) {
+function toggleSchedWorker(id) {
   if (WS.schedWorkers.includes(id)) {
     WS.schedWorkers = WS.schedWorkers.filter(x=>x!==id);
   } else {
@@ -2663,9 +2718,15 @@ function toggleSchedWorker(id, row) {
 function renderSchedDayChips() {
   const el = document.getElementById('sched-day-chips');
   if (!el) return;
-  el.innerHTML = WS.schedDays.sort().map(ds=>`
-    <span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:12px;background:var(--accent-soft);color:var(--accent);cursor:pointer;" onclick="removeSchedDay('${ds}')">${ds} ✕</span>
-  `).join('') || '<span style="font-size:11px;color:var(--text3)">Tap days on calendar…</span>';
+  const sorted = [...WS.schedDays].sort();
+  el.innerHTML = sorted.map(ds => {
+    const d = new Date(ds+'T00:00:00');
+    const lbl = d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    return `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:12px;background:var(--accent-soft);color:var(--accent);cursor:pointer;user-select:none;" onclick="removeSchedDay('${ds}')">${lbl} ✕</span>`;
+  }).join('') || '<span style="font-size:11px;color:var(--text3);font-style:italic;">tap days above…</span>';
+  // Update hint separately
+  const hint2 = document.getElementById('sched-bar-hint');
+  if (hint2 && WS.schedDays.length) hint2.textContent = WS.schedDays.length+' day'+(WS.schedDays.length!==1?'s':'')+' selected';
 }
 
 function calDayClickSched(ds) {
