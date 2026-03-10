@@ -371,6 +371,79 @@ html.light-theme .ev-work    {color:var(--c-work);}
   .g-card.full{grid-column:span 1;}
 }
 
+
+/* ── WORKERS ── */
+.worker-card{display:flex;align-items:center;gap:14px;padding:14px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:10px;transition:all var(--tr);}
+.worker-card:hover{border-color:var(--accent);box-shadow:var(--shadow);}
+.worker-avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0;letter-spacing:-.5px;}
+.worker-info{flex:1;min-width:0;}
+.worker-name{font-size:15px;font-weight:700;color:var(--text);}
+.worker-role{font-size:12px;color:var(--text3);margin-top:2px;}
+.worker-contact{font-size:11px;color:var(--text3);margin-top:3px;}
+.worker-sched-strip{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+.ws-chip{font-size:11px;font-weight:600;padding:2px 8px;border-radius:12px;color:#fff;}
+
+/* Schedule mode panel */
+.sched-panel{position:fixed;right:20px;top:80px;width:260px;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;z-index:400;box-shadow:var(--shadow-lg);animation:mIn .25s ease both;}
+.sched-panel-inner{}
+.sched-panel-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.sched-worker-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:opacity var(--tr);}
+.sched-worker-row:last-child{border-bottom:none;}
+.sched-worker-row:hover{opacity:.8;}
+.sched-check{width:18px;height:18px;border-radius:5px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all var(--tr);}
+.sched-check.on{border-color:transparent;color:#fff;}
+.sched-worker-name{font-size:13px;font-weight:600;color:var(--text);}
+
+/* Calendar day — work shift badge */
+.cal-day.sched-mode{cursor:crosshair;}
+.cal-day.sched-mode:hover{border-color:var(--accent);background:var(--accent-soft);}
+.cal-day.sched-selected{background:var(--accent-soft) !important;border-color:var(--accent) !important;}
+.shift-dots{display:flex;flex-wrap:wrap;gap:2px;padding:2px 3px 1px;}
+.shift-dot{width:16px;height:16px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:#fff;letter-spacing:-.3px;flex-shrink:0;line-height:1;}
+
+/* Hover tooltip */
+.cal-tooltip{
+  position:fixed;z-index:9999;
+  background:var(--bg-panel);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:12px 16px;
+  min-width:200px;max-width:280px;
+  box-shadow:var(--shadow-lg);
+  pointer-events:none;
+  opacity:0;transition:opacity .15s;
+}
+.cal-tooltip.visible{opacity:1;}
+.cal-tooltip-date{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+.cal-tooltip-row{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px;color:var(--text);}
+.cal-tooltip-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.cal-tooltip-empty{font-size:12px;color:var(--text3);font-style:italic;}
+
+/* Color picker */
+.color-picker-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
+.cp-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .15s;flex-shrink:0;}
+.cp-swatch.on{border-color:var(--text);transform:scale(1.15);}
+.cp-swatch:hover{transform:scale(1.1);}
+
+/* Event color dot on task chips */
+.ev-color-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle;flex-shrink:0;}
+
+/* Log sort tabs */
+.log-sort-tabs{display:flex;gap:6px;margin-bottom:12px;}
+.log-sort-tab{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;border:1.5px solid var(--border);background:none;color:var(--text3);cursor:pointer;font-family:inherit;transition:all var(--tr);}
+.log-sort-tab.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);}
+
+/* Calendar multi-color strip per day */
+.cal-day-colors{display:flex;height:4px;border-radius:3px;overflow:hidden;margin:0 4px 3px;}
+.cal-day-color-seg{flex:1;}
+
+/* Improved calendar day number area */
+.cal-day-top{display:flex;align-items:center;justify-content:space-between;padding:0 2px;margin-bottom:2px;}
+.cal-day-top .cal-dn{margin:0;}
+.cal-day-top .cal-dn-circle{margin:0;}
+
+@media(max-width:768px){
+  .sched-panel{right:8px;top:auto;bottom:72px;width:calc(100vw - 16px);}
+}
+
 /* ── TASKS PAGE ── */
 .tasks-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
 .search-bar{display:flex;align-items:center;gap:8px;background:var(--bg-card);border:1.5px solid var(--border);border-radius:var(--radius);padding:9px 14px;flex:1;min-width:160px;max-width:320px;transition:border-color var(--tr);}
@@ -511,6 +584,7 @@ select.form-in option{background:var(--bg-panel);}
   <div class="nav-item" onclick="goCat('finance',this)"><span class="nav-icon">💰</span>Finance</div>
   <div class="nav-label">Garage 🚗</div>
   <div class="nav-item" onclick="showPage('garage',this)"><span class="nav-icon">🚗</span>My Cars</div>
+  <div class="nav-item" onclick="showPage('workers',this)"><span class="nav-icon">👷</span>Workers</div>
   <div class="nav-label">System</div>
   <div class="nav-item" onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span>Settings</div>
   <div class="sidebar-footer">
@@ -590,6 +664,7 @@ select.form-in option{background:var(--bg-panel);}
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
         <button class="cal-today-btn" onclick="calGoToday()">Today</button>
+        <button class="cal-today-btn" id="cal-sched-btn" onclick="toggleScheduleMode()" style="display:none">👷 Schedule</button>
         <button class="new-btn" style="padding:7px 14px;font-size:12px;" onclick="openAddForDate()">＋ Add Event</button>
       </div>
     </div>
@@ -678,6 +753,20 @@ select.form-in option{background:var(--bg-panel);}
     <div id="trips-list"></div>
   </div>
 
+  <!-- WORKERS PAGE -->
+
+  <div class="page" id="page-workers">
+    <div class="garage-header">
+      <div>
+        <div class="g-title">Workers</div>
+        <div class="g-sub" id="w-count">No workers yet</div>
+      </div>
+      <button class="new-btn" onclick="openWorkerModal()">＋ Add Worker</button>
+    </div>
+    <div class="g-tabs" id="w-tabs"></div>
+    <div id="w-sheet"></div>
+  </div>
+
   <!-- GARAGE -->
 
   <div class="page" id="page-garage">
@@ -721,7 +810,7 @@ select.form-in option{background:var(--bg-panel);}
     <div class="form-row full"><div class="form-g"><label class="form-lbl">Task / Event</label><input class="form-in" id="mt" placeholder="What needs to be done?" style="font-size:15px;font-weight:600;"></div></div>
     <div class="form-row">
       <div class="form-g"><label class="form-lbl">Start Date</label><input class="form-in" type="date" id="md"></div>
-      <div class="form-g"><label class="form-lbl">End Date <small>(multi-day)</small></label><input class="form-in" type="date" id="md-end"></div>
+      <div class="form-g"><label class="form-lbl">End Date <small style="color:var(--text3)">optional · leave blank for single day</small></label><input class="form-in" type="date" id="md-end"></div>
       <div class="form-g"><label class="form-lbl">Time</label><input class="form-in" type="time" id="mtime"></div>
       <div class="form-g">
         <label class="form-lbl">Category</label>
@@ -860,6 +949,51 @@ select.form-in option{background:var(--bg-panel);}
   </div>
 </div>
 
+<!-- WORKER MODAL -->
+
+<div class="modal-overlay" id="worker-modal">
+  <div class="modal" style="max-width:440px;">
+    <div class="modal-head">
+      <div class="modal-title" id="wm-title">Add Worker</div>
+      <button class="modal-close" onclick="closeWorkerModal()">✕</button>
+    </div>
+    <div class="form-row">
+      <div class="form-g"><label class="form-lbl">First Name</label><input class="form-in" id="wm-first" placeholder="Jane"></div>
+      <div class="form-g"><label class="form-lbl">Last Name</label><input class="form-in" id="wm-last" placeholder="Smith"></div>
+      <div class="form-g s2"><label class="form-lbl">Role / Position</label><input class="form-in" id="wm-role" placeholder="Manager, Cashier, Technician…"></div>
+      <div class="form-g"><label class="form-lbl">Phone</label><input class="form-in" id="wm-phone" type="tel" placeholder="(555) 000-0000"></div>
+      <div class="form-g"><label class="form-lbl">Email</label><input class="form-in" id="wm-email" type="email" placeholder="jane@example.com"></div>
+      <div class="form-g s2">
+        <label class="form-lbl">Color <small>(shows on calendar)</small></label>
+        <div class="color-picker-row" id="wm-color-row"></div>
+      </div>
+    </div>
+    <div class="modal-acts">
+      <button class="btn-ghost" onclick="closeWorkerModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveWorker()">Save Worker</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEDULE MODE PANEL -->
+
+<div class="sched-panel" id="sched-panel" style="display:none;">
+  <div class="sched-panel-inner">
+    <div class="sched-panel-hd">
+      <div style="font-size:14px;font-weight:700;color:var(--text)">👷 Assign Work Days</div>
+      <button class="modal-close" onclick="exitScheduleMode()">✕</button>
+    </div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">Select workers, then tap days on the calendar</div>
+    <div id="sched-worker-list"></div>
+    <div style="margin-top:12px;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;">Selected days</div>
+    <div id="sched-day-chips" style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px;min-height:24px;"></div>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button class="btn-ghost" style="flex:1;font-size:12px;" onclick="clearScheduleSel()">Clear</button>
+      <button class="btn-primary" style="flex:2;font-size:12px;" onclick="saveSchedule()">Save Schedule</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast-zone" id="tz"></div>
 
 <script>
@@ -933,11 +1067,17 @@ function migrateTask(t) {
 // ════════════════════════════════════
 function init() {
   load();
+  wLoad();
   if (!S.tasks.length) seed();
   applyTheme(S.theme);
   updateUserDisplay();
   updateDate();
   renderAll();
+  // Show schedule button if workers exist
+  setTimeout(()=>{
+    const sb=document.getElementById('cal-sched-btn');
+    if(sb) sb.style.display=(WS.workers&&WS.workers.length)?'':'none';
+  },50);
   setInterval(updateDate, 60000);
 }
 
@@ -975,6 +1115,8 @@ function renderAll() {
     if (pg==='birthdays') try { renderCategoryPage('birthday'); } catch(e) {}
     if (pg==='trips')     try { renderCategoryPage('travel');   } catch(e) {}
     if (pg==='garage')    try { renderGarage();                 } catch(e) {}
+    if (pg==='workers')   try { renderWorkers();                } catch(e) {}
+    if (pg==='workers')   try { renderWorkers();                } catch(e) {}
   }
   updateBadge(); updateUserDisplay(); refreshThemeBtns();
 }
@@ -1165,9 +1307,12 @@ function renderCalendar() {
   // Legend
   const usedTags=[...new Set(S.tasks.filter(t=>t.tag).map(t=>t.tag))];
   const colorMap={travel:'#0ea5e9',birthday:'#f04a6b',renewal:'#f59e0b',health:'#22c55e',finance:'#a855f7',personal:'#8b5cf6',work:'#06b6d4',car:'#64748b'};
+  const workerLegend = (WS.workers||[]).map(w=>
+    `<div class="cal-legend-item"><div class="cal-legend-dot" style="background:${workerColor(w)};border-radius:3px;"></div>${esc(workerFullName(w))}</div>`
+  ).join('');
   document.getElementById('cal-legend').innerHTML = usedTags.map(tag=>
     `<div class="cal-legend-item"><div class="cal-legend-dot" style="background:${colorMap[tag]||'var(--accent)'}"></div>${TAGS[tag]||tag}</div>`
-  ).join('');
+  ).join('') + workerLegend;
 
   // ── Slot allocation ──────────────────────────────────────────────────────
   // Each event claims a "row slot" (0,1,2) consistently across all its days.
@@ -1240,8 +1385,13 @@ function renderCalendar() {
     const dnEl = isToday
       ? `<div class="cal-dn-circle">${dayNum}</div>`
       : `<div class="cal-dn">${dayNum}</div>`;
-    return `<div class="cal-day${isOther?' other-month':''}${isToday?' today':''}${isSel?' selected':''}" data-ds="${ds}" onclick="calSel('${ds}')">
-      ${dnEl}
+    return `<div class="cal-day${isOther?' other-month':''}${isToday?' today':''}${isSel?' selected':''}" data-ds="${ds}"
+      onclick="if(!calDayClickSched('${ds}'))calSel('${ds}')"
+      onmouseenter="showCalTooltip('${ds}',event.clientX,event.clientY)"
+      onmousemove="showCalTooltip('${ds}',event.clientX,event.clientY)"
+      onmouseleave="hideCalTooltip()">
+      <div class="cal-day-top">${dnEl}</div>
+      <div class="cal-day-colors" id="cdc-${ds}"></div>
       <div class="cal-events" id="cev-${ds}"></div>
     </div>`;
   }).join('');
@@ -1309,6 +1459,61 @@ function renderCalendar() {
     container.appendChild(moreEl);
   });
 
+  // ── Worker shift dots + per-day color strip ──────────────────────────────
+  const tagColorMap={travel:'#0ea5e9',birthday:'#f04a6b',renewal:'#f59e0b',health:'#22c55e',finance:'#a855f7',personal:'#8b5cf6',work:'#06b6d4',car:'#64748b'};
+  visibleDates.forEach(ds => {
+    // Collect all colors for this day
+    const dayColors = new Set();
+    // From tasks
+    S.tasks.filter(t=>{
+      if (!t.date||t.done) return false;
+      const s=new Date(t.date+'T00:00:00'), e=t.dateEnd?new Date(t.dateEnd+'T00:00:00'):s;
+      return new Date(ds+'T00:00:00')>=s && new Date(ds+'T00:00:00')<=e;
+    }).forEach(t=>{
+      const col = t._workerColor || (t._workerId?(WS.workers.find(w=>w.id===t._workerId)||{}).color||'#6366f1':null) || tagColorMap[t.tag] || '#6366f1';
+      dayColors.add(col);
+    });
+
+    // Color strip
+    const strip = document.getElementById('cdc-'+ds);
+    if (strip && dayColors.size) {
+      strip.innerHTML = [...dayColors].map(c=>`<div class="cal-day-color-seg" style="background:${c}"></div>`).join('');
+    }
+
+    // Worker shift dots (showing initials)
+    const workerShifts = S.tasks.filter(t=>t._workerId && t.date===ds && !t.done);
+    if (workerShifts.length) {
+      const container = document.getElementById('cev-'+ds);
+      if (container) {
+        const dotsWrap = document.createElement('div');
+        dotsWrap.className = 'shift-dots';
+        dotsWrap.style.position = 'absolute';
+        dotsWrap.style.bottom   = '2px';
+        dotsWrap.style.left     = '2px';
+        dotsWrap.style.right    = '2px';
+        dotsWrap.style.zIndex   = '3';
+        workerShifts.forEach(t=>{
+          const w = WS.workers.find(x=>x.id===t._workerId);
+          if (!w) return;
+          const dot = document.createElement('div');
+          dot.className = 'shift-dot';
+          dot.style.background = workerColor(w);
+          dot.title = workerFullName(w);
+          // Show first initial + W
+          dot.textContent = (w.first||'?')[0].toUpperCase();
+          dot.onclick = e => { e.stopPropagation(); calSel(ds); };
+          dotsWrap.appendChild(dot);
+        });
+        container.appendChild(dotsWrap);
+      }
+    }
+
+    // Restore sched-selected if in schedule mode
+    if (WS.schedMode && WS.schedDays.includes(ds)) {
+      document.querySelector(`.cal-day[data-ds="${ds}"]`)?.classList.add('sched-selected');
+    }
+  });
+
   if (S.cSel) { renderCalDetail(S.cSel); document.getElementById('cal-detail').style.display='block'; }
 }
 
@@ -1328,17 +1533,21 @@ function renderCalDetail(ds) {
   });
   const el=document.getElementById('cal-ev-list');
   if(!items.length){el.innerHTML=`<div style="color:var(--text3);font-size:13px;padding:6px 0">No events on this day.</div>`;return;}
-  const colorMap={travel:'#0ea5e9',birthday:'#f04a6b',renewal:'#f59e0b',health:'#22c55e',finance:'#a855f7',personal:'#8b5cf6',work:'#06b6d4',car:'#64748b'};
+  const _detColors={travel:'#0ea5e9',birthday:'#f04a6b',renewal:'#f59e0b',health:'#22c55e',finance:'#a855f7',personal:'#8b5cf6',work:'#06b6d4',car:'#64748b'};
   el.innerHTML=items.map(t=>{
-    const col=colorMap[t.tag]||(t.priority==='urgent'?'var(--urgent)':t.priority==='medium'?'var(--medium)':'var(--low)');
-    const span=t.dateEnd&&t.dateEnd!==t.date?` · ${t.date} → ${t.dateEnd}`:'';
+    const wkr = t._workerId ? (WS.workers||[]).find(w=>w.id===t._workerId) : null;
+    const col = wkr ? workerColor(wkr) : (t._workerColor || _detColors[t.tag] || (t.priority==='urgent'?'var(--urgent)':t.priority==='medium'?'var(--medium)':'var(--low)'));
+    const span=t.dateEnd&&t.dateEnd!==t.date?` · ends ${t.dateEnd}`:'';
     const recurLabel = t.recur ? ` · ↻ every ${t.recurN||1} ${t.recur}` : '';
-    return `<div class="cal-ev-row" onclick="openEdit('${t.id}')">
+    const wrkLabel   = wkr ? ` · 👷 ${esc(workerFullName(wkr))}` : '';
+    const clickAct   = t._workerId ? `showPage('workers',null);setMN('garage')` : `openEdit('${t.id}')`;
+    return `<div class="cal-ev-row" onclick="${clickAct}" style="cursor:pointer">
       <div class="cal-ev-bar" style="background:${col}"></div>
-      <div>
+      <div style="flex:1;min-width:0">
         <div class="cal-ev-name">${esc(t.text)}</div>
-        <div class="cal-ev-meta">${t.time?fmt12(t.time)+' · ':'All day · '}${t.tag?TAGS[t.tag]+' · ':''}${PLAB[t.priority]}${span}${recurLabel}</div>
+        <div class="cal-ev-meta">${t.time?fmt12(t.time)+' · ':''}${t.tag&&TAGS[t.tag]?TAGS[t.tag]+' · ':''}${PLAB[t.priority]||''}${span}${recurLabel}${wrkLabel}</div>
       </div>
+      ${!t._workerId?`<button style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:6px;transition:color .15s" onmouseenter="this.style.color='var(--urgent)'" onmouseleave="this.style.color='var(--text3)'" onclick="event.stopPropagation();deleteTask('${t.id}')">✕</button>`:''}
     </div>`;
   }).join('');
 }
@@ -1489,7 +1698,7 @@ function refreshThemeBtns(){
 // ════════════════════════════════════
 // NAV
 // ════════════════════════════════════
-const PTITLES={dashboard:'Dashboard',tasks:'All Tasks',calendar:'Calendar',garage:'🚗 My Garage',birthdays:'🎂 Birthdays',trips:'✈️ Trips & Travel',settings:'Settings'};
+const PTITLES={dashboard:'Dashboard',tasks:'All Tasks',calendar:'Calendar',garage:'🚗 My Garage',birthdays:'🎂 Birthdays',trips:'✈️ Trips & Travel',workers:'👷 Workers',settings:'Settings'};
 function showPage(name,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
@@ -1497,9 +1706,10 @@ function showPage(name,el){
   if(el)el.classList.add('active');
   document.getElementById('ptitle').textContent=PTITLES[name]||name;
   closeSidebar(); renderAll();
-  if(name==='garage') renderGarage();
+  if(name==='garage')    renderGarage();
+  if(name==='workers')   renderWorkers();
   if(name==='birthdays') renderCategoryPage('birthday');
-  if(name==='trips') renderCategoryPage('travel');
+  if(name==='trips')     renderCategoryPage('travel');
 }
 function goCat(tag,el){S.filter=tag;showPage('tasks',el||null);setMN('tasks');}
 function setMN(name){document.querySelectorAll('.mni').forEach(el=>el.classList.remove('on'));const mn=document.getElementById('mn-'+name);if(mn)mn.classList.add('on');}
@@ -1722,10 +1932,18 @@ function renderScheduleHTML(car) {
   }).join('');
 }
 
-function renderLogHTML(car) {
-  const log = [...(car.log||[])].sort((a,b)=>(b.date||'') < (a.date||'') ? -1 : 1);
-  if (!log.length) return `<div class="log-empty">No service history yet.<br>Log your first service above.</div>`;
-  return log.map((entry, i) => `
+function renderLogHTML(car, sortMode) {
+  sortMode = sortMode || car._logSort || 'newest';
+  car._logSort = sortMode;
+  let log = [...(car.log||[])];
+  if (sortMode==='newest')  log.sort((a,b)=>(b.date||'')>(a.date||'')?1:-1);
+  if (sortMode==='oldest')  log.sort((a,b)=>(a.date||'')>(b.date||'')?1:-1);
+  if (sortMode==='type')    log.sort((a,b)=>(a.displayType||a.type||'').localeCompare(b.displayType||b.type||''));
+  const tabs = `<div class="log-sort-tabs">
+    ${['newest','oldest','type'].map(m=>`<button class="log-sort-tab ${sortMode===m?'on':''}" onclick="setLogSort('${car.id}','${m}')">${m==='newest'?'Newest first':m==='oldest'?'Oldest first':'By type'}</button>`).join('')}
+  </div>`;
+  if (!log.length) return tabs+`<div class="log-empty">No service history yet.<br>Log your first service above.</div>`;
+  return tabs + log.map((entry, i) => `
     <div class="log-item">
       <div class="log-timeline">
         <div class="log-dot" style="background:${logColor(entry.type)}"></div>
@@ -2250,6 +2468,313 @@ function nextOccurrenceDate(ds) {
   return next;
 }
 
+
+// ════════════════════════════════════════════════════════════════════════
+// WORKERS MODULE
+// ════════════════════════════════════════════════════════════════════════
+
+const WS = { workers:[], editId:null, schedMode:false, schedWorkers:[], schedDays:[] };
+const WORKER_COLORS = ['#6366f1','#f04a6b','#f59e0b','#22c55e','#0ea5e9','#a855f7','#06b6d4','#f97316','#14b8a6','#ec4899','#84cc16','#8b5cf6'];
+
+function wSave() { try { localStorage.setItem('lb6-workers', JSON.stringify({workers:WS.workers})); } catch(e){} }
+function wLoad() {
+  try {
+    const d = JSON.parse(localStorage.getItem('lb6-workers')||'{}');
+    if (d.workers) WS.workers = d.workers;
+  } catch(e) {}
+}
+
+function workerInitials(w) {
+  return ((w.first||'')[0]||(w.name||'')[0]||'?').toUpperCase() +
+         ((w.last||'')[0]||'').toUpperCase();
+}
+function workerFullName(w) {
+  return [w.first, w.last].filter(Boolean).join(' ') || w.name || 'Worker';
+}
+function workerColor(w) { return w.color || WORKER_COLORS[0]; }
+
+// ── Workers Page ──────────────────────────────────────────────────────────
+function renderWorkers() {
+  wLoad();
+  const cnt = document.getElementById('w-count');
+  if (cnt) cnt.textContent = WS.workers.length
+    ? WS.workers.length + ' worker' + (WS.workers.length!==1?'s':'') + ' — click calendar to schedule shifts'
+    : 'No workers yet — add your first worker';
+
+  // Show/hide Schedule button on calendar page
+  const schedBtn = document.getElementById('cal-sched-btn');
+  if (schedBtn) schedBtn.style.display = WS.workers.length ? '' : 'none';
+
+  const sheet = document.getElementById('w-sheet');
+  if (!sheet) return;
+
+  if (!WS.workers.length) {
+    sheet.innerHTML = `<div class="cat-empty">
+      <div class="cat-empty-icon">👷</div>
+      <div class="cat-empty-title">No workers yet</div>
+      <div style="font-size:13px;margin-bottom:18px">Add workers to schedule shifts on the calendar</div>
+      <button class="btn-primary" onclick="openWorkerModal()">＋ Add First Worker</button>
+    </div>`;
+    return;
+  }
+
+  sheet.innerHTML = WS.workers.map(w => {
+    // Get this worker's upcoming shifts from S.tasks
+    const shifts = S.tasks.filter(t => t._workerId===w.id && !t.done && t.date)
+      .sort((a,b)=>a.date>b.date?1:-1).slice(0,5);
+    const col = workerColor(w);
+    const initials = workerInitials(w);
+    return `<div class="worker-card">
+      <div class="worker-avatar" style="background:${col}">${initials}</div>
+      <div class="worker-info">
+        <div class="worker-name">${esc(workerFullName(w))}${w.role?'<span style="font-weight:400;color:var(--text3);font-size:13px;"> · '+esc(w.role)+'</span>':''}</div>
+        <div class="worker-contact">${[w.phone,w.email].filter(Boolean).map(esc).join(' · ')}</div>
+        ${shifts.length?`<div class="worker-sched-strip">${shifts.map(t=>`<span class="ws-chip" style="background:${col}">${t.date}</span>`).join('')}</div>`:'<div style="font-size:11px;color:var(--text3);margin-top:4px;">No upcoming shifts</div>'}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
+        <button class="maint-log-btn" onclick="scheduleWorker('${w.id}')">📅 Schedule</button>
+        <button class="maint-edit-btn" onclick="openWorkerModal('${w.id}')">✏️ Edit</button>
+        <button class="maint-edit-btn" style="color:var(--urgent)" onclick="deleteWorker('${w.id}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Worker CRUD ───────────────────────────────────────────────────────────
+function openWorkerModal(id) {
+  WS.editId = id||null;
+  const w = id ? WS.workers.find(x=>x.id===id) : null;
+  document.getElementById('wm-title').textContent = id ? 'Edit Worker' : 'Add Worker';
+  document.getElementById('wm-first').value  = w?.first||'';
+  document.getElementById('wm-last').value   = w?.last||'';
+  document.getElementById('wm-role').value   = w?.role||'';
+  document.getElementById('wm-phone').value  = w?.phone||'';
+  document.getElementById('wm-email').value  = w?.email||'';
+  // Build color swatches
+  const curColor = w?.color || WORKER_COLORS[Math.floor(Math.random()*WORKER_COLORS.length)];
+  WS._pendingColor = curColor;
+  const row = document.getElementById('wm-color-row');
+  row.innerHTML = WORKER_COLORS.map(c=>`
+    <div class="cp-swatch ${c===curColor?'on':''}" style="background:${c}" onclick="selectWorkerColor('${c}',this)"></div>
+  `).join('');
+  document.getElementById('worker-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('wm-first').focus(),80);
+}
+function selectWorkerColor(c, el) {
+  WS._pendingColor = c;
+  document.querySelectorAll('#wm-color-row .cp-swatch').forEach(s=>s.classList.remove('on'));
+  el.classList.add('on');
+}
+function closeWorkerModal() { document.getElementById('worker-modal').classList.remove('open'); }
+function saveWorker() {
+  const first = document.getElementById('wm-first').value.trim();
+  const last  = document.getElementById('wm-last').value.trim();
+  if (!first) { toast('Please enter a first name','warn'); return; }
+  const id = WS.editId || suid();
+  const worker = { id, first, last,
+    role:  document.getElementById('wm-role').value.trim(),
+    phone: document.getElementById('wm-phone').value.trim(),
+    email: document.getElementById('wm-email').value.trim(),
+    color: WS._pendingColor || WORKER_COLORS[0]
+  };
+  if (WS.editId) {
+    const i = WS.workers.findIndex(x=>x.id===WS.editId);
+    if (i>=0) WS.workers[i]=worker; else WS.workers.push(worker);
+  } else {
+    WS.workers.push(worker);
+  }
+  wSave(); closeWorkerModal(); renderWorkers();
+  // Refresh calendar schedule button visibility
+  const schedBtn = document.getElementById('cal-sched-btn');
+  if (schedBtn) schedBtn.style.display = WS.workers.length ? '' : 'none';
+  toast((WS.editId?'Worker updated':'Worker added')+' ✓','success');
+}
+function deleteWorker(id) {
+  const w = WS.workers.find(x=>x.id===id);
+  if (!confirm(`Remove ${workerFullName(w||{})} and their schedule?`)) return;
+  WS.workers = WS.workers.filter(x=>x.id!==id);
+  // Remove their shifts from tasks
+  S.tasks = S.tasks.filter(t=>t._workerId!==id);
+  save(); wSave(); renderWorkers(); renderAll();
+  toast('Worker removed','info');
+}
+
+// ── Schedule Mode ─────────────────────────────────────────────────────────
+function scheduleWorker(workerId) {
+  showPage('calendar', null); setMN('calendar');
+  setTimeout(()=>{ toggleScheduleMode(workerId); }, 100);
+}
+
+function toggleScheduleMode(preSelectId) {
+  wLoad();
+  if (!WS.workers.length) { toast('Add workers first','warn'); return; }
+  WS.schedMode = !WS.schedMode;
+  if (!WS.schedMode) { exitScheduleMode(); return; }
+
+  WS.schedDays = [];
+  WS.schedWorkers = preSelectId ? [preSelectId] : [];
+
+  const panel = document.getElementById('sched-panel');
+  panel.style.display = '';
+
+  renderSchedPanel();
+  // Put calendar into sched mode
+  document.querySelectorAll('.cal-day').forEach(el=>{
+    el.classList.add('sched-mode');
+  });
+  const btn = document.getElementById('cal-sched-btn');
+  if (btn) { btn.textContent='✕ Cancel'; btn.style.background='var(--urgent-soft)'; btn.style.color='var(--urgent)'; btn.style.borderColor='var(--urgent)'; }
+}
+
+function exitScheduleMode() {
+  WS.schedMode = false;
+  WS.schedDays = [];
+  WS.schedWorkers = [];
+  document.getElementById('sched-panel').style.display='none';
+  document.querySelectorAll('.cal-day').forEach(el=>{
+    el.classList.remove('sched-mode','sched-selected');
+  });
+  const btn = document.getElementById('cal-sched-btn');
+  if (btn) { btn.textContent='👷 Schedule'; btn.style.background=''; btn.style.color=''; btn.style.borderColor=''; }
+  renderCalendar();
+}
+
+function renderSchedPanel() {
+  const list = document.getElementById('sched-worker-list');
+  if (!list) return;
+  list.innerHTML = WS.workers.map(w=>`
+    <div class="sched-worker-row" onclick="toggleSchedWorker('${w.id}',this)">
+      <div class="sched-check ${WS.schedWorkers.includes(w.id)?'on':''}" id="swc-${w.id}" style="${WS.schedWorkers.includes(w.id)?'background:'+workerColor(w):''}">${WS.schedWorkers.includes(w.id)?'✓':''}</div>
+      <div class="worker-avatar" style="width:28px;height:28px;font-size:11px;background:${workerColor(w)}">${workerInitials(w)}</div>
+      <div class="sched-worker-name">${esc(workerFullName(w))}</div>
+    </div>`).join('');
+  renderSchedDayChips();
+}
+
+function toggleSchedWorker(id, row) {
+  if (WS.schedWorkers.includes(id)) {
+    WS.schedWorkers = WS.schedWorkers.filter(x=>x!==id);
+  } else {
+    WS.schedWorkers.push(id);
+  }
+  renderSchedPanel();
+}
+
+function renderSchedDayChips() {
+  const el = document.getElementById('sched-day-chips');
+  if (!el) return;
+  el.innerHTML = WS.schedDays.sort().map(ds=>`
+    <span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:12px;background:var(--accent-soft);color:var(--accent);cursor:pointer;" onclick="removeSchedDay('${ds}')">${ds} ✕</span>
+  `).join('') || '<span style="font-size:11px;color:var(--text3)">Tap days on calendar…</span>';
+}
+
+function calDayClickSched(ds) {
+  if (!WS.schedMode) return false;
+  if (!WS.schedWorkers.length) { toast('Select at least one worker first','warn'); return true; }
+  const idx = WS.schedDays.indexOf(ds);
+  if (idx>=0) { WS.schedDays.splice(idx,1); } else { WS.schedDays.push(ds); }
+  // Toggle selected class on day
+  const cell = document.querySelector(`.cal-day[data-ds="${ds}"]`);
+  if (cell) cell.classList.toggle('sched-selected', WS.schedDays.includes(ds));
+  renderSchedDayChips();
+  return true; // consumed
+}
+
+function removeSchedDay(ds) {
+  WS.schedDays = WS.schedDays.filter(x=>x!==ds);
+  const cell = document.querySelector(`.cal-day[data-ds="${ds}"]`);
+  if (cell) cell.classList.remove('sched-selected');
+  renderSchedDayChips();
+}
+
+function clearScheduleSel() {
+  WS.schedDays = [];
+  document.querySelectorAll('.cal-day.sched-selected').forEach(el=>el.classList.remove('sched-selected'));
+  renderSchedDayChips();
+}
+
+function saveSchedule() {
+  if (!WS.schedWorkers.length) { toast('Select workers first','warn'); return; }
+  if (!WS.schedDays.length)    { toast('Select days on the calendar','warn'); return; }
+  let added = 0;
+  WS.schedWorkers.forEach(wid=>{
+    const w = WS.workers.find(x=>x.id===wid);
+    if (!w) return;
+    WS.schedDays.forEach(ds=>{
+      // Check if already scheduled
+      const exists = S.tasks.find(t=>t._workerId===wid && t.date===ds);
+      if (!exists) {
+        S.tasks.unshift({
+          id: uid(), _workerId: wid,
+          text: `${workerFullName(w)} — Work Shift`,
+          priority:'low', tag:'work', date:ds, dateEnd:'', time:'', notes:'',
+          recur:'', recurN:1, done:false, _workerColor:workerColor(w)
+        });
+        added++;
+      }
+    });
+  });
+  save(); exitScheduleMode(); renderAll();
+  toast(`${added} shift${added!==1?'s':''} added to calendar ✓`,'success');
+}
+
+// ── Log sort helper ────────────────────────────────────────────────────────
+function setLogSort(carId, mode) {
+  const car = GS.cars.find(c=>c.id===carId); if(!car)return;
+  const el = document.getElementById('g-log-'+carId);
+  if (el) { el.innerHTML = renderLogHTML(car, mode); el.scrollTop = 0; }
+}
+
+// ── Calendar tooltip ───────────────────────────────────────────────────────
+let _tooltipTimer = null;
+const _tooltip = (() => {
+  const el = document.createElement('div');
+  el.className = 'cal-tooltip';
+  el.id = 'cal-tooltip';
+  document.body.appendChild(el);
+  return el;
+})();
+
+function showCalTooltip(ds, x, y) {
+  clearTimeout(_tooltipTimer);
+  // Build tooltip content
+  const eventsOnDay = S.tasks.filter(t=>{
+    if (!t.date) return false;
+    const s=new Date(t.date+'T00:00:00'), e=t.dateEnd?new Date(t.dateEnd+'T00:00:00'):s;
+    return new Date(ds+'T00:00:00')>=s && new Date(ds+'T00:00:00')<=e;
+  });
+  // Worker shifts
+  const shifts = S.tasks.filter(t=>t._workerId && t.date===ds);
+  const allItems = [...eventsOnDay];
+
+  if (!allItems.length) { hideCalTooltip(); return; }
+
+  const d = new Date(ds+'T00:00:00');
+  const dateStr = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  const tagColors={travel:'#0ea5e9',birthday:'#f04a6b',renewal:'#f59e0b',health:'#22c55e',finance:'#a855f7',personal:'#8b5cf6',work:'#06b6d4',car:'#64748b'};
+
+  _tooltip.innerHTML = `<div class="cal-tooltip-date">${dateStr}</div>` +
+    allItems.map(t=>{
+      const col = t._workerColor || (t._workerId ? (WS.workers.find(w=>w.id===t._workerId)||{color:'#6366f1'}).color : tagColors[t.tag]) || '#6366f1';
+      return `<div class="cal-tooltip-row"><div class="cal-tooltip-dot" style="background:${col}"></div>${esc(t.text)}</div>`;
+    }).join('');
+
+  // Position smartly
+  const vw = window.innerWidth, vh = window.innerHeight;
+  let tx = x+14, ty = y-10;
+  if (tx+290 > vw) tx = x-294;
+  if (ty+200 > vh) ty = vh-210;
+  _tooltip.style.left  = Math.max(8,tx)+'px';
+  _tooltip.style.top   = Math.max(8,ty)+'px';
+  _tooltip.classList.add('visible');
+}
+
+function hideCalTooltip() {
+  _tooltipTimer = setTimeout(()=>_tooltip.classList.remove('visible'), 120);
+}
+
+wLoad();
+
 // ════════════════════════════════════
 // CLOSE HANDLERS + BOOT
 // ════════════════════════════════════
@@ -2257,7 +2782,8 @@ document.getElementById('modal').addEventListener('click',function(e){if(e.targe
 document.getElementById('car-modal').addEventListener('click',function(e){if(e.target===this)closeCarModal();});
 document.getElementById('log-modal').addEventListener('click',function(e){if(e.target===this)closeLogModal();});
 document.getElementById('sched-modal').addEventListener('click',function(e){if(e.target===this)closeSchedModal();});
-document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); closeCarModal(); closeLogModal(); closeSchedModal(); }});
+document.getElementById('worker-modal').addEventListener('click',function(e){if(e.target===this)closeWorkerModal();});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); closeCarModal(); closeLogModal(); closeSchedModal(); closeWorkerModal(); if(WS.schedMode)exitScheduleMode(); }});
 init();
 </script>
 
