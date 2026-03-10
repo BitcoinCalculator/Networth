@@ -439,7 +439,7 @@ html.light-theme .ev-work    {color:var(--c-work);}
 .cal-day.sched-mode:hover{border-color:var(--accent);background:var(--accent-soft);}
 .cal-day.sched-selected{background:var(--accent-soft) !important;border-color:var(--accent) !important;}
 
-.cal-worker-dots{position:absolute;bottom:3px;left:3px;right:3px;display:flex;flex-wrap:wrap;gap:2px;z-index:2;}
+
 .shift-dot{width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 2px 4px rgba(0,0,0,.35);cursor:pointer;letter-spacing:0;}
 
 /* Hover tooltip */
@@ -449,9 +449,16 @@ html.light-theme .ev-work    {color:var(--c-work);}
 .shift-det-avatar{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;margin-right:8px;}
 .cal-del-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:6px;transition:color .15s;flex-shrink:0;font-family:inherit;}
 .cal-del-btn:hover{color:var(--urgent);background:var(--urgent-soft);}
-.cal-hol-icon{font-size:11px;margin-left:3px;line-height:1;flex-shrink:0;}
-.cal-hol-name{font-size:8px;font-weight:700;color:var(--accent2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-left:4px;letter-spacing:.01em;flex:1;min-width:0;}
-@media(max-width:600px){.cal-hol-name{display:none;}}
+/* Worker dots — top right of cell, same line as day number */
+.cal-top-workers{display:flex;gap:2px;flex-wrap:nowrap;margin-left:auto;padding-left:2px;flex-shrink:0;}
+/* Bottom bar — holiday left, birthday right */
+.cal-day-bottom{position:absolute;bottom:3px;left:3px;right:3px;display:flex;align-items:flex-end;justify-content:space-between;pointer-events:none;z-index:2;}
+.cal-hol-bl{display:flex;align-items:center;gap:2px;pointer-events:auto;max-width:calc(100% - 22px);overflow:hidden;}
+.cal-hol-icon{font-size:10px;line-height:1;flex-shrink:0;}
+.cal-hol-plus{font-size:7px;font-weight:800;color:var(--accent2);margin-left:1px;}
+.cal-hol-name{font-size:7.5px;font-weight:700;color:var(--accent2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.01em;}
+.cal-bday-icon{font-size:12px;line-height:1;flex-shrink:0;pointer-events:auto;}
+@media(max-width:600px){.cal-hol-name{display:none;}.cal-hol-icon{font-size:11px;}.cal-bday-icon{font-size:11px;}}
 .cal-tooltip{
   position:fixed;z-index:9999;
   background:var(--bg-panel);border:1px solid var(--border);
@@ -486,7 +493,7 @@ html.light-theme .ev-work    {color:var(--c-work);}
 .cal-day-color-seg{flex:1;}
 
 /* Improved calendar day number area */
-.cal-day-top{display:flex;align-items:center;justify-content:space-between;padding:0 2px;margin-bottom:1px;;overflow:hidden;}
+.cal-day-top{display:flex;align-items:center;padding:0 2px;margin-bottom:1px;gap:2px;overflow:hidden;}
 .cal-day-top .cal-dn{margin:0;}
 .cal-day-top .cal-dn-circle{margin:0;}
 
@@ -607,6 +614,17 @@ select.form-in option{background:var(--bg-panel);}
   .modal{padding:20px 18px;}
   .cal-day{min-height:70px;}
 }
+
+/* ── Smart modal category chips ─────────────────────────────── */
+.cat-chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.cat-chip{padding:6px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg-hover);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;user-select:none;white-space:nowrap;}
+.cat-chip:hover{border-color:var(--accent);color:var(--accent);}
+.cat-chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);}
+.m-mode{animation:fadeIn .15s ease;}
+/* ── Bottom-right cell icons (birthday + car lined up) ──────── */
+.cal-br-icons{display:flex;gap:2px;align-items:center;flex-shrink:0;}
+/* ── Priority hint text ─────────────────────────────────────── */
+#m-pri-hint{transition:opacity .3s;}
 </style>
 
 </head>
@@ -880,59 +898,144 @@ select.form-in option{background:var(--bg-panel);}
 </nav>
 </div>
 
-<!-- MODAL -->
-
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <div class="modal-head">
       <div class="modal-title" id="mtitle">New Task</div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="nlp-strip">💡 <strong>Quick add:</strong> Type <em>"Europe trip June 10 travel medium"</em> in the top bar — date, category & priority auto-fill. Set an End Date for multi-day events like trips.</div>
-    <div class="form-row full"><div class="form-g"><label class="form-lbl">Task / Event</label><input class="form-in" id="mt" placeholder="What needs to be done?" style="font-size:15px;font-weight:600;"></div></div>
-    <div class="form-row">
-      <div class="form-g"><label class="form-lbl">Start Date</label><input class="form-in" type="date" id="md"></div>
-      <div class="form-g"><label class="form-lbl">End Date <small style="color:var(--text3)">optional · leave blank for single day</small></label><input class="form-in" type="date" id="md-end"></div>
-      <div class="form-g"><label class="form-lbl">Time</label><input class="form-in" type="time" id="mtime"></div>
-      <div class="form-g">
-        <label class="form-lbl">Category</label>
-        <select class="form-in" id="mtag">
+    <div class="nlp-strip">💡 <strong>Quick add:</strong> Type <em>"Europe trip June 10 travel medium"</em> in the top bar — date, category &amp; priority auto-fill.</div>
+
+```
+<!-- STEP 1: Category picker (always visible, always first) -->
+<div class="form-row full" id="m-cat-row">
+  <div class="form-g">
+    <label class="form-lbl">What kind of entry is this?</label>
+    <div class="cat-chip-row" id="m-cat-chips">
+      <div class="cat-chip" data-cat="" onclick="modalSetCat('')">📋 General</div>
+      <div class="cat-chip" data-cat="birthday" onclick="modalSetCat('birthday')">🎂 Birthday</div>
+      <div class="cat-chip" data-cat="car" onclick="modalSetCat('car')">🚗 Car</div>
+      <div class="cat-chip" data-cat="travel" onclick="modalSetCat('travel')">✈️ Trip</div>
+      <div class="cat-chip" data-cat="health" onclick="modalSetCat('health')">🏥 Health</div>
+      <div class="cat-chip" data-cat="renewal" onclick="modalSetCat('renewal')">🪪 Renewal</div>
+      <div class="cat-chip" data-cat="finance" onclick="modalSetCat('finance')">💰 Finance</div>
+      <div class="cat-chip" data-cat="work" onclick="modalSetCat('work')">💼 Work</div>
+      <div class="cat-chip" data-cat="personal" onclick="modalSetCat('personal')">👤 Personal</div>
+    </div>
+    <input type="hidden" id="mtag" value="">
+  </div>
+</div>
+
+<!-- BIRTHDAY MODE -->
+<div id="m-mode-birthday" class="m-mode" style="display:none">
+  <div class="form-row">
+    <div class="form-g full"><label class="form-lbl">Person's Name</label><input class="form-in" id="mb-name" placeholder="e.g. Mom, Dad, Sarah…" style="font-size:15px;font-weight:600;"></div>
+    <div class="form-g"><label class="form-lbl">Birthday (month &amp; day)</label><input class="form-in" type="date" id="mb-date"></div>
+    <div class="form-g"><label class="form-lbl">Birth Year <small style="color:var(--text3)">optional — shows age</small></label><input class="form-in" type="number" id="mb-year" placeholder="1990" min="1900" max="2025"></div>
+    <div class="form-g s2"><label class="form-lbl">Notes <small style="color:var(--text3)">gift ideas, etc.</small></label><input class="form-in" id="mb-notes" placeholder="Chocolate cake, likes hiking…"></div>
+  </div>
+</div>
+
+<!-- CAR SERVICE MODE -->
+<div id="m-mode-car" class="m-mode" style="display:none">
+  <div class="form-row">
+    <div class="form-g s2"><label class="form-lbl">Which Car?</label><select class="form-in" id="mc-car"></select></div>
+    <div class="form-g s2"><label class="form-lbl">Service Type</label>
+      <select class="form-in" id="mc-type">
+        <option value="Oil Change">🛢 Oil Change</option>
+        <option value="Tire Rotation">🔄 Tire Rotation</option>
+        <option value="Air Filter">💨 Air Filter</option>
+        <option value="Cabin Filter">🌬 Cabin Filter</option>
+        <option value="Brakes">🛑 Brakes</option>
+        <option value="Battery">🔋 Battery</option>
+        <option value="Inspection">📋 Inspection</option>
+        <option value="Tires">🏎 New Tires</option>
+        <option value="Alignment">📐 Wheel Alignment</option>
+        <option value="Detail">✨ Full Detail</option>
+        <option value="Other">🔧 Other</option>
+      </select>
+    </div>
+    <div class="form-g"><label class="form-lbl">Scheduled Date</label><input class="form-in" type="date" id="mc-date"></div>
+    <div class="form-g"><label class="form-lbl">Time <small style="color:var(--text3)">optional</small></label><input class="form-in" type="time" id="mc-time"></div>
+    <div class="form-g s2"><label class="form-lbl">Notes <small style="color:var(--text3)">shop, mileage, etc.</small></label><input class="form-in" id="mc-notes" placeholder="e.g. Jiffy Lube, 45,200 mi…"></div>
+  </div>
+</div>
+
+<!-- TRAVEL MODE -->
+<div id="m-mode-travel" class="m-mode" style="display:none">
+  <div class="form-row">
+    <div class="form-g full"><label class="form-lbl">Trip Name / Destination</label><input class="form-in" id="mtr-name" placeholder="e.g. Paris Trip, Beach Weekend…" style="font-size:15px;font-weight:600;"></div>
+    <div class="form-g"><label class="form-lbl">Departure Date</label><input class="form-in" type="date" id="mtr-start"></div>
+    <div class="form-g"><label class="form-lbl">Return Date <small style="color:var(--text3)">optional</small></label><input class="form-in" type="date" id="mtr-end"></div>
+    <div class="form-g s2"><label class="form-lbl">Notes <small style="color:var(--text3)">hotel, flight #, packing list…</small></label><input class="form-in" id="mtr-notes" placeholder="Flight AA123, Hotel Marriott…"></div>
+  </div>
+</div>
+
+<!-- RENEWAL MODE -->
+<div id="m-mode-renewal" class="m-mode" style="display:none">
+  <div class="form-row">
+    <div class="form-g full"><label class="form-lbl">What needs renewing?</label><input class="form-in" id="mr-name" placeholder="e.g. Driver's License, Passport, Insurance…" style="font-size:15px;font-weight:600;"></div>
+    <div class="form-g"><label class="form-lbl">Due / Expiry Date</label><input class="form-in" type="date" id="mr-date"></div>
+    <div class="form-g"><label class="form-lbl">Remind Me</label>
+      <select class="form-in" id="mr-lead">
+        <option value="7">1 week before</option>
+        <option value="14">2 weeks before</option>
+        <option value="30" selected>1 month before</option>
+        <option value="60">2 months before</option>
+        <option value="90">3 months before</option>
+      </select>
+    </div>
+    <div class="form-g"><label class="form-lbl">Recurs Every</label>
+      <select class="form-in" id="mr-recur">
+        <option value="">— One time —</option>
+        <option value="years-1">1 year</option>
+        <option value="years-2">2 years</option>
+        <option value="years-4">4 years</option>
+        <option value="years-10">10 years</option>
+        <option value="months-6">6 months</option>
+        <option value="months-1">1 month</option>
+      </select>
+    </div>
+    <div class="form-g s2"><label class="form-lbl">Notes</label><input class="form-in" id="mr-notes" placeholder="Documents needed, location…"></div>
+  </div>
+</div>
+
+<!-- GENERAL MODE (health / finance / work / personal / default) -->
+<div id="m-mode-general" class="m-mode" style="display:none">
+  <div class="form-row full"><div class="form-g"><label class="form-lbl" id="m-gen-label">Task / Event</label><input class="form-in" id="mt" placeholder="What needs to be done?" style="font-size:15px;font-weight:600;"></div></div>
+  <div class="form-row">
+    <div class="form-g"><label class="form-lbl">Date</label><input class="form-in" type="date" id="md"></div>
+    <div class="form-g" id="m-end-wrap"><label class="form-lbl">End Date <small style="color:var(--text3)">optional</small></label><input class="form-in" type="date" id="md-end"></div>
+    <div class="form-g"><label class="form-lbl">Time <small style="color:var(--text3)">optional</small></label><input class="form-in" type="time" id="mtime"></div>
+    <div class="form-g s2"><label class="form-lbl">Priority <small id="m-pri-hint" style="color:var(--accent);font-size:10px;"></small></label>
+      <div class="pri-pills">
+        <div class="pri-pill urgent" onclick="selPri('urgent',true)">🔴 Urgent</div>
+        <div class="pri-pill medium on" onclick="selPri('medium',true)">🟡 Medium</div>
+        <div class="pri-pill low" onclick="selPri('low',true)">🟢 Low</div>
+      </div>
+    </div>
+    <div class="form-g s2">
+      <label class="form-lbl">Recurrence</label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <select class="form-in" id="mrecur-type" style="flex:1;">
           <option value="">— None —</option>
-          <option value="health">🏥 Health</option>
-          <option value="finance">💰 Finance</option>
-          <option value="travel">✈️ Travel</option>
-          <option value="personal">👤 Personal</option>
-          <option value="birthday">🎂 Birthday</option>
-          <option value="work">💼 Work</option>
-          <option value="renewal">🪪 Renewal</option>
-          <option value="car">🚗 Car Service</option>
+          <option value="years">Every N Years</option>
+          <option value="months">Every N Months</option>
+          <option value="weeks">Every N Weeks</option>
         </select>
+        <input class="form-in" type="number" id="mrecur-n" placeholder="N" min="1" max="99" style="width:80px;" value="1">
       </div>
-      <div class="form-g s2"><label class="form-lbl">Priority</label>
-        <div class="pri-pills">
-          <div class="pri-pill urgent" onclick="selPri('urgent')">🔴 Urgent</div>
-          <div class="pri-pill medium on" onclick="selPri('medium')">🟡 Medium</div>
-          <div class="pri-pill low" onclick="selPri('low')">🟢 Low</div>
-        </div>
-      </div>
-      <div class="form-g s2">
-        <label class="form-lbl">Recurrence <small>(e.g. every 1 year, every 4 years)</small></label>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <select class="form-in" id="mrecur-type" style="flex:1;">
-            <option value="">— None —</option>
-            <option value="years">Every N Years</option>
-            <option value="months">Every N Months</option>
-            <option value="weeks">Every N Weeks</option>
-          </select>
-          <input class="form-in" type="number" id="mrecur-n" placeholder="N" min="1" max="99" style="width:80px;" value="1">
-        </div>
-      </div>
-      <div class="form-g s2"><label class="form-lbl">Notes</label><input class="form-in" id="mnotes" placeholder="Any extra details…"></div>
     </div>
-    <div class="modal-acts">
-      <button class="btn-ghost" onclick="closeModal()">Cancel</button>
-      <button class="btn-primary" onclick="saveTask()">Save Task</button>
-    </div>
+    <div class="form-g s2"><label class="form-lbl">Notes</label><input class="form-in" id="mnotes" placeholder="Any extra details…"></div>
+  </div>
+</div>
+
+<div class="modal-acts">
+  <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+  <button class="btn-primary" onclick="saveTask()">Save ✓</button>
+</div>
+```
+
   </div>
 </div>
 
@@ -1412,7 +1515,7 @@ function renderCalendar() {
   const slotUsed = Array.from({length:totalCols}, ()=>[false,false,false]);
 
   const tasks = S.tasks.filter(t => {
-    if (t.done || !t.date || t._workerId) return false;
+    if (t.done || !t.date || t._workerId || t.tag==='birthday' || t.tag==='car') return false;
     const s = new Date(t.date+'T00:00:00');
     const e = t.dateEnd ? new Date(t.dateEnd+'T00:00:00') : s;
     const vStart = new Date(visibleDates[0]+'T00:00:00');
@@ -1472,16 +1575,43 @@ function renderCalendar() {
       ? `<div class="cal-dn-circle">${dayNum}</div>`
       : `<div class="cal-dn">${dayNum}</div>`;
 
-    // Holiday label for this cell
-    const hols = holidayMap[ds] || [];
-    // Mobile: just icon in day-top. Desktop: icon + name inline next to day number.
-    const holMobile  = hols.length ? `<span class="cal-hol-icon">${hols[0].icon}${hols.length>1?'+':''}</span>` : '';
-    const holDesktop = hols.map(h=>`<span class="cal-hol-name">${h.icon} ${h.name}</span>`).join('');
+    // ── Workers on this day (dots go in top row) ─────────────────────────
+    const workers = (WS.workers||[]).filter(w=>(w.shifts||[]).includes(ds));
+    const workerDots = workers.map(w=>
+      `<div class="shift-dot" style="background:${workerColor(w)}" title="${esc(workerFullName(w))}"
+        onclick="event.stopPropagation();calSel('${ds}')">${(w.first||'?')[0].toUpperCase()}</div>`
+    ).join('');
+    const workerDotsHtml = workerDots ? `<div class="cal-top-workers">${workerDots}</div>` : '';
 
-    // Color strip (thin line under date number)
+    // ── Holiday — bottom left ─────────────────────────────────────────────
+    const hols = holidayMap[ds] || [];
+    const holHtml = hols.length
+      ? `<div class="cal-hol-bl"><span class="cal-hol-icon">${hols[0].icon}${hols.length>1?'<span class="cal-hol-plus">+'+hols.length+'</span>':''}</span><span class="cal-hol-name">${hols.map(h=>h.name).join(', ')}</span></div>`
+      : '';
+
+    // ── Birthday icon — bottom right (tasks still tracked normally) ───────
+    const hasBday = S.tasks.some(t =>
+      t.tag==='birthday' && !t.done && t.date &&
+      new Date(t.date+'T00:00:00').getMonth()===new Date(ds+'T00:00:00').getMonth() &&
+      new Date(t.date+'T00:00:00').getDate()===new Date(ds+'T00:00:00').getDate()
+    );
+    const bdayIcon = hasBday ? `<div class="cal-bday-icon" title="Birthday!">🎂</div>` : '';
+
+    // ── Car service icon — bottom right alongside birthday ────────────────
+    const hasCarSvc = S.tasks.some(t =>
+      t.tag==='car' && !t.done && t.date && t.date===ds
+    );
+    const carIcon = hasCarSvc ? `<div class="cal-bday-icon" title="Car service due">🚗</div>` : '';
+
+    // Combined bottom-right icons (bday + car lined up horizontally)
+    const brIcons = (hasBday || hasCarSvc)
+      ? `<div class="cal-br-icons">${bdayIcon}${carIcon}</div>`
+      : '';
+
+    // ── Color strip ───────────────────────────────────────────────────────
     const dayColors = new Set();
     S.tasks.filter(t=>{
-      if(!t.date||t.done||t._workerId) return false;
+      if(!t.date||t.done||t._workerId||t.tag==='birthday'||t.tag==='car') return false;
       const s=new Date(t.date+'T00:00:00'), e=t.dateEnd?new Date(t.dateEnd+'T00:00:00'):s;
       return new Date(ds+'T00:00:00')>=s && new Date(ds+'T00:00:00')<=e;
     }).forEach(t=>dayColors.add(tagColorMap[t.tag]||'#6366f1'));
@@ -1490,21 +1620,15 @@ function renderCalendar() {
       ? `<div class="cal-day-colors">${[...dayColors].map(c=>`<div class="cal-day-color-seg" style="background:${c}"></div>`).join('')}</div>`
       : '';
 
-    // Worker dots — bottom of cell, just initials
-    const workers = (WS.workers||[]).filter(w=>(w.shifts||[]).includes(ds));
-    const dotHtml  = workers.length
-      ? `<div class="cal-worker-dots">${workers.map(w=>`<div class="shift-dot" style="background:${workerColor(w)}" title="${esc(workerFullName(w))}">${(w.first||'?')[0].toUpperCase()}</div>`).join('')}</div>`
-      : '';
-
     return `<div class="cal-day${isOther?' other-month':''}${isToday?' today':''}${isSel?' selected':''}" data-ds="${ds}"
       onclick="if(!calDayClickSched('${ds}'))calSel('${ds}')"
       onmouseenter="showCalTooltip('${ds}',event.clientX,event.clientY)"
       onmousemove="showCalTooltip('${ds}',event.clientX,event.clientY)"
       onmouseleave="hideCalTooltip()">
-      <div class="cal-day-top">${dnEl}${holMobile}${holDesktop}</div>
+      <div class="cal-day-top">${dnEl}${workerDotsHtml}</div>
       ${colorStrip}
       <div class="cal-ev-space" id="cev-${ds}"></div>
-      ${dotHtml}
+      <div class="cal-day-bottom">${holHtml}${brIcons}</div>
     </div>`;
   }).join('');
 
@@ -1713,54 +1837,273 @@ function confirmClear(){if(confirm('Delete ALL data? Cannot be undone.')){S.task
 // ════════════════════════════════════
 // MODAL
 // ════════════════════════════════════
+// ── Priority manual-override flag ─────────────────────────────────────────
+let S_priManual = false;
+
+// Auto-priority from date: <7d=urgent, 7-30d=medium, >30d=low
+function autoPriority(dateStr) {
+  if (!dateStr) return 'medium';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const d = new Date(dateStr+'T00:00:00');
+  const days = Math.round((d - today) / 86400000);
+  if (days < 0)   return 'urgent';  // overdue
+  if (days <= 7)  return 'urgent';
+  if (days <= 30) return 'medium';
+  return 'low';
+}
+
+function applyAutoPriority(dateStr) {
+  if (S_priManual) return; // user already manually picked — don't override
+  const p = autoPriority(dateStr);
+  selPri(p, false);
+  const hint = document.getElementById('m-pri-hint');
+  if (hint) hint.textContent = '(auto)';
+}
+
 function openAdd(){
-  S.editId=null;
-  document.getElementById('mtitle').textContent='New Task / Event';
-  ['mt','md','md-end','mtime','mtag','mnotes'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('mrecur-type').value='';
-  document.getElementById('mrecur-n').value='1';
-  selPri('medium');
+  S.editId=null; S_priManual=false;
+  document.getElementById('mtitle').textContent='New Task';
   document.getElementById('modal').classList.add('open');
-  setTimeout(()=>document.getElementById('mt').focus(),80);
+  modalSetCat('', true);  // reset to general, reset all fields
 }
 function openEdit(id){
   const t=S.tasks.find(t=>t.id===id); if(!t)return;
-  S.editId=id;
-  document.getElementById('mtitle').textContent='Edit Task';
-  document.getElementById('mt').value    =t.text;
-  document.getElementById('md').value    =t.date||'';
-  document.getElementById('md-end').value=t.dateEnd||'';
-  document.getElementById('mtime').value =t.time||'';
-  document.getElementById('mtag').value  =t.tag||'';
-  document.getElementById('mnotes').value=t.notes||'';
-  document.getElementById('mrecur-type').value=t.recur||'';
-  document.getElementById('mrecur-n').value=t.recurN||1;
-  selPri(t.priority||'medium');
+  S.editId=id; S_priManual=true; // treat all edits as manual
+  document.getElementById('mtitle').textContent='Edit';
   document.getElementById('modal').classList.add('open');
-  setTimeout(()=>document.getElementById('mt').focus(),80);
+  modalSetCat(t.tag||'', false, t);
 }
+// ── Smart modal: show correct mode for category ──────────────────────────
+function modalSetCat(cat, resetFields, editTask) {
+  // Update hidden input
+  const tagInput = document.getElementById('mtag');
+  if (tagInput) tagInput.value = cat;
+
+  // Highlight selected chip
+  document.querySelectorAll('.cat-chip').forEach(c => {
+    c.classList.toggle('on', c.dataset.cat === cat);
+  });
+
+  // Hide all modes
+  document.querySelectorAll('.m-mode').forEach(m => m.style.display='none');
+
+  const t = editTask;
+
+  if (cat === 'birthday') {
+    document.getElementById('m-mode-birthday').style.display='';
+    if (resetFields || !t) {
+      document.getElementById('mb-name').value  = '';
+      document.getElementById('mb-date').value  = '';
+      document.getElementById('mb-year').value  = '';
+      document.getElementById('mb-notes').value = '';
+    } else if (t) {
+      // Parse name from text like "Mom's Birthday" → "Mom"
+      document.getElementById('mb-name').value  = t.text.replace(/'?s? ?birthday/i,'').replace(/🎂/,'').trim() || t.text;
+      document.getElementById('mb-date').value  = t.date||'';
+      document.getElementById('mb-year').value  = t.date ? new Date(t.date+'T00:00:00').getFullYear() : '';
+      document.getElementById('mb-notes').value = t.notes||'';
+    }
+    setTimeout(()=>document.getElementById('mb-name').focus(),80);
+
+  } else if (cat === 'car') {
+    document.getElementById('m-mode-car').style.display='';
+    // Populate car dropdown from GS.cars
+    const sel = document.getElementById('mc-car');
+    sel.innerHTML = GS.cars.length
+      ? GS.cars.map(c=>`<option value="${c.id}">${c.year||''} ${c.make} ${c.model}</option>`).join('')
+      : '<option value="">— No cars added yet —</option>';
+    if (resetFields || !t) {
+      document.getElementById('mc-type').value  = 'Oil Change';
+      document.getElementById('mc-date').value  = '';
+      document.getElementById('mc-time').value  = '';
+      document.getElementById('mc-notes').value = '';
+    } else if (t) {
+      // Try to match car id from notes or task
+      if (t._carId) sel.value = t._carId;
+      // Try to guess service type from text
+      const svcTypes=['Oil Change','Tire Rotation','Air Filter','Cabin Filter','Brakes','Battery','Inspection','Tires','Alignment','Detail'];
+      const matched = svcTypes.find(s=>t.text.includes(s));
+      document.getElementById('mc-type').value  = matched||'Oil Change';
+      document.getElementById('mc-date').value  = t.date||'';
+      document.getElementById('mc-time').value  = t.time||'';
+      document.getElementById('mc-notes').value = t.notes||'';
+    }
+    setTimeout(()=>document.getElementById('mc-date').focus(),80);
+
+  } else if (cat === 'travel') {
+    document.getElementById('m-mode-travel').style.display='';
+    if (resetFields || !t) {
+      document.getElementById('mtr-name').value  = '';
+      document.getElementById('mtr-start').value = '';
+      document.getElementById('mtr-end').value   = '';
+      document.getElementById('mtr-notes').value = '';
+    } else if (t) {
+      document.getElementById('mtr-name').value  = t.text;
+      document.getElementById('mtr-start').value = t.date||'';
+      document.getElementById('mtr-end').value   = t.dateEnd||'';
+      document.getElementById('mtr-notes').value = t.notes||'';
+    }
+    setTimeout(()=>document.getElementById('mtr-name').focus(),80);
+
+  } else if (cat === 'renewal') {
+    document.getElementById('m-mode-renewal').style.display='';
+    if (resetFields || !t) {
+      document.getElementById('mr-name').value  = '';
+      document.getElementById('mr-date').value  = '';
+      document.getElementById('mr-lead').value  = '30';
+      document.getElementById('mr-recur').value = '';
+      document.getElementById('mr-notes').value = '';
+    } else if (t) {
+      document.getElementById('mr-name').value  = t.text;
+      document.getElementById('mr-date').value  = t.date||'';
+      document.getElementById('mr-notes').value = t.notes||'';
+      // Reconstruct recur
+      if (t.recur && t.recurN) document.getElementById('mr-recur').value = t.recur+'-'+t.recurN;
+    }
+    setTimeout(()=>document.getElementById('mr-name').focus(),80);
+
+  } else {
+    // General mode: health, finance, work, personal, or blank
+    document.getElementById('m-mode-general').style.display='';
+    const labels = {health:'Appointment / Task',finance:'Bill / Expense',work:'Work Task',personal:'Personal Task','':"Task / Event"};
+    const el = document.getElementById('m-gen-label');
+    if (el) el.textContent = labels[cat]||'Task / Event';
+    // Show/hide end date for non-multi-day categories
+    const endWrap = document.getElementById('m-end-wrap');
+    if (endWrap) endWrap.style.display = (cat===''||cat==='work'||cat==='personal') ? '' : 'none';
+    if (resetFields || !t) {
+      document.getElementById('mt').value         = '';
+      document.getElementById('md').value         = '';
+      document.getElementById('md-end').value     = '';
+      document.getElementById('mtime').value      = '';
+      document.getElementById('mnotes').value     = '';
+      document.getElementById('mrecur-type').value= '';
+      document.getElementById('mrecur-n').value   = '1';
+      S_priManual = false;
+      selPri('medium', false);
+    } else if (t) {
+      document.getElementById('mt').value         = t.text;
+      document.getElementById('md').value         = t.date||'';
+      document.getElementById('md-end').value     = t.dateEnd||'';
+      document.getElementById('mtime').value      = t.time||'';
+      document.getElementById('mnotes').value     = t.notes||'';
+      document.getElementById('mrecur-type').value= t.recur||'';
+      document.getElementById('mrecur-n').value   = t.recurN||1;
+      selPri(t.priority||'medium', true);
+    }
+    // Wire date input to auto-priority
+    const dateEl = document.getElementById('md');
+    if (dateEl) {
+      dateEl.oninput = () => applyAutoPriority(dateEl.value);
+    }
+    setTimeout(()=>document.getElementById('mt').focus(),80);
+  }
+}
+
 function closeModal(){document.getElementById('modal').classList.remove('open');}
 function saveTask(){
-  const text=document.getElementById('mt').value.trim();
-  if(!text){toast('Please enter a task name','warn');return;}
-  const task={
-    id:S.editId||uid(), text,
-    priority:S.selPriority,
-    date:    document.getElementById('md').value,
-    dateEnd: document.getElementById('md-end').value,
-    time:    document.getElementById('mtime').value,
-    tag:     document.getElementById('mtag').value,
-    notes:   document.getElementById('mnotes').value,
-    recur:   document.getElementById('mrecur-type').value,
-    recurN:  parseInt(document.getElementById('mrecur-n').value)||1,
-    done:false
-  };
-  if(S.editId){const i=S.tasks.findIndex(t=>t.id===S.editId);if(i>=0){task.done=S.tasks[i].done;S.tasks[i]=task;}}
-  else S.tasks.unshift(task);
-  save();closeModal();renderAll();
-  toast(S.editId?'Task updated ✓':'Task added ✓','success');
+  const cat = (document.getElementById('mtag')||{}).value || '';
+  let task = null;
+
+  // ── AUTO-PRIORITY helper (respects manual override) ──────────────────────
+  function smartPri(dateStr) {
+    if (S_priManual) return S.selPriority;
+    return autoPriority(dateStr);
+  }
+
+  if (cat === 'birthday') {
+    const name = document.getElementById('mb-name').value.trim();
+    const date = document.getElementById('mb-date').value;
+    const year = document.getElementById('mb-year').value;
+    if (!name) { toast('Please enter a name','warn'); return; }
+    if (!date) { toast('Please enter a birthday date','warn'); return; }
+    // Store date with birth year if provided, otherwise keep as-is
+    const storeDate = year
+      ? `${year}-${date.slice(5)}`   // replace year part
+      : date;
+    task = {
+      id: S.editId||uid(), text: name+"'s Birthday 🎂",
+      priority: 'low',  // birthdays don't auto-escalate
+      date: storeDate, dateEnd:'', time:'',
+      tag:'birthday', notes: document.getElementById('mb-notes').value,
+      recur:'years', recurN:1, done:false
+    };
+
+  } else if (cat === 'car') {
+    const carId  = document.getElementById('mc-car').value;
+    const svcType= document.getElementById('mc-type').value;
+    const date   = document.getElementById('mc-date').value;
+    if (!date) { toast('Please enter a service date','warn'); return; }
+    const car = GS.cars.find(c=>c.id===carId);
+    const carLabel = car ? `${car.year||''} ${car.make} ${car.model}`.trim() : 'Car';
+    task = {
+      id: S.editId||uid(), text: `🚗 ${svcType} — ${carLabel}`,
+      priority: smartPri(date),
+      date, dateEnd:'', time: document.getElementById('mc-time').value,
+      tag:'car', notes: document.getElementById('mc-notes').value,
+      _carId: carId,
+      recur:'', recurN:1, done:false
+    };
+
+  } else if (cat === 'travel') {
+    const name  = document.getElementById('mtr-name').value.trim();
+    const start = document.getElementById('mtr-start').value;
+    if (!name)  { toast('Please enter a trip name','warn'); return; }
+    if (!start) { toast('Please enter a departure date','warn'); return; }
+    task = {
+      id: S.editId||uid(), text: name,
+      priority: smartPri(start),
+      date: start, dateEnd: document.getElementById('mtr-end').value,
+      time:'', tag:'travel',
+      notes: document.getElementById('mtr-notes').value,
+      recur:'', recurN:1, done:false
+    };
+
+  } else if (cat === 'renewal') {
+    const name = document.getElementById('mr-name').value.trim();
+    const date = document.getElementById('mr-date').value;
+    if (!name) { toast('Please enter what needs renewing','warn'); return; }
+    if (!date) { toast('Please enter the expiry/due date','warn'); return; }
+    const recurVal = document.getElementById('mr-recur').value; // e.g. "years-4"
+    const [recurType, recurNStr] = recurVal ? recurVal.split('-') : ['',''];
+    task = {
+      id: S.editId||uid(), text: name,
+      priority: smartPri(date),
+      date, dateEnd:'', time:'',
+      tag:'renewal', notes: document.getElementById('mr-notes').value,
+      recur: recurType||'', recurN: parseInt(recurNStr)||1,
+      done:false
+    };
+
+  } else {
+    // General / health / finance / work / personal
+    const text = document.getElementById('mt').value.trim();
+    if (!text) { toast('Please enter a task name','warn'); return; }
+    const date = document.getElementById('md').value;
+    task = {
+      id: S.editId||uid(), text,
+      priority: smartPri(date),
+      date, dateEnd: document.getElementById('md-end').value,
+      time:    document.getElementById('mtime').value,
+      tag:     cat,
+      notes:   document.getElementById('mnotes').value,
+      recur:   document.getElementById('mrecur-type').value,
+      recurN:  parseInt(document.getElementById('mrecur-n').value)||1,
+      done:false
+    };
+  }
+
+  if (S.editId) {
+    const i = S.tasks.findIndex(t=>t.id===S.editId);
+    if (i>=0) { task.done=S.tasks[i].done; S.tasks[i]=task; }
+  } else {
+    S.tasks.unshift(task);
+  }
+  save(); closeModal(); renderAll();
+  toast(S.editId?'Updated ✓':'Added ✓','success');
 }
-function selPri(p){
+function selPri(p, manual=false){
+  if (manual) { S_priManual=true; const h=document.getElementById('m-pri-hint'); if(h)h.textContent=''; }
   S.selPriority=p;
   document.querySelectorAll('.pri-pill').forEach(el=>{el.classList.remove('on');if(el.classList.contains(p))el.classList.add('on');});
 }
@@ -2408,12 +2751,10 @@ gLoad();
 // ════════════════════════════════════════════════════════
 
 function openCatAdd(tag) {
-  openAdd();
-  // Pre-select the category — use slightly longer delay to ensure modal DOM is ready
-  setTimeout(() => {
-    const sel = document.getElementById('mtag');
-    if (sel) { sel.value = tag; }
-  }, 100);
+  S.editId=null; S_priManual=false;
+  document.getElementById('mtitle').textContent='New Task';
+  document.getElementById('modal').classList.add('open');
+  modalSetCat(tag, true);
 }
 
 function renderCategoryPage(tag) {
