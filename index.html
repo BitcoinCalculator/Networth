@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Life — Dashboard</title>
+
+  <style>
+    :root {
+      --bg:        #f8f9fc;
+      --surface:    #ffffff;
+      --surface-2:  #f0f2f8;
+      --text:       #1a1f36;
+      --text-2:     #5c6370;
+      --border:     #e2e8f0;
+      --accent:     #6366f1;
+      --accent-soft:#eef2ff;
+      --urgent:     #ef4444;
+      --mid:        #f59e0b;
+      --low:        #10b981;
+      --overdue:    #dc2626;
+      --success:    #10b981;
+      --radius:     12px;
+      --shadow-sm:  0 1px 3px rgba(0,0,0,0.08);
+      --shadow:     0 4px 12px rgba(0,0,0,0.08);
+      --transition: all 0.22s ease;
+    }
+
+    [data-theme="dark"] {
+      --bg:        #0f172a;
+      --surface:    #1e293b;
+      --surface-2:  #334155;
+      --text:       #e2e8f0;
+      --text-2:     #94a3b8;
+      --border:     #334155;
+      --accent:     #818cf8;
+      --accent-soft:#312e81;
+      --urgent:     #f87171;
+      --mid:        #fbbf24;
+      --low:        #34d399;
+    }
+
+    * {
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    header {
+      padding: 1rem 1.5rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      box-shadow: var(--shadow-sm);
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .controls {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.1rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    button:hover {
+      background: #4f46e5;
+      transform: translateY(-1px);
+    }
+
+    button.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    button.secondary:hover {
+      background: var(--surface-2);
+    }
+
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    nav button {
+      background: transparent;
+      color: var(--text-2);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    nav button.active,
+    nav button:hover {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .priority-column {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .priority-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    .urgent .priority-header { background: color-mix(in srgb, var(--urgent) 12%, transparent); color: var(--urgent); }
+    .mid    .priority-header { background: color-mix(in srgb, var(--mid)   12%, transparent); color: var(--mid);   }
+    .low    .priority-header { background: color-mix(in srgb, var(--low)   12%, transparent); color: var(--low);   }
+
+    .item-list {
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .item {
+      background: var(--surface-2);
+      border-radius: var(--radius);
+      padding: 1rem;
+      border-left: 4px solid;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .item.urgent { border-left-color: var(--urgent); }
+    .item.mid    { border-left-color: var(--mid);    }
+    .item.low    { border-left-color: var(--low);    }
+    .item.overdue { background: color-mix(in srgb, var(--overdue) 8%, var(--surface-2)); }
+
+    .item-title {
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .item-meta {
+      font-size: 0.875rem;
+      color: var(--text-2);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .badge {
+      padding: 0.25rem 0.6rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .cal-day-name {
+      text-align: center;
+      font-weight: 600;
+      color: var(--text-2);
+      padding: 0.75rem 0;
+      font-size: 0.9rem;
+    }
+
+    .cal-day {
+      aspect-ratio: 1 / 1.1;
+      background: var(--surface-2);
+      border-radius: var(--radius);
+      padding: 0.6rem;
+      font-size: 0.9rem;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .cal-day:hover {
+      background: color-mix(in srgb, var(--accent) 8%, var(--surface-2));
+    }
+
+    .cal-day.today {
+      background: color-mix(in srgb, var(--accent) 12%, var(--surface-2));
+      box-shadow: 0 0 0 2px var(--accent) inset;
+    }
+
+    .cal-day.outside {
+      opacity: 0.4;
+    }
+
+    .cal-day-number {
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .cal-events {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.78rem;
+      margin-top: 0.3rem;
+    }
+
+    .cal-event {
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .cal-event.urgent { background: color-mix(in srgb, var(--urgent) 18%, transparent); color: var(--urgent); }
+    .cal-event.mid    { background: color-mix(in srgb, var(--mid)   18%, transparent); color: var(--mid);   }
+    .cal-event.low    { background: color-mix(in srgb, var(--low)   18%, transparent); color: var(--low);   }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: grid;
+      place-items: center;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius);
+      width: 90%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow);
+      transform: scale(0.95);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-overlay.open .modal {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.45rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      font: inherit;
+      color: var(--text);
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .form-row { grid-template-columns: 1fr; }
+      main { padding: 1rem; }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-2);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Life</h1>
+  <div class="controls">
+    <button class="secondary" id="theme-toggle">Dark</button>
+    <button id="add-item">+ Add</button>
+  </div>
+</header>
+
+<main>
+
+  <nav>
+    <button data-view="dashboard" class="active">Dashboard</button>
+    <button data-view="calendar">Calendar</button>
+  </nav>
+
+  <div id="dashboard-view">
+    <div class="dashboard">
+      <div class="priority-column urgent">
+        <div class="priority-header">Urgent</div>
+        <div class="item-list" id="urgent-list"></div>
+      </div>
+      <div class="priority-column mid">
+        <div class="priority-header">Soon</div>
+        <div class="item-list" id="mid-list"></div>
+      </div>
+      <div class="priority-column low">
+        <div class="priority-header">Later</div>
+        <div class="item-list" id="low-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="calendar-view" style="display:none">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+      <button id="prev-month">&larr; Prev</button>
+      <h2 id="month-title"></h2>
+      <button id="next-month">Next &rarr;</button>
+    </div>
+    <div class="calendar-grid" id="calendar-grid"></div>
+  </div>
+
+</main>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Item</div>
+      <button class="secondary" id="close-modal">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="item-form">
+
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" id="title" required placeholder="Dentist appointment, Oil change…">
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <select id="category">
+            <option value="personal">Personal</option>
+            <option value="health">Health</option>
+            <option value="car">Car</option>
+            <option value="home">Home</option>
+            <option value="work">Work</option>
+            <option value="birthday">Birthday</option>
+            <option value="chores">Chores</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Due / Event date</label>
+            <input type="date" id="dueDate" required>
+          </div>
+          <div class="form-group">
+            <label>Priority</label>
+            <select id="priority">
+              <option value="urgent">Urgent</option>
+              <option value="mid" selected>Soon</option>
+              <option value="low">Later</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea id="notes" rows="3" placeholder="Details, location, contacts…"></textarea>
+        </div>
+
+        <div style="display:flex; gap:0.75rem; justify-content:flex-end; margin-top:1.5rem;">
+          <button type="button" class="secondary" id="cancel-form">Cancel</button>
+          <button type="submit">Save</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// ────────────────────────────────────────────────
+const STORAGE_KEY = "life-organizer-items";
+let items = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+let currentView = "dashboard";
+let currentMonth = new Date().getMonth();
+let currentYear  = new Date().getFullYear();
+
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+// Theme
+const themeToggle = $("#theme-toggle");
+themeToggle.textContent = localStorage.getItem("theme") === "dark" ? "Light" : "Dark";
+if (localStorage.getItem("theme") === "dark") {
+  document.documentElement.setAttribute("data-theme", "dark");
+}
+themeToggle.onclick = () => {
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+  document.documentElement.setAttribute("data-theme", isDark ? "light" : "dark");
+  localStorage.setItem("theme", isDark ? "light" : "dark");
+  themeToggle.textContent = isDark ? "Dark" : "Light";
+};
+
+// Modal
+const modal = $("#modal");
+const openModal = () => modal.classList.add("open");
+const closeModal = () => {
+  modal.classList.remove("open");
+  $("#item-form").reset();
+  $("#item-form").dataset.id = "";
+  $(".modal-title").textContent = "New Item";
+};
+
+$("#add-item").onclick      = openModal;
+$("#close-modal").onclick   = closeModal;
+$("#cancel-form").onclick   = closeModal;
+modal.onclick = e => { if (e.target === modal) closeModal(); };
+
+// Save item
+$("#item-form").onsubmit = e => {
+  e.preventDefault();
+  const id = e.target.dataset.id || Date.now().toString();
+  const data = {
+    id,
+    title:    $("#title").value.trim(),
+    category: $("#category").value,
+    dueDate:  $("#dueDate").value,
+    priority: $("#priority").value,
+    notes:    $("#notes").value.trim(),
+    created:  new Date().toISOString()
+  };
+
+  if (!data.title || !data.dueDate) return alert("Title and date required");
+
+  const idx = items.findIndex(i => i.id === id);
+  if (idx >= 0) items[idx] = data;
+  else          items.push(data);
+
+  save();
+  render();
+  closeModal();
+};
+
+// Delete item
+function deleteItem(id) {
+  if (!confirm("Delete this item?")) return;
+  items = items.filter(i => i.id !== id);
+  save();
+  render();
+}
+
+// Complete item (mark done)
+function toggleDone(id) {
+  const item = items.find(i => i.id === id);
+  if (item) {
+    item.done = !item.done;
+    save();
+    render();
+  }
+}
+
+// Helpers
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+function daysUntil(dateStr) {
+  const d = new Date(dateStr);
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  d.setHours(0,0,0,0);
+  return Math.round((d - now) / 86400000);
+}
+
+function getDisplayPriority(item) {
+  if (item.done) return "done";
+  const days = daysUntil(item.dueDate);
+  if (days < 0) return "overdue";
+  if (item.priority === "urgent" || days <= 3)  return "urgent";
+  if (item.priority === "mid"    || days <= 14) return "mid";
+  return "low";
+}
+
+function categoryColor(cat) {
+  const map = {
+    health:   "#8b5cf6",
+    car:      "#f97316",
+    home:     "#10b981",
+    work:     "#3b82f6",
+    birthday: "#ec4899",
+    chores:   "#eab308",
+    personal: "#64748b",
+    other:    "#6b7280"
+  };
+  return map[cat] || "#9ca3af";
+}
+
+// Render Dashboard
+function renderDashboard() {
+  const lists = {
+    urgent: $("#urgent-list"),
+    mid:    $("#mid-list"),
+    low:    $("#low-list")
+  };
+
+  Object.values(lists).forEach(l => l.innerHTML = "");
+
+  const today = new Date().toISOString().split("T")[0];
+
+  items
+    .sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate))
+    .forEach(item => {
+      const prio = getDisplayPriority(item);
+      if (prio === "done") return;
+
+      const el = document.createElement("div");
+      el.className = `item ${prio}`;
+      if (prio === "overdue") el.classList.add("overdue");
+
+      el.innerHTML = `
+        <div class="item-title" style="text-decoration:${item.done?'line-through':''}">
+          ${item.title}
+        </div>
+        <div class="item-meta">
+          <span style="color:${categoryColor(item.category)}">● ${item.category}</span>
+          <span>${new Date(item.dueDate).toLocaleDateString()}</span>
+          ${item.notes ? `<span title="${item.notes.replace(/"/g,'&quot;')}">ℹ</span>` : ""}
+        </div>
+        <div style="margin-top:0.8rem; display:flex; gap:0.5rem; justify-content:flex-end;">
+          <button class="secondary" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="toggleDone('${item.id}')">
+            ${item.done ? "Undo" : "Done"}
+          </button>
+          <button class="secondary" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="editItem('${item.id}')">
+            Edit
+          </button>
+          <button class="secondary" style="font-size:0.8rem; padding:0.4rem 0.8rem; color:var(--overdue);" onclick="deleteItem('${item.id}')">
+            Delete
+          </button>
+        </div>
+      `;
+
+      lists[prio === "overdue" ? "urgent" : prio].appendChild(el);
+    });
+
+  // Empty states
+  Object.entries(lists).forEach(([k,v]) => {
+    if (!v.children.length) {
+      v.innerHTML = `<div class="empty-state">Nothing ${k === "urgent" ? "urgent" : k === "mid" ? "soon" : "planned"}</div>`;
+    }
+  });
+}
+
+// Calendar
+function renderCalendar() {
+  const grid = $("#calendar-grid");
+  const title = $("#month-title");
+  grid.innerHTML = "";
+
+  title.textContent = new Date(currentYear, currentMonth).toLocaleString("default", { month:"long", year:"numeric" });
+
+  // Weekday names
+  ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(d => {
+    const el = document.createElement("div");
+    el.className = "cal-day-name";
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth+1, 0).getDate();
+
+  // Previous month padding
+  for (let i = 0; i < firstDay; i++) {
+    const el = document.createElement("div");
+    el.className = "cal-day outside";
+    grid.appendChild(el);
+  }
+
+  // Current month
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(currentYear, currentMonth, d);
+    const dateStr = date.toISOString().split("T")[0];
+    const isToday = dateStr === new Date().toISOString().split("T")[0];
+
+    const dayEl = document.createElement("div");
+    dayEl.className = "cal-day";
+    if (isToday) dayEl.classList.add("today");
+
+    dayEl.innerHTML = `<div class="cal-day-number">${d}</div><div class="cal-events"></div>`;
+
+    // Events on this day
+    const eventsEl = dayEl.querySelector(".cal-events");
+    items
+      .filter(i => !i.done && i.dueDate === dateStr)
+      .forEach(i => {
+        const ev = document.createElement("div");
+        ev.className = `cal-event ${getDisplayPriority(i)}`;
+        ev.style.borderLeft = `3px solid ${categoryColor(i.category)}`;
+        ev.textContent = i.title;
+        eventsEl.appendChild(ev);
+      });
+
+    dayEl.onclick = () => {
+      $("#dueDate").value = dateStr;
+      openModal();
+    };
+
+    grid.appendChild(dayEl);
+  }
+}
+
+// Navigation
+$$("nav button").forEach(btn => {
+  btn.onclick = () => {
+    $$("nav button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentView = btn.dataset.view;
+    $("#dashboard-view").style.display = currentView === "dashboard" ? "" : "none";
+    $("#calendar-view").style.display = currentView === "calendar" ? "" : "none";
+    if (currentView === "calendar") renderCalendar();
+  };
+});
+
+// Month navigation
+$("#prev-month").onclick = () => {
+  currentMonth--;
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+  renderCalendar();
+};
+
+$("#next-month").onclick = () => {
+  currentMonth++;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  renderCalendar();
+};
+
+// Edit item
+window.editItem = id => {
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+
+  $("#title").value    = item.title;
+  $("#category").value = item.category;
+  $("#dueDate").value  = item.dueDate;
+  $("#priority").value = item.priority;
+  $("#notes").value    = item.notes || "";
+
+  $("#item-form").dataset.id = id;
+  $(".modal-title").textContent = "Edit Item";
+  openModal();
+};
+
+// Init
+function render() {
+  if (currentView === "dashboard") renderDashboard();
+  else if (currentView === "calendar") renderCalendar();
+}
+
+render();
+
+// Save on unload (extra safety)
+window.onbeforeunload = () => save();
+</script>
+
+</body>
+</html>
