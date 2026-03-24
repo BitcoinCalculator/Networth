@@ -10,7 +10,7 @@
 <style>
 [data-theme="dark"]{--bg:#080808;--bg2:#0d0d0d;--card:#111114;--border:#1e1e24;--text:#e8e8e8;--muted:#555;--nav-bg:rgba(8,8,8,.96);--toggle-bg:#1e1e24;--prose:#c8c8c8;--input-bg:#0d0d10;--input-border:#2a2a32;--table-alt:#0d0d10;--table-head:#16161c;--quote-bg:#0d0d10}
 [data-theme="light"]{--bg:#f5f4f0;--bg2:#ece9e0;--card:#fff;--border:#e0ddd5;--text:#1a1a1a;--muted:#888;--nav-bg:rgba(245,244,240,.97);--toggle-bg:#e0ddd5;--prose:#3a3a3a;--input-bg:#fff;--input-border:#d0cdc5;--table-alt:#f9f8f5;--table-head:#f0ede6;--quote-bg:#f0ede6}
-:root{--btc:#F7931A;--green:#22c55e;--gold:#FFD700;--soul:#7c3aed;--teal:#06b6d4;--red:#e63946;--hyper:#a855f7;--time:#06b6d4;--moon:#c4b5fd;--weekend:#fb923c}
+:root{--btc:#F7931A;--green:#22c55e;--gold:#FFD700;--soul:#7c3aed;--teal:#06b6d4;--red:#e63946;--hyper:#a855f7;--time:#06b6d4}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);transition:background .35s,color .35s;-webkit-font-smoothing:antialiased;overflow-x:hidden}
@@ -113,10 +113,10 @@ input[disabled]{opacity:.5;cursor:not-allowed}
 .hh-sub{font-size:14px;color:var(–prose);font-family:‘Lora’,serif;font-style:italic;margin-top:12px;line-height:1.7;max-width:560px;margin-left:auto;margin-right:auto}
 .hh-divider{width:80px;height:2px;background:linear-gradient(90deg,transparent,var(–teal),transparent);margin:20px auto}
 
-/* Special highlight cards for weekends & moons */
-.stat-card.weekend-c::after{background:var(–weekend)}.stat-card:hover.weekend-c{border-color:rgba(251,146,60,.4)}
-.stat-card.moon-c::after{background:var(–moon)}.stat-card:hover.moon-c{border-color:rgba(196,181,253,.4)}
-.s-val.wv{color:var(–weekend)}.s-val.mv{color:var(–moon)}
+/* Weekend & Moon cards use existing palette */
+.stat-card.weekend-c::after{background:var(–gold)}.stat-card:hover.weekend-c{border-color:rgba(255,215,0,.4)}
+.stat-card.moon-c::after{background:var(–hyper)}.stat-card:hover.moon-c{border-color:rgba(168,85,247,.4)}
+.s-val.wv{color:var(–gold)}.s-val.mv{color:var(–hyper)}
 
 .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:24px}
 .stat-card{background:var(–card);border:1px solid var(–border);border-radius:16px;padding:20px;position:relative;overflow:hidden;transition:transform .3s,border-color .3s}
@@ -137,17 +137,17 @@ input[disabled]{opacity:.5;cursor:not-allowed}
 /* Weekend & Moon highlight banner */
 .moon-weekend-banner{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}
 .mw-card{border-radius:20px;padding:28px 26px;position:relative;overflow:hidden;text-align:center}
-.mw-card.weekend-card{background:linear-gradient(135deg,rgba(251,146,60,.1),rgba(251,146,60,.04));border:2px solid rgba(251,146,60,.35)}
-.mw-card.moon-card{background:linear-gradient(135deg,rgba(196,181,253,.1),rgba(196,181,253,.04));border:2px solid rgba(196,181,253,.35)}
+.mw-card.weekend-card{background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(255,215,0,.03));border:2px solid rgba(255,215,0,.3)}
+.mw-card.moon-card{background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(168,85,247,.03));border:2px solid rgba(168,85,247,.3)}
 .mw-card::before{position:absolute;font-size:110px;opacity:.06;pointer-events:none;line-height:1;bottom:-20px;right:-10px}
 .weekend-card::before{content:‘🏖️’}
 .moon-card::before{content:‘🌕’}
 .mw-eyebrow{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;opacity:.8}
-.weekend-card .mw-eyebrow{color:var(–weekend)}
-.moon-card .mw-eyebrow{color:var(–moon)}
+.weekend-card .mw-eyebrow{color:var(–gold)}
+.moon-card .mw-eyebrow{color:var(–hyper)}
 .mw-number{font-size:clamp(48px,8vw,88px);font-weight:900;letter-spacing:-4px;line-height:1;animation:countUp .7s .1s ease both;opacity:0;animation-fill-mode:both}
-.weekend-card .mw-number{color:var(–weekend);text-shadow:0 0 40px rgba(251,146,60,.25)}
-.moon-card .mw-number{color:var(–moon);text-shadow:0 0 40px rgba(196,181,253,.25)}
+.weekend-card .mw-number{color:var(–gold);text-shadow:0 0 40px rgba(255,215,0,.2)}
+.moon-card .mw-number{color:var(–hyper);text-shadow:0 0 40px rgba(168,85,247,.25)}
 .mw-unit{font-size:13px;font-weight:800;color:var(–muted);letter-spacing:-.3px;margin-top:4px}
 .mw-sub{font-size:12px;color:var(–muted);font-family:‘Lora’,serif;font-style:italic;margin-top:10px;line-height:1.65}
 .mw-divider{width:50px;height:1px;background:currentColor;opacity:.2;margin:12px auto}
@@ -193,8 +193,7 @@ input[disabled]{opacity:.5;cursor:not-allowed}
 .cs-val-c{font-size:clamp(16px,2.5vw,26px);font-weight:900;letter-spacing:-1px;line-height:1}
 .cs-lbl-c{font-size:10px;font-weight:700;color:var(–muted);text-transform:uppercase;letter-spacing:.8px;margin-top:4px}
 .con-pledge{font-family:‘Inter’,sans-serif;font-size:clamp(15px,2.4vw,22px);font-weight:900;letter-spacing:-.8px;line-height:1.35;padding:22px 26px;border-left:4px solid var(–teal);background:rgba(6,182,212,.06);border-radius:0 14px 14px 0;margin-top:22px;color:var(–text)}
-.con-pledge .pt{color:var(–teal)}.con-pledge .pg{color:var(–green)}.con-pledge .pgo{color:var(–gold)}.con-pledge .pb{color:var(–btc)}
-.con-pledge .pw{color:var(–weekend)}.con-pledge .pm{color:var(–moon)}
+.con-pledge .pt{color:var(–teal)}.con-pledge .pg{color:var(–green)}.con-pledge .pgo{color:var(–gold)}.con-pledge .pb{color:var(–btc)}.con-pledge .pv{color:var(–hyper)}
 
 footer{text-align:center;padding:48px 24px;color:var(–muted);font-size:13px;border-top:1px solid var(–border);margin-top:48px}
 footer a{color:var(–btc);text-decoration:none}
@@ -1044,8 +1043,8 @@ function renderConclusion(r) {
       '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--teal)">' + formatInt(r.ownedHours) + '</div><div class="cs-lbl-c">Owned Hours</div></div>' +
       '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--gold)">' + r.pctOwned.toFixed(1) + '%</div><div class="cs-lbl-c">Of Waking Time Yours</div></div>' +
       '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--red)">' + r.pctWork.toFixed(1) + '%</div><div class="cs-lbl-c">Waking Time at Work</div></div>' +
-      '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--weekend)">' + formatInt(r.weekendsLeft) + '</div><div class="cs-lbl-c">Weekend Days Left</div></div>' +
-      '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--moon)">' + formatInt(r.fullMoonsLeft) + '</div><div class="cs-lbl-c">Full Moons Left</div></div>' +
+      '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--gold)">' + formatInt(r.weekendsLeft) + '</div><div class="cs-lbl-c">Weekend Days Left</div></div>' +
+      '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--hyper)">' + formatInt(r.fullMoonsLeft) + '</div><div class="cs-lbl-c">Full Moons Left</div></div>' +
       '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--btc)">$' + usdPerHour + '</div><div class="cs-lbl-c">USD per Owned Hour (BTC)</div></div>' +
     '</div>' +
     '<div class="con-body">' +
@@ -1058,7 +1057,7 @@ function renderConclusion(r) {
     '</div>' +
     '<div class="con-pledge">' +
       '<span class="pt">' + formatInt(r.ownedHours) + ' hours left.</span><br>' +
-      '<span class="pw">' + formatInt(r.weekendsLeft) + ' weekend days. </span><span class="pm">' + formatInt(r.fullMoonsLeft) + ' full moons.</span><br>' +
+      '<span class="pgo">' + formatInt(r.weekendsLeft) + ' weekend days. </span><span class="pv">' + formatInt(r.fullMoonsLeft) + ' full moons.</span><br>' +
       '<span class="pgo">Spend fewer of them working for others.</span><br>' +
       '<span class="pg">Stack more of them for yourself.</span><br>' +
       '<span class="pb">Bitcoin helps. Time demands it. &#128273;</span>' +
