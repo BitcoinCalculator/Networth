@@ -113,11 +113,6 @@ input[disabled]{opacity:.5;cursor:not-allowed}
 .hh-sub{font-size:14px;color:var(–prose);font-family:‘Lora’,serif;font-style:italic;margin-top:12px;line-height:1.7;max-width:560px;margin-left:auto;margin-right:auto}
 .hh-divider{width:80px;height:2px;background:linear-gradient(90deg,transparent,var(–teal),transparent);margin:20px auto}
 
-/* Weekend & Moon cards use existing palette */
-.stat-card.weekend-c::after{background:var(–gold)}.stat-card:hover.weekend-c{border-color:rgba(255,215,0,.4)}
-.stat-card.moon-c::after{background:var(–hyper)}.stat-card:hover.moon-c{border-color:rgba(168,85,247,.4)}
-.s-val.wv{color:var(–gold)}.s-val.mv{color:var(–hyper)}
-
 .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:24px}
 .stat-card{background:var(–card);border:1px solid var(–border);border-radius:16px;padding:20px;position:relative;overflow:hidden;transition:transform .3s,border-color .3s}
 .stat-card:hover{transform:translateY(-3px)}
@@ -133,24 +128,6 @@ input[disabled]{opacity:.5;cursor:not-allowed}
 .s-val{font-size:clamp(18px,3vw,28px);font-weight:900;letter-spacing:-1.5px;line-height:1;animation:countUp .6s ease both}
 .s-val.tv{color:var(–teal)}.s-val.gv{color:var(–gold)}.s-val.grv{color:var(–green)}.s-val.rv{color:var(–red)}.s-val.pv{color:var(–hyper)}.s-val.bv{color:var(–btc)}
 .s-sub{font-size:11px;color:var(–muted);margin-top:5px;line-height:1.5}
-
-/* Weekend & Moon highlight banner */
-.moon-weekend-banner{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}
-.mw-card{border-radius:20px;padding:28px 26px;position:relative;overflow:hidden;text-align:center}
-.mw-card.weekend-card{background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(255,215,0,.03));border:2px solid rgba(255,215,0,.3)}
-.mw-card.moon-card{background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(168,85,247,.03));border:2px solid rgba(168,85,247,.3)}
-.mw-card::before{position:absolute;font-size:110px;opacity:.06;pointer-events:none;line-height:1;bottom:-20px;right:-10px}
-.weekend-card::before{content:‘🏖️’}
-.moon-card::before{content:‘🌕’}
-.mw-eyebrow{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;opacity:.8}
-.weekend-card .mw-eyebrow{color:var(–gold)}
-.moon-card .mw-eyebrow{color:var(–hyper)}
-.mw-number{font-size:clamp(48px,8vw,88px);font-weight:900;letter-spacing:-4px;line-height:1;animation:countUp .7s .1s ease both;opacity:0;animation-fill-mode:both}
-.weekend-card .mw-number{color:var(–gold);text-shadow:0 0 40px rgba(255,215,0,.2)}
-.moon-card .mw-number{color:var(–hyper);text-shadow:0 0 40px rgba(168,85,247,.25)}
-.mw-unit{font-size:13px;font-weight:800;color:var(–muted);letter-spacing:-.3px;margin-top:4px}
-.mw-sub{font-size:12px;color:var(–muted);font-family:‘Lora’,serif;font-style:italic;margin-top:10px;line-height:1.65}
-.mw-divider{width:50px;height:1px;background:currentColor;opacity:.2;margin:12px auto}
 
 .time-breakdown{background:var(–card);border:1px solid var(–border);border-radius:18px;padding:24px 28px;margin-bottom:24px}
 .tb-title{font-size:14px;font-weight:800;margin-bottom:6px}
@@ -188,12 +165,12 @@ input[disabled]{opacity:.5;cursor:not-allowed}
 .con-body p{margin-bottom:18px}.con-body p:last-child{margin-bottom:0}
 .con-body strong{color:var(–text);font-weight:700;font-family:‘Inter’,sans-serif;font-size:.92em}
 .con-body em{color:var(–teal);font-style:italic}
-.con-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:22px 0;padding:20px;background:var(–card);border-radius:16px;border:1px solid var(–border)}
+.con-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:22px 0;padding:20px;background:var(–card);border-radius:16px;border:1px solid var(–border)}
 .cs-item-c{text-align:center}
-.cs-val-c{font-size:clamp(16px,2.5vw,26px);font-weight:900;letter-spacing:-1px;line-height:1}
+.cs-val-c{font-size:clamp(18px,3vw,28px);font-weight:900;letter-spacing:-1px;line-height:1}
 .cs-lbl-c{font-size:10px;font-weight:700;color:var(–muted);text-transform:uppercase;letter-spacing:.8px;margin-top:4px}
 .con-pledge{font-family:‘Inter’,sans-serif;font-size:clamp(15px,2.4vw,22px);font-weight:900;letter-spacing:-.8px;line-height:1.35;padding:22px 26px;border-left:4px solid var(–teal);background:rgba(6,182,212,.06);border-radius:0 14px 14px 0;margin-top:22px;color:var(–text)}
-.con-pledge .pt{color:var(–teal)}.con-pledge .pg{color:var(–green)}.con-pledge .pgo{color:var(–gold)}.con-pledge .pb{color:var(–btc)}.con-pledge .pv{color:var(–hyper)}
+.con-pledge .pt{color:var(–teal)}.con-pledge .pg{color:var(–green)}.con-pledge .pgo{color:var(–gold)}.con-pledge .pb{color:var(–btc)}
 
 footer{text-align:center;padding:48px 24px;color:var(–muted);font-size:13px;border-top:1px solid var(–border);margin-top:48px}
 footer a{color:var(–btc);text-decoration:none}
@@ -206,7 +183,6 @@ nav{padding-left:18px;padding-right:18px}
 .grid{grid-template-columns:1fr}
 .clock-card{flex-direction:column;gap:14px}
 .conclusion{padding:26px 20px}
-.moon-weekend-banner{grid-template-columns:1fr}
 }
 </style>
 
@@ -341,25 +317,6 @@ nav{padding-left:18px;padding-right:18px}
     <div class="hh-unit" id="hhUnit">owned waking hours</div>
     <div class="hh-divider"></div>
     <div class="hh-sub" id="hhSub">Every hour in this number is a unit of your sovereignty.</div>
-  </div>
-
-  <!-- Weekend & Full Moon Banner -->
-
-  <div class="moon-weekend-banner" id="moonWeekendBanner" style="display:none">
-    <div class="mw-card weekend-card">
-      <div class="mw-eyebrow">🏖️ Weekends Remaining</div>
-      <div class="mw-number" id="weekendsRemaining">--</div>
-      <div class="mw-unit">weekend days left</div>
-      <div class="mw-divider"></div>
-      <div class="mw-sub" id="weekendsSub">Saturday & Sunday until your estimated end of life</div>
-    </div>
-    <div class="mw-card moon-card">
-      <div class="mw-eyebrow">🌕 Full Moons Remaining</div>
-      <div class="mw-number" id="fullMoonsRemaining">--</div>
-      <div class="mw-unit">full moons left</div>
-      <div class="mw-divider"></div>
-      <div class="mw-sub" id="fullMoonsSub">Every 29.53 days the sky lights up — how many more will you see?</div>
-    </div>
   </div>
 
   <div class="stat-grid" id="statGrid"></div>
@@ -560,61 +517,9 @@ function refreshPrice() {
 refreshPrice();
 setInterval(refreshPrice, 30000);
 
-// ===== WEEKEND & FULL MOON CALCULATIONS =====
-
-/**
- * Count remaining weekend days (Sat + Sun) from today until a future date.
- * Returns total individual weekend days (not weekend "pairs").
- */
-function countRemainingWeekendDays(yearsRemaining) {
-  // Each 7-day week has 2 weekend days
-  // More precisely: count from today to death date
-  var now = new Date();
-  var deathDate = new Date(now.getTime() + yearsRemaining * 365.25 * 24 * 3600 * 1000);
-
-  // Find next Saturday from today
-  var totalDays = Math.floor((deathDate - now) / (24 * 3600 * 1000));
-  // Each complete week = 2 weekend days
-  var completeWeeks = Math.floor(totalDays / 7);
-  var remainder = totalDays % 7;
-
-  // Count extra weekend days in the partial week
-  // Start from day after today
-  var startDow = now.getDay(); // 0=Sun, 1=Mon...6=Sat
-  var extraWeekend = 0;
-  for (var i = 1; i <= remainder; i++) {
-    var dow = (startDow + i) % 7;
-    if (dow === 0 || dow === 6) extraWeekend++;
-  }
-  return completeWeeks * 2 + extraWeekend;
-}
-
-/**
- * Count remaining full moons from today for a given number of remaining years.
- * Synodic month = 29.53059 days
- * Uses a known reference full moon (Jan 13, 2025 22:27 UTC) and counts forward.
- */
-function countRemainingFullMoons(yearsRemaining) {
-  var SYNODIC = 29.53059; // days
-  // Known full moon reference: Jan 13, 2025 22:27 UTC
-  var refFullMoon = new Date(Date.UTC(2025, 0, 13, 22, 27, 0));
-  var now = new Date();
-  var deathDate = new Date(now.getTime() + yearsRemaining * 365.25 * 24 * 3600 * 1000);
-
-  // Find the next full moon after today
-  var daysSinceRef = (now - refFullMoon) / (24 * 3600 * 1000);
-  var cyclesSinceRef = daysSinceRef / SYNODIC;
-  var nextCycle = Math.ceil(cyclesSinceRef);
-  var nextFullMoonDate = new Date(refFullMoon.getTime() + nextCycle * SYNODIC * 24 * 3600 * 1000);
-
-  // Count full moons from nextFullMoon to deathDate
-  if (nextFullMoonDate > deathDate) return 0;
-  var daysLeft = (deathDate - nextFullMoonDate) / (24 * 3600 * 1000);
-  return Math.floor(daysLeft / SYNODIC) + 1; // +1 for the nextFullMoon itself
-}
-
 // ===== INIT =====
 (function init() {
+  // Populate country select
   var sel = document.getElementById('country');
   var sorted = LIFE_DATA.countries.slice().sort(function(a,b){ return a.name.localeCompare(b.name); });
   for (var i = 0; i < sorted.length; i++) {
@@ -623,7 +528,9 @@ function countRemainingFullMoons(yearsRemaining) {
     o.textContent = sorted[i].name;
     sel.appendChild(o);
   }
+  // Default USA
   sel.value = 'USA';
+  // Init disease rows
   initDiseaseRows();
 })();
 
@@ -700,6 +607,19 @@ function computeConditionYearsLost(keys) {
   return clamp(total, 0, 25);
 }
 
+// ===== WEEKEND & FULL MOON HELPERS =====
+function countWeekendPairs(remainingCalendarYears) {
+  // Each week has exactly 1 weekend pair (Sat+Sun). Total weeks = days / 7.
+  var totalDays = remainingCalendarYears * 365.25;
+  return Math.floor(totalDays / 7);
+}
+
+function countFullMoons(remainingCalendarYears) {
+  // Synodic month = 29.53059 days
+  var totalDays = remainingCalendarYears * 365.25;
+  return Math.floor(totalDays / 29.53059);
+}
+
 // ===== CALCULATE =====
 function calculate() {
   var eb = document.getElementById('errorBox');
@@ -719,6 +639,7 @@ function calculate() {
     }
   }
 
+  // Validate
   var errs = [];
   if (isNaN(age) || age < 0 || age > 120) errs.push('Age must be 0–120.');
   if (!countryCode) errs.push('Please select a country.');
@@ -740,11 +661,12 @@ function calculate() {
   var remainingCalendarYears = estimatedDeathAge - age;
 
   var SLEEP_H = 8;
-  var WAKING_H = 24 - SLEEP_H;
+  var WAKING_H = 24 - SLEEP_H; // 16
   var DAYS_PY = 365.25;
   var WAKING_HRS_PY = WAKING_H * DAYS_PY;
   var CALENDAR_HRS_PY = 24 * DAYS_PY;
 
+  // Show results section
   document.getElementById('resultsSection').classList.add('show');
 
   if (remainingCalendarYears <= 0) {
@@ -753,7 +675,6 @@ function calculate() {
     document.getElementById('bonusSection').style.display = 'block';
     document.getElementById('bonusHours').textContent = formatInt(bonusHours);
     document.getElementById('hourglassHero').style.display = 'none';
-    document.getElementById('moonWeekendBanner').style.display = 'none';
     document.getElementById('statGrid').innerHTML = '';
     document.getElementById('timeBreakdown').style.display = 'none';
     document.getElementById('btcSection').style.display = 'none';
@@ -776,10 +697,6 @@ function calculate() {
   var pctOwned = totalWakingHrs > 0 ? ownedHours / totalWakingHrs * 100 : 0;
   var pctWork = totalWakingHrs > 0 ? workHrsRemaining / totalWakingHrs * 100 : 0;
 
-  // Compute weekends and full moons
-  var weekendsLeft = countRemainingWeekendDays(remainingCalendarYears);
-  var fullMoonsLeft = countRemainingFullMoons(remainingCalendarYears);
-
   lastCalcResult = {
     age: age, gender: gender, retireAge: retireAge, workHPW: workHPW, weeksWorked: weeksWorked,
     baseLE: baseLE, condYearsLost: condYearsLost, estimatedDeathAge: estimatedDeathAge,
@@ -787,8 +704,7 @@ function calculate() {
     workHrsRemaining: workHrsRemaining, ownedHours: ownedHours, ownedYears: ownedYears,
     ownedDays: ownedDays, retiredYears: retiredYears, retiredHrs: retiredHrs,
     sleepHrsTotal: sleepHrsTotal, totalAllHrs: totalAllHrs, pctOwned: pctOwned,
-    pctWork: pctWork, yearsToRetire: yearsToRetire,
-    weekendsLeft: weekendsLeft, fullMoonsLeft: fullMoonsLeft
+    pctWork: pctWork, yearsToRetire: yearsToRetire
   };
 
   document.getElementById('bonusSection').style.display = 'none';
@@ -801,16 +717,10 @@ function calculate() {
     formatInt(workHrsRemaining) + ' work hours subtracted.';
   document.getElementById('hourglassHero').style.display = 'block';
 
-  // Weekend & Full Moon Banner
-  document.getElementById('weekendsRemaining').textContent = formatInt(weekendsLeft);
-  document.getElementById('weekendsSub').textContent =
-    formatInt(Math.floor(weekendsLeft / 2)) + ' full weekend pairs (Sat + Sun) until estimated age ' + estimatedDeathAge.toFixed(0);
-  document.getElementById('fullMoonsRemaining').textContent = formatInt(fullMoonsLeft);
-  document.getElementById('fullMoonsSub').textContent =
-    'One every 29.5 days — ' + (fullMoonsLeft / 12).toFixed(1) + ' years of moonlit nights ahead';
-  document.getElementById('moonWeekendBanner').style.display = 'grid';
+  // Stat cards — original 8 + 2 new ones for weekends and full moons
+  var weekendPairs = countWeekendPairs(remainingCalendarYears);
+  var fullMoons = countFullMoons(remainingCalendarYears);
 
-  // Stat cards
   var cards = [
     {icon:'⌛',label:'Owned Hours Remaining',val:formatInt(ownedHours),sub:'Waking hours fully yours',cls:'teal-c',vcls:'tv'},
     {icon:'📆',label:'Owned Years',val:ownedYears.toFixed(1)+' yrs',sub:'Same time as years',cls:'gold-c',vcls:'gv'},
@@ -818,10 +728,10 @@ function calculate() {
     {icon:'💼',label:'Work Hours Remaining',val:formatInt(workHrsRemaining),sub:'Until retirement at '+retireAge,cls:'red-c',vcls:'rv'},
     {icon:'🏖️',label:'Retired Free Hours',val:formatInt(retiredHrs),sub:'Waking hours after retirement',cls:'green-c',vcls:'grv'},
     {icon:'😴',label:'Sleep Hours Remaining',val:formatInt(sleepHrsTotal),sub:'Excluded from owned time',cls:'btc-c',vcls:'bv'},
-    {icon:'📅',label:'Weekends Remaining',val:formatInt(weekendsLeft)+' days',sub:formatInt(Math.floor(weekendsLeft/2))+' full weekend pairs left',cls:'weekend-c',vcls:'wv'},
-    {icon:'🌕',label:'Full Moons Remaining',val:formatInt(fullMoonsLeft),sub:(fullMoonsLeft/12).toFixed(1)+' yrs of full moons',cls:'moon-c',vcls:'mv'},
     {icon:'📊',label:'Owned Time %',val:pctOwned.toFixed(1)+'%',sub:'Of remaining waking hours',cls:'teal-c',vcls:'tv'},
-    {icon:'🧮',label:'Life Expectancy',val:baseLE.toFixed(1)+' − '+condYearsLost.toFixed(1),sub:'= '+estimatedDeathAge.toFixed(1)+' estimated age at death',cls:'gold-c',vcls:'gv'}
+    {icon:'🧮',label:'Life Expectancy',val:baseLE.toFixed(1)+' − '+condYearsLost.toFixed(1),sub:'= '+estimatedDeathAge.toFixed(1)+' estimated age at death',cls:'gold-c',vcls:'gv'},
+    {icon:'📅',label:'Weekend Pairs Remaining',val:formatInt(weekendPairs),sub:'Saturdays + Sundays left',cls:'green-c',vcls:'grv'},
+    {icon:'🌕',label:'Full Moons Remaining',val:formatInt(fullMoons),sub:'One every 29.5 days',cls:'purple-c',vcls:'pv'}
   ];
   document.getElementById('statGrid').innerHTML = cards.map(function(c) {
     return '<div class="stat-card '+c.cls+'"><span class="s-icon">'+c.icon+'</span><div class="s-label">'+c.label+'</div><div class="s-val '+c.vcls+'">'+c.val+'</div><div class="s-sub">'+c.sub+'</div></div>';
@@ -1043,21 +953,17 @@ function renderConclusion(r) {
       '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--teal)">' + formatInt(r.ownedHours) + '</div><div class="cs-lbl-c">Owned Hours</div></div>' +
       '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--gold)">' + r.pctOwned.toFixed(1) + '%</div><div class="cs-lbl-c">Of Waking Time Yours</div></div>' +
       '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--red)">' + r.pctWork.toFixed(1) + '%</div><div class="cs-lbl-c">Waking Time at Work</div></div>' +
-      '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--gold)">' + formatInt(r.weekendsLeft) + '</div><div class="cs-lbl-c">Weekend Days Left</div></div>' +
-      '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--hyper)">' + formatInt(r.fullMoonsLeft) + '</div><div class="cs-lbl-c">Full Moons Left</div></div>' +
       '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--btc)">$' + usdPerHour + '</div><div class="cs-lbl-c">USD per Owned Hour (BTC)</div></div>' +
     '</div>' +
     '<div class="con-body">' +
       '<p>You have <strong>' + formatInt(r.ownedHours) + ' owned waking hours remaining</strong> — that is your real balance. Not the number in your bank account. Not your salary. Not your net worth on paper. <em>The hours that belong entirely to you</em>, where no employer, no system, and no obligation has a claim.</p>' +
       '<p>Of all your remaining waking hours, only <strong>' + r.pctOwned.toFixed(1) + '% are fully yours</strong>. The remaining ' + r.pctWork.toFixed(1) + '% are allocated to work' + (r.yearsToRetire > 0 ? ' for the next ' + workYearsLeft + ' years' : ' — though you have already retired, meaning all remaining waking time is yours') + '. Most people never see this number. Most people never ask the question. You just did, and that alone changes something.</p>' +
-      '<p>Consider what <strong>' + formatInt(r.weekendsLeft) + ' weekend days</strong> means — that is every Saturday and Sunday between now and your statistical horizon. And <strong>' + formatInt(r.fullMoonsLeft) + ' full moons</strong> that will rise and fall while you are still here to see them. These are not abstractions. They are scheduled events on the calendar of your life, and each one is finite, irreplaceable, and already approaching.</p>' +
       '<p>Here is the connection that most people miss: <em>money is stored time.</em> When you work an hour, the system gives you a number. That number is supposed to preserve the value of that hour until you spend it. But fiat currency fails at this. Inflation silently drains the purchasing power of every hour you have already traded. Bitcoin does not do this. When you stack sats, you are converting your most irreplaceable asset — <strong>your owned hours</strong> — into a form of stored value that cannot be inflated away, cannot be debased, and cannot be confiscated by anyone running a printing press.</p>' +
       '<p>At today\'s price of $' + formatInt(price) + ', each of your owned hours is worth <strong>$' + usdPerHour + ' in Bitcoin terms</strong>. That is not your hourly wage. That is the value of your <em>free, sovereign, unencumbered time</em> measured in the hardest money ever created. Use that lens the next time someone asks you to work late, or the next time you spend a free afternoon on something that does not matter.</p>' +
       '<p>The question is not "how do I earn more?" The question is: <strong>"how do I buy back more of my own hours?"</strong> Retiring early is not about luxury — it is about the fundamental human act of reclaiming your time from a system that profits from your continued participation in it. Bitcoin, used with patience and discipline, is one of the most powerful tools in history for doing exactly that.</p>' +
     '</div>' +
     '<div class="con-pledge">' +
       '<span class="pt">' + formatInt(r.ownedHours) + ' hours left.</span><br>' +
-      '<span class="pgo">' + formatInt(r.weekendsLeft) + ' weekend days. </span><span class="pv">' + formatInt(r.fullMoonsLeft) + ' full moons.</span><br>' +
       '<span class="pgo">Spend fewer of them working for others.</span><br>' +
       '<span class="pg">Stack more of them for yourself.</span><br>' +
       '<span class="pb">Bitcoin helps. Time demands it. &#128273;</span>' +
@@ -1077,7 +983,6 @@ function resetAll() {
   document.getElementById('resultsSection').classList.remove('show');
   document.getElementById('bonusSection').style.display = 'none';
   document.getElementById('hourglassHero').style.display = 'none';
-  document.getElementById('moonWeekendBanner').style.display = 'none';
   document.getElementById('timeBreakdown').style.display = 'none';
   document.getElementById('btcSection').style.display = 'none';
   document.getElementById('chartCard').style.display = 'none';
