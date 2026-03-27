@@ -1,996 +1,800 @@
 <!DOCTYPE html>
-
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Time Currency — Your Most Valuable Asset | SATOLOGY</title>
-<script>document.documentElement.setAttribute('data-theme',localStorage.getItem('satology-theme')||'dark')</script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Lora:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
-<style>
-[data-theme="dark"]{--bg:#080808;--bg2:#0d0d0d;--card:#111114;--border:#1e1e24;--text:#e8e8e8;--muted:#555;--nav-bg:rgba(8,8,8,.96);--toggle-bg:#1e1e24;--prose:#c8c8c8;--input-bg:#0d0d10;--input-border:#2a2a32;--table-alt:#0d0d10;--table-head:#16161c;--quote-bg:#0d0d10}
-[data-theme="light"]{--bg:#f5f4f0;--bg2:#ece9e0;--card:#fff;--border:#e0ddd5;--text:#1a1a1a;--muted:#888;--nav-bg:rgba(245,244,240,.97);--toggle-bg:#e0ddd5;--prose:#3a3a3a;--input-bg:#fff;--input-border:#d0cdc5;--table-alt:#f9f8f5;--table-head:#f0ede6;--quote-bg:#f0ede6}
-:root{--btc:#F7931A;--green:#22c55e;--gold:#FFD700;--soul:#7c3aed;--teal:#06b6d4;--red:#e63946;--hyper:#a855f7;--time:#06b6d4}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);transition:background .35s,color .35s;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#0A0805" />
+  <title>Reach Escape Velocity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-.scroll-progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:999;pointer-events:none}
-.scroll-fill{height:100%;background:linear-gradient(90deg,var(–teal),var(–gold),var(–green));width:0%}
+    html {
+      background-color: #0A0805;
+      color-scheme: dark;
+      scroll-behavior: smooth;
+    }
 
-.ticker{background:linear-gradient(90deg,#0a1a2a,#0c2a3a,#0a1a2a);padding:8px 0;overflow:hidden;white-space:nowrap}
-.ticker-inner{display:inline-flex;gap:56px;animation:tick 40s linear infinite;font-size:11px;font-weight:700;color:#fff}
-@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    body {
+      background-color: #0A0805;
+      color: #E8DEC8;
+      font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
 
-nav{position:sticky;top:0;z-index:200;height:64px;padding:0 40px;display:flex;align-items:center;justify-content:space-between;background:var(–nav-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(–border)}
-.logo{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(–text)}
-.logo-icon{width:36px;height:36px;background:var(–btc);border-radius:9px;display:grid;place-items:center;font-size:18px;font-weight:900;color:#fff}
-.logo-name{font-size:18px;font-weight:900;letter-spacing:-.5px}
-.logo-sub{font-size:9px;font-weight:600;color:var(–muted);letter-spacing:1.8px;text-transform:uppercase}
-.nav-right{display:flex;align-items:center;gap:12px}
-.nav-price{display:flex;align-items:center;gap:7px;background:rgba(247,147,26,.1);border:1px solid rgba(247,147,26,.2);border-radius:100px;padding:6px 14px;font-size:14px;font-weight:800;color:var(–btc);cursor:pointer;transition:all .2s}
-.nav-price:hover{background:rgba(247,147,26,.18)}
-.nav-dot{width:7px;height:7px;background:var(–green);border-radius:50%;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
-.theme-toggle{width:52px;height:28px;border-radius:100px;background:var(–toggle-bg);border:1px solid var(–border);cursor:pointer;position:relative;flex-shrink:0}
-.theme-toggle::after{content:’’;position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(–btc);transition:transform .3s}
-[data-theme=“light”] .theme-toggle::after{transform:translateX(24px)}
-.t-icon{position:absolute;top:50%;transform:translateY(-50%);font-size:11px;pointer-events:none}
-.t-icon.moon{right:7px}.t-icon.sun{left:7px;opacity:0}
-[data-theme=“light”] .t-icon.moon{opacity:0}[data-theme=“light”] .t-icon.sun{opacity:1}
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.45;
+    }
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-@keyframes countUp{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      position: relative;
+      background-color: #0A0805;
+      background-image:
+        radial-gradient(ellipse 85% 65% at 50% 40%, rgba(240,165,0,0.10) 0%, transparent 70%),
+        radial-gradient(ellipse 45% 25% at 50% 80%, rgba(255,77,28,0.06) 0%, transparent 70%);
+      border-bottom: 1px solid rgba(240,165,0,0.12);
+    }
 
-.hero{padding:64px 48px 52px;max-width:960px;margin:0 auto;position:relative;overflow:hidden;min-height:340px}
-#heroCanvas{position:absolute;inset:0;pointer-events:none;z-index:0}
-.hero-eyebrow{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2.5px;background:linear-gradient(90deg,var(–teal),var(–gold),var(–green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:14px;animation:fadeUp .5s ease both;position:relative;z-index:1}
-.hero h1{font-size:clamp(30px,5.8vw,76px);font-weight:900;letter-spacing:-4px;line-height:.93;margin-bottom:20px;animation:fadeUp .5s .06s ease both;position:relative;z-index:1}
-.h1-teal{color:var(–teal)}.h1-go{color:var(–gold)}.h1-g{color:var(–green)}
-.hero-sub{font-size:clamp(15px,1.9vw,19px);color:var(–muted);line-height:1.85;max-width:640px;font-family:‘Lora’,serif;font-style:italic;animation:fadeUp .5s .12s ease both;position:relative;z-index:1}
+    .hero-label {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      color: #F0A500;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
 
-.clock-strip{max-width:960px;margin:0 auto;padding:0 48px}
-.clock-card{background:var(–card);border:1px solid rgba(6,182,212,.25);border-radius:18px;padding:20px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;position:relative;overflow:hidden}
-.clock-card::before{content:’’;position:absolute;inset:0;background:linear-gradient(135deg,rgba(6,182,212,.04),transparent);pointer-events:none}
-.clock-main{display:flex;flex-direction:column;gap:4px}
-.clock-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(–teal);opacity:.7}
-.clock-time{font-size:clamp(28px,5vw,52px);font-weight:900;letter-spacing:-2px;line-height:1;color:var(–teal);font-variant-numeric:tabular-nums;text-shadow:0 0 30px rgba(6,182,212,.3)}
-.clock-date{font-size:13px;color:var(–muted);font-weight:600}
-.clock-right{display:flex;gap:22px;flex-wrap:wrap}
-.clock-stat{text-align:center}
-.cs-val{font-size:clamp(18px,3vw,26px);font-weight:900;letter-spacing:-1px;line-height:1;color:var(–gold)}
-.cs-lbl{font-size:10px;color:var(–muted);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-top:3px}
+    .hero h1 {
+      font-family: 'Bebas Neue', Impact, 'Arial Narrow', 'Franklin Gothic Medium', sans-serif;
+      font-size: clamp(3.6rem, 12vw, 9.2rem);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      color: #FAF5EB;
+      max-width: 980px;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.4s forwards;
+    }
 
-.calc-outer{max-width:960px;margin:28px auto 0;padding:0 48px 48px}
-.calc-card{background:var(–card);border:1px solid var(–border);border-radius:22px;padding:36px}
+    .hero h1 span {
+      color: #F0A500;
+      display: block;
+    }
 
-.sec-hdr{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin:26px 0 14px;display:flex;align-items:center;gap:10px;color:var(–muted)}
-.sec-hdr::after{content:’’;flex:1;height:1px;background:linear-gradient(90deg,var(–border),transparent)}
-.sec-hdr.teal{color:var(–teal)}.sec-hdr.gold{color:var(–gold)}.sec-hdr.grn{color:var(–green)}.sec-hdr.red{color:var(–red)}.sec-hdr:first-child{margin-top:0}
+    .hero-sub {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-style: italic;
+      font-size: clamp(1.1rem, 2.5vw, 1.55rem);
+      color: #8A7D62;
+      margin-top: 1.5rem;
+      max-width: 720px;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.65s forwards;
+    }
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
-.form-group{display:flex;flex-direction:column;gap:6px}
-label{font-size:12px;font-weight:700;color:var(–muted);text-transform:uppercase;letter-spacing:.7px}
-input[type=“number”],select{padding:11px 13px;border:1px solid var(–input-border);border-radius:10px;font-size:14px;font-weight:600;background:var(–input-bg);color:var(–text);font-family:‘Inter’,sans-serif;outline:none;transition:border-color .2s,box-shadow .2s}
-input:focus,select:focus{border-color:var(–teal);box-shadow:0 0 0 3px rgba(6,182,212,.15)}
-select option{background:var(–card);color:var(–text)}
-input[disabled]{opacity:.5;cursor:not-allowed}
-.field-note{font-size:11px;color:var(–muted);line-height:1.5;margin-top:3px}
+    .value-counter {
+      margin-top: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 1s 0.9s forwards;
+    }
 
-.disease-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-.disease-row select{flex:1}
-.remove-btn{flex-shrink:0;width:34px;height:34px;border-radius:8px;background:rgba(230,57,70,.12);border:1px solid rgba(230,57,70,.3);color:var(–red);cursor:pointer;font-size:18px;font-weight:900;display:grid;place-items:center;transition:all .2s}
-.remove-btn:hover{background:rgba(230,57,70,.25)}
+    .value-counter-label {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: #8A7D62;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
 
-.note-box{font-size:12px;color:var(–muted);line-height:1.75;padding:13px 16px;background:var(–bg2);border-radius:10px;border-left:3px solid var(–teal);margin-top:16px}
-.note-box strong{color:var(–text);font-weight:700}
+    .value-counter-num {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: #F0A500;
+      line-height: 1;
+      text-shadow: 0 0 20px rgba(240,165,0,0.22);
+    }
 
-.calc-btn{width:100%;padding:16px;border-radius:13px;border:none;font-size:17px;font-weight:900;cursor:pointer;font-family:‘Inter’,sans-serif;letter-spacing:-.3px;background:linear-gradient(135deg,var(–teal),#0891b2);color:#fff;box-shadow:0 6px 24px rgba(6,182,212,.35);margin-top:22px;position:relative;overflow:hidden;transition:all .3s}
-.calc-btn::before{content:’’;position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transform:translateX(-100%);transition:transform .6s}
-.calc-btn:hover::before{transform:translateX(100%)}
-.calc-btn:hover{transform:translateY(-2px)}
-.calc-btn:active{transform:translateY(0)}
-.reset-btn{width:100%;padding:11px;border-radius:10px;border:1px solid var(–border);background:transparent;color:var(–muted);font-size:13px;font-weight:700;cursor:pointer;font-family:‘Inter’,sans-serif;margin-top:8px;transition:all .2s}
-.reset-btn:hover{border-color:var(–teal);color:var(–teal)}
+    .value-counter-sub {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 0.65rem;
+      color: #8A7D62;
+      letter-spacing: 0.1em;
+      margin-top: 0.3rem;
+    }
 
-.error-box{margin-top:14px;padding:12px 16px;background:rgba(230,57,70,.1);border:1px solid rgba(230,57,70,.3);border-radius:10px;color:var(–red);font-size:13px;display:none}
-.error-box.show{display:block}
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 1s 1.3s forwards;
+    }
 
-.results-section{max-width:960px;margin:28px auto 0;padding:0 48px;display:none}
-.results-section.show{display:block;animation:fadeUp .5s ease both}
+    .scroll-hint span {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: #8A7D62;
+      text-transform: uppercase;
+    }
 
-.bonus-section{background:var(–card);border:2px solid rgba(34,197,94,.35);border-radius:22px;padding:32px;margin-bottom:24px;text-align:center}
-.bonus-head{font-size:28px;font-weight:900;color:var(–green);margin-bottom:10px}
-.bonus-sub{font-size:15px;color:var(–prose);font-family:‘Lora’,serif;font-style:italic;line-height:1.8;max-width:580px;margin:0 auto 22px}
-.bonus-hours{font-size:clamp(40px,8vw,80px);font-weight:900;letter-spacing:-4px;color:var(–green);line-height:1;animation:countUp .7s ease both}
-.bonus-unit{font-size:16px;font-weight:800;color:var(–muted);letter-spacing:-1px;margin-top:4px}
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, #F0A500, transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
 
-.hourglass-hero{background:var(–card);border:2px solid rgba(6,182,212,.35);border-radius:24px;padding:36px;margin-bottom:24px;position:relative;overflow:hidden;text-align:center}
-.hourglass-hero::before{content:‘⏳’;position:absolute;right:-30px;bottom:-50px;font-size:240px;opacity:.04;pointer-events:none;line-height:1}
-.hh-eyebrow{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(–teal);margin-bottom:16px;opacity:.8}
-.hh-main{font-size:clamp(52px,10vw,110px);font-weight:900;letter-spacing:-5px;line-height:1;color:var(–teal);text-shadow:0 0 40px rgba(6,182,212,.25);animation:countUp .7s ease both}
-.hh-unit{font-size:clamp(18px,3vw,28px);font-weight:900;color:var(–muted);letter-spacing:-1px;margin-top:4px}
-.hh-sub{font-size:14px;color:var(–prose);font-family:‘Lora’,serif;font-style:italic;margin-top:12px;line-height:1.7;max-width:560px;margin-left:auto;margin-right:auto}
-.hh-divider{width:80px;height:2px;background:linear-gradient(90deg,transparent,var(–teal),transparent);margin:20px auto}
+    article {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 5rem 2rem 8rem;
+      background-color: #0A0805;
+    }
 
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:24px}
-.stat-card{background:var(–card);border:1px solid var(–border);border-radius:16px;padding:20px;position:relative;overflow:hidden;transition:transform .3s,border-color .3s}
-.stat-card:hover{transform:translateY(-3px)}
-.stat-card::after{content:’’;position:absolute;bottom:0;left:0;right:0;height:2px}
-.stat-card.teal-c::after{background:var(–teal)}.stat-card:hover.teal-c{border-color:rgba(6,182,212,.4)}
-.stat-card.gold-c::after{background:var(–gold)}.stat-card:hover.gold-c{border-color:rgba(255,215,0,.4)}
-.stat-card.green-c::after{background:var(–green)}.stat-card:hover.green-c{border-color:rgba(34,197,94,.4)}
-.stat-card.red-c::after{background:var(–red)}.stat-card:hover.red-c{border-color:rgba(230,57,70,.4)}
-.stat-card.purple-c::after{background:var(–hyper)}.stat-card:hover.purple-c{border-color:rgba(168,85,247,.4)}
-.stat-card.btc-c::after{background:var(–btc)}.stat-card:hover.btc-c{border-color:rgba(247,147,26,.4)}
-.s-icon{font-size:26px;margin-bottom:9px;display:block}
-.s-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.9px;color:var(–muted);margin-bottom:5px}
-.s-val{font-size:clamp(18px,3vw,28px);font-weight:900;letter-spacing:-1.5px;line-height:1;animation:countUp .6s ease both}
-.s-val.tv{color:var(–teal)}.s-val.gv{color:var(–gold)}.s-val.grv{color:var(–green)}.s-val.rv{color:var(–red)}.s-val.pv{color:var(–hyper)}.s-val.bv{color:var(–btc)}
-.s-sub{font-size:11px;color:var(–muted);margin-top:5px;line-height:1.5}
+    .section {
+      margin-bottom: 5rem;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
 
-.time-breakdown{background:var(–card);border:1px solid var(–border);border-radius:18px;padding:24px 28px;margin-bottom:24px}
-.tb-title{font-size:14px;font-weight:800;margin-bottom:6px}
-.tb-sub{font-size:12px;color:var(–muted);margin-bottom:20px}
-.tb-bar-row{margin-bottom:14px}
-.tb-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
-.tb-name{font-size:12px;font-weight:700;color:var(–prose)}
-.tb-pct{font-size:12px;font-weight:800;color:var(–muted)}
-.tb-bar{height:10px;border-radius:100px;background:var(–bg2);overflow:hidden}
-.tb-fill{height:100%;border-radius:100px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-.btc-time-section{background:linear-gradient(135deg,rgba(247,147,26,.07),rgba(255,215,0,.04));border:2px solid rgba(247,147,26,.25);border-radius:22px;padding:30px;margin-bottom:24px}
-.bts-head{font-size:15px;font-weight:900;margin-bottom:6px}
-.bts-sub{font-size:13px;color:var(–muted);margin-bottom:22px;line-height:1.7}
-.btc-time-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-.btc-time-card{background:var(–card);border:1px solid rgba(247,147,26,.2);border-radius:14px;padding:18px;text-align:center}
-.btc-tc-icon{font-size:28px;margin-bottom:8px;display:block}
-.btc-tc-val{font-size:clamp(20px,3.5vw,32px);font-weight:900;letter-spacing:-1.5px;line-height:1;color:var(–btc);animation:countUp .6s .2s ease both;opacity:0;animation-fill-mode:both}
-.btc-tc-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.9px;color:var(–muted);margin-top:5px;margin-bottom:3px}
-.btc-tc-sub{font-size:11px;color:var(–muted);line-height:1.5;margin-top:4px}
+    .chapter {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      color: #C47F00;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
 
-.chart-card{background:var(–card);border:1px solid var(–border);border-radius:18px;padding:24px;margin-bottom:24px}
-.chart-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.ct-btn{padding:7px 14px;border-radius:100px;font-size:11px;font-weight:800;cursor:pointer;border:1px solid var(–border);background:var(–bg2);color:var(–muted);transition:all .2s;font-family:‘Inter’,sans-serif}
-.ct-btn.active{background:linear-gradient(135deg,var(–teal),#0891b2);color:#fff;border-color:transparent}
-.chart-title-txt{font-size:14px;font-weight:800;margin-bottom:3px}
-.chart-sub-text{font-size:12px;color:var(–muted);margin-bottom:14px}
+    .chapter::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background-color: rgba(240,165,0,0.15);
+    }
 
-.conclusion{background:var(–bg2);border:2px solid rgba(6,182,212,.22);border-radius:24px;padding:40px 44px;margin-bottom:28px;position:relative;overflow:hidden}
-.conclusion::before{content:‘⏳’;position:absolute;bottom:-60px;right:-30px;font-size:280px;opacity:.025;pointer-events:none;line-height:1}
-.con-eyebrow{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:var(–teal);margin-bottom:20px;display:flex;align-items:center;gap:10px}
-.con-eyebrow::after{content:’’;flex:1;height:1px;background:linear-gradient(90deg,rgba(6,182,212,.5),transparent)}
-.con-headline{font-size:clamp(22px,4vw,48px);font-weight:900;letter-spacing:-2px;line-height:1.05;margin-bottom:18px}
-.con-body{font-family:‘Lora’,serif;font-size:clamp(15px,1.9vw,19px);line-height:1.95;color:var(–prose);margin-bottom:22px}
-.con-body p{margin-bottom:18px}.con-body p:last-child{margin-bottom:0}
-.con-body strong{color:var(–text);font-weight:700;font-family:‘Inter’,sans-serif;font-size:.92em}
-.con-body em{color:var(–teal);font-style:italic}
-.con-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:22px 0;padding:20px;background:var(–card);border-radius:16px;border:1px solid var(–border)}
-.cs-item-c{text-align:center}
-.cs-val-c{font-size:clamp(18px,3vw,28px);font-weight:900;letter-spacing:-1px;line-height:1}
-.cs-lbl-c{font-size:10px;font-weight:700;color:var(–muted);text-transform:uppercase;letter-spacing:.8px;margin-top:4px}
-.con-pledge{font-family:‘Inter’,sans-serif;font-size:clamp(15px,2.4vw,22px);font-weight:900;letter-spacing:-.8px;line-height:1.35;padding:22px 26px;border-left:4px solid var(–teal);background:rgba(6,182,212,.06);border-radius:0 14px 14px 0;margin-top:22px;color:var(–text)}
-.con-pledge .pt{color:var(–teal)}.con-pledge .pg{color:var(–green)}.con-pledge .pgo{color:var(–gold)}.con-pledge .pb{color:var(–btc)}
+    h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      line-height: 1.2;
+      color: #FAF5EB;
+      margin-bottom: 1.5rem;
+      font-weight: 400;
+    }
 
-footer{text-align:center;padding:48px 24px;color:var(–muted);font-size:13px;border-top:1px solid var(–border);margin-top:48px}
-footer a{color:var(–btc);text-decoration:none}
-footer a:hover{color:var(–gold)}
+    p {
+      margin-bottom: 1.2rem;
+      color: #E8DEC8;
+      font-size: 1.05rem;
+    }
 
-@media(max-width:760px){
-nav{padding-left:18px;padding-right:18px}
-.hero,.clock-strip,.calc-outer,.results-section{padding-left:18px;padding-right:18px}
-.hero h1{letter-spacing:-2px}
-.grid{grid-template-columns:1fr}
-.clock-card{flex-direction:column;gap:14px}
-.conclusion{padding:26px 20px}
-}
-</style>
+    .objection {
+      background-color: #110E08;
+      border: 1px solid rgba(255,77,28,0.2);
+      border-left: 3px solid #FF4D1C;
+      padding: 2rem;
+      margin: 2.5rem 0 1rem;
+      position: relative;
+      overflow: hidden;
+    }
 
+    .objection::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, rgba(255,77,28,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .objection-label {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: #FF4D1C;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .objection-claim {
+      font-family: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: #FAF5EB;
+      line-height: 1.1;
+      letter-spacing: 0.03em;
+    }
+
+    .rebuttal {
+      background-color: #0D0A04;
+      border: 1px solid rgba(240,165,0,0.2);
+      border-left: 3px solid #F0A500;
+      padding: 2rem;
+      margin: 0 0 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rebuttal::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, rgba(240,165,0,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .rebuttal-label {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: #F0A500;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .rebuttal p {
+      margin-bottom: 0.8rem;
+      font-size: 1rem;
+      color: #E8DEC8;
+    }
+
+    .rebuttal p:last-child { margin-bottom: 0; }
+
+    .stat-block {
+      background-color: #110E08;
+      border: 1px solid rgba(240,165,0,0.2);
+      border-left: 3px solid #F0A500;
+      padding: 2.5rem 2rem;
+      margin: 2.5rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-block::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(240,165,0,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .stat-number {
+      font-family: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+      font-size: clamp(3rem, 8vw, 5rem);
+      color: #F0A500;
+      line-height: 1;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-label {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 0.78rem;
+      color: #8A7D62;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .resilience-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 2.5rem 0;
+    }
+
+    .resilience-item {
+      background-color: #110E08;
+      border: 1px solid rgba(240,165,0,0.13);
+      padding: 1.4rem;
+      transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+    }
+
+    .resilience-item:hover {
+      transform: translateY(-3px);
+      border-color: rgba(240,165,0,0.3);
+      background-color: #151008;
+    }
+
+    .resilience-item-icon {
+      font-size: 1.3rem;
+      display: block;
+      margin-bottom: 0.6rem;
+    }
+
+    .resilience-item h4 {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: 1.1rem;
+      color: #FAF5EB;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.4rem;
+    }
+
+    .resilience-item p {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 0.67rem;
+      color: #8A7D62;
+      line-height: 1.55;
+      letter-spacing: 0.02em;
+      margin-bottom: 0;
+    }
+
+    .value-pulse {
+      background-color: #0D0A04;
+      border: 1px solid rgba(240,165,0,0.2);
+      padding: 2rem;
+      margin: 2.5rem 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .value-pulse-label {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      color: #8A7D62;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .value-pulse-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .pulse-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(240,165,0,0.3);
+      background-color: rgba(240,165,0,0.06);
+      animation: blockPulse 1.5s ease-in-out infinite;
+    }
+
+    .pulse-dot:nth-child(2) { animation-delay: 0.2s; }
+    .pulse-dot:nth-child(3) { animation-delay: 0.4s; }
+    .pulse-dot:nth-child(4) { animation-delay: 0.6s; }
+    .pulse-dot:nth-child(5) { animation-delay: 0.8s; }
+    .pulse-dot:nth-child(6) { animation-delay: 1s; }
+
+    .value-pulse-sub {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 0.65rem;
+      color: #8A7D62;
+      letter-spacing: 0.1em;
+      margin-top: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    .value-pulse-sub span {
+      color: #F0A500;
+    }
+
+    blockquote {
+      padding: 2.5rem 0;
+      margin: 3rem 0;
+      border-top: 1px solid rgba(240,165,0,0.15);
+      border-bottom: 1px solid rgba(240,165,0,0.15);
+    }
+
+    blockquote p {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-style: italic;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      color: #FAF5EB;
+      line-height: 1.4;
+      margin-bottom: 0;
+    }
+
+    .mono-fact {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: #F0A500;
+      background-color: rgba(240,165,0,0.06);
+      border-left: 2px solid #F0A500;
+      padding: 1rem 1.5rem;
+      margin: 2rem 0;
+      letter-spacing: 0.05em;
+    }
+
+    .divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(to right, transparent, #F0A500, transparent);
+      margin: 3rem auto;
+    }
+
+    .finale {
+      text-align: center;
+      padding: 5rem 2rem;
+      background-image: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(240,165,0,0.06), transparent 70%);
+    }
+
+    .finale-question {
+      font-family: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+      font-size: clamp(2rem, 7vw, 5rem);
+      line-height: 1;
+      color: #FAF5EB;
+      margin-bottom: 1rem;
+    }
+
+    .finale-question span { color: #F0A500; }
+
+    .finale-sub {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-style: italic;
+      font-size: 1.2rem;
+      color: #8A7D62;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes blockPulse {
+      0%, 100% {
+        background-color: rgba(240,165,0,0.06);
+        border-color: rgba(240,165,0,0.3);
+        transform: scale(1);
+      }
+      50% {
+        background-color: rgba(240,165,0,0.24);
+        border-color: rgba(240,165,0,0.75);
+        transform: scale(1.08);
+      }
+    }
+
+    @media (max-width: 520px) {
+      .resilience-grid { grid-template-columns: 1fr; }
+      article { padding-left: 1.25rem; padding-right: 1.25rem; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="scroll-progress"><div class="scroll-fill" id="scrollFill"></div></div>
+  <header class="hero">
+    <p class="hero-label">₿ Freedom Threshold Report</p>
+    <h1>Reach Escape<span>Velocity</span></h1>
+    <p class="hero-sub">The moment your investments grow faster than your spending is the moment life stops feeling like a treadmill and starts feeling like lift.</p>
 
-<div class="ticker"><div class="ticker-inner">
-  <span>⏳ TIME CURRENCY — YOUR SCARCEST ASSET · SATOLOGY</span><span>·</span>
-  <span>⚠️ RIGHT NOW YOU ARE SPENDING TIME — THE ONLY THING YOU CANNOT EARN BACK</span><span>·</span>
-  <span>🔑 BITCOIN IS SCARCE · YOUR TIME IS SCARCER</span><span>·</span>
-  <span>⏱️ EVERY OWNED HOUR IS A UNIT OF SOVEREIGNTY — SPEND IT LIKE IT</span><span>·</span>
-  <span>⏳ TIME CURRENCY — YOUR SCARCEST ASSET · SATOLOGY</span><span>·</span>
-  <span>⚠️ RIGHT NOW YOU ARE SPENDING TIME — THE ONLY THING YOU CANNOT EARN BACK</span><span>·</span>
-  <span>🔑 BITCOIN IS SCARCE · YOUR TIME IS SCARCER</span><span>·</span>
-  <span>⏱️ EVERY OWNED HOUR IS A UNIT OF SOVEREIGNTY — SPEND IT LIKE IT</span><span>·</span>
-</div></div>
-
-<nav>
-  <a class="logo" href="index.html">
-    <div class="logo-icon">₿</div>
-    <div style="display:flex;flex-direction:column;gap:1px"><span class="logo-name">SATOLOGY</span><span class="logo-sub">Understanding Bitcoin</span></div>
-  </a>
-  <div class="nav-right">
-    <div class="nav-price" id="navPrice" onclick="refreshPrice()" title="Click to refresh">
-      <span class="nav-dot"></span>
-      <span id="btcPriceDisplay">$--</span>
-      <span style="font-size:10px;color:var(--muted)" id="priceHint">↻</span>
+    <div class="value-counter">
+      <div class="value-counter-label">The threshold that changes everything</div>
+      <div class="value-counter-num">Growth &gt; Burn</div>
+      <div class="value-counter-sub">Assets expand faster than lifestyle consumes them · That is the flip · That is freedom</div>
     </div>
-    <button class="theme-toggle" id="themeToggle"><span class="t-icon sun">☀️</span><span class="t-icon moon">🌙</span></button>
-  </div>
-</nav>
 
-<div class="hero">
-  <canvas id="heroCanvas"></canvas>
-  <div class="hero-eyebrow">⏳ Time Currency · SATOLOGY Tools</div>
-  <h1><span class="h1-teal">Your Time</span><br><span class="h1-go">Is Your</span><br><span class="h1-g">True Wealth.</span></h1>
-  <p class="hero-sub">Bitcoin is scarce. Your time is scarcer. This tool measures what you actually own — the waking hours that are yours, after every obligation is subtracted. Discover your real net worth.</p>
-</div>
-
-<div class="clock-strip">
-  <div class="clock-card">
-    <div class="clock-main">
-      <div class="clock-label">⏱ Time Right Now</div>
-      <div class="clock-time" id="liveClock">--:--:--</div>
-      <div class="clock-date" id="liveDate">--</div>
+    <div class="scroll-hint">
+      <span>Read</span>
+      <div class="scroll-line"></div>
     </div>
-    <div class="clock-right">
-      <div class="clock-stat"><div class="cs-val" id="clockHoursToday">--</div><div class="cs-lbl">Hours Today Gone</div></div>
-      <div class="clock-stat"><div class="cs-val" id="clockDayPct">--%</div><div class="cs-lbl">Day Elapsed</div></div>
-      <div class="clock-stat"><div class="cs-val" id="clockYearPct">--%</div><div class="cs-lbl">Year Elapsed</div></div>
+  </header>
+
+  <article>
+
+    <div class="section">
+      <div class="chapter">The Moment</div>
+      <h2>Almost Nobody Talks About This With Enough Reverence</h2>
+      <p>There is a moment in life so important it should be taught in every home, every school, every workplace, every exhausted Monday morning commute. It is the moment your money starts moving faster than your needs. The moment your investments grow faster than your spending.</p>
+      <p>That is escape velocity. Not fake freedom. Not weekend freedom. Not “I took PTO so I can breathe for four days” freedom. Real freedom. The kind that changes how you wake up, how you think, how you choose, and how you carry yourself through the world.</p>
+
+      <blockquote>
+        <p>“Once your assets expand faster than your lifestyle consumes them, the machine flips. You are no longer pushing life uphill. Life starts carrying you.”</p>
+      </blockquote>
+
+      <p>That is the threshold. That is the prize. Not retirement as an age. Freedom as a relationship between your burn rate and your capital.</p>
     </div>
-  </div>
-</div>
 
-<div class="calc-outer">
-<div class="calc-card">
+    <div class="section">
+      <div class="chapter">The Trap</div>
+      <h2>Most People Miss Escape Velocity Because They Build for Applause Before They Build for Freedom</h2>
+      <p>They increase expenses before increasing assets. They inflate lifestyle before securing leverage. They consume the very fuel that could have launched them. A nicer car. A bigger payment. More subscriptions. More upgrades. More convenience. More invisible leaks.</p>
+      <p>They do not realize that every recurring expense is gravity. Every dollar committed to appearances is fuel burned on the launch pad. And gravity is ruthless. It does not care that you work hard. It does not care that you are tired. It only responds to numbers.</p>
 
-  <div class="sec-hdr teal" style="margin-top:0">👤 About You</div>
-  <div class="grid">
-    <div class="form-group">
-      <label for="age">Current Age (years)</label>
-      <input type="number" id="age" min="0" max="120" step="0.1" placeholder="e.g. 35">
+      <div class="stat-block">
+        <span class="stat-number">1 Enemy</span>
+        <span class="stat-label">Lifestyle inflation — the silent force that delays freedom while pretending to be progress</span>
+      </div>
+
+      <div class="mono-fact">
+        Every permanent expense is not just a bill.<br>
+        It is future time you no longer own.
+      </div>
     </div>
-    <div class="form-group">
-      <label for="gender">Gender</label>
-      <select id="gender">
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-      </select>
+
+    <div class="section">
+      <div class="chapter">Objection 01</div>
+
+      <div class="objection">
+        <div class="objection-label">⚠ The Excuse</div>
+        <div class="objection-claim">“I’ll Focus on Freedom Later”</div>
+      </div>
+
+      <div class="rebuttal">
+        <div class="rebuttal-label">✓ The Collapse</div>
+        <p>Later is usually the lie that keeps people permanently grounded. The early years matter more than almost any other phase of the journey because that is when savings rate, habits, and compounding do the most damage to mediocrity.</p>
+        <p>If you burn your best runway years on consumption, the math gets colder later. Escape velocity does not reward good intentions. It rewards margin, invested early, compounded long enough, with low enough drag to matter.</p>
+        <p>The early years are not glamorous. They are the furnace. That is where freedom is forged.</p>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="country">Country</label>
-      <select id="country"><option value="">Select a country…</option></select>
+
+    <div class="section">
+      <div class="chapter">Mission One</div>
+      <h2>Reduce Drag Before You Try to Add More Thrust</h2>
+      <p>Before the big gains, before the portfolio screenshots, before the confidence, before compounding starts to feel magical, there is one brutal truth: your first job is not to look successful. Your first job is to lower the cost of survival.</p>
+      <p>Because the lower your expenses, the easier it is to save. The easier it is to save, the faster you can invest. The faster you can invest, the sooner compounding matters. The sooner compounding matters, the sooner you stop trading life for money.</p>
+
+      <blockquote>
+        <p>“Freedom is not only about how much you make. It is about how little you need.”</p>
+      </blockquote>
+
+      <p>That is the hidden cheat code. Not misery. Not deprivation. Precision. Cut what does not matter. Keep what truly matters. Eliminate status games. Stop financing ego. Stop bleeding energy into things that do not expand your future.</p>
     </div>
-  </div>
 
-  <div class="sec-hdr gold">💼 Work &amp; Retirement</div>
-  <div class="grid">
-    <div class="form-group">
-      <label for="retireAge">Retirement Age</label>
-      <input type="number" id="retireAge" min="0" max="120" step="0.5" value="65">
-      <div class="field-note">Lower than your age = already retired.</div>
+    <div class="section">
+      <div class="chapter">Objection 02</div>
+
+      <div class="objection">
+        <div class="objection-label">⚠ The Excuse</div>
+        <div class="objection-claim">“That Sounds Too Extreme”</div>
+      </div>
+
+      <div class="rebuttal">
+        <div class="rebuttal-label">✓ The Collapse</div>
+        <p>To outsiders, disciplined years often look restrictive. You work more. You save harder. You delay indulgence. You say no more often. You build while others binge. You invest while others upgrade. You think in decades while the world thinks in weekends.</p>
+        <p>But what looks extreme from the outside often feels like propulsion from the inside. The person aiming for freedom is not randomly depriving themselves. They are compressing time. They are buying back their future in advance.</p>
+        <p>In the early phase, seriousness is not imbalance. It is targeting.</p>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="workHoursPerWeek">Work Hours / Week</label>
-      <input type="number" id="workHoursPerWeek" min="0" max="120" step="0.5" value="40">
+
+    <div class="section">
+      <div class="chapter">Mission Two</div>
+      <h2>Maximize Thrust Like Your Life Depends on It</h2>
+      <p>Reducing drag is only half the equation. The other half is force. You need income. More of it. Aggressively. Intentionally. Without apology. Work overtime. Pick up extra shifts. Start the side hustle. Learn the higher-paying skill. Negotiate. Move up. Monetize competence. Turn dead hours into cash flow.</p>
+      <p>The early years are not the years to coast. They are the years to sprint. There is a season in life when the grind is not oppression. It is a weapon.</p>
+
+      <div class="value-pulse">
+        <div class="value-pulse-label">How escape velocity is built</div>
+        <div class="value-pulse-row">
+          <div class="pulse-dot"></div>
+          <div class="pulse-dot"></div>
+          <div class="pulse-dot"></div>
+          <div class="pulse-dot"></div>
+          <div class="pulse-dot"></div>
+          <div class="pulse-dot"></div>
+        </div>
+        <div class="value-pulse-sub">Lower burn + higher income + invested surplus = <span>launch force</span></div>
+      </div>
+
+      <p>Low time preference is where the separation begins. Most people want the reward now. The future-free person becomes dangerous precisely because they can wait.</p>
     </div>
-    <div class="form-group">
-      <label for="weeksPerYearWorked">Weeks Worked / Year</label>
-      <input type="number" id="weeksPerYearWorked" min="0" max="52" step="1" value="48">
+
+    <div class="section">
+      <div class="chapter">The Psychology</div>
+      <h2>Delayed Gratification Is Not Punishment. It Is Strategic Violence Against Mediocrity.</h2>
+      <p>Every extra dollar earned and invested in the early stage is not just a dollar. It is a worker. A future employee. A tiny machine that can compound for years without asking for rest, praise, or permission.</p>
+      <p>The more workers you acquire, the more your future begins to outnumber your present effort. At first it feels slow. Then subtle. Then noticeable. Then powerful. Then unstoppable.</p>
+
+      <div class="stat-block">
+        <span class="stat-number">1 Decision</span>
+        <span class="stat-label">Choose freedom over applause — and almost every financial choice becomes clearer</span>
+      </div>
+
+      <blockquote>
+        <p>“The early grind is not about becoming rich-looking. It is about becoming hard to control.”</p>
+      </blockquote>
     </div>
-    <div class="form-group">
-      <label for="sleepHours">Sleep Hours / Day</label>
-      <input type="number" id="sleepHours" value="8" disabled>
-      <div class="field-note">Fixed at 8 — sleep is not owned time.</div>
+
+    <div class="section">
+      <div class="chapter">Mission Three</div>
+      <h2>Buy Assets, Not Illusions</h2>
+      <p>Once you have margin, you need a place for that energy to go. Saving alone is not enough. Cash sitting still gets eaten by time. You need assets. Assets that can appreciate. Assets that can outgrow inflation. Assets that can turn discipline into force multiplication.</p>
+      <p>This is where the traditional roadmap begins. Index funds. Broad market exposure. Long-term ownership of productive businesses. Real estate. Rental income. Equity accumulation. Businesses. Skills turned into systems. Systems turned into assets.</p>
+      <p>This is the respectable path. The sane path. And it works for many. It teaches discipline, consistency, patience, and the psychology of ownership. It gets people out of consumer mode and into builder mode. That already puts them ahead of the crowd.</p>
+
+      <div class="resilience-grid">
+        <div class="resilience-item">
+          <span class="resilience-item-icon">📈</span>
+          <h4>Index Funds</h4>
+          <p>Broad ownership of productive companies with long-term compounding potential.</p>
+        </div>
+        <div class="resilience-item">
+          <span class="resilience-item-icon">🏠</span>
+          <h4>Real Estate</h4>
+          <p>Equity, income, and leverage when used carefully and strategically.</p>
+        </div>
+        <div class="resilience-item">
+          <span class="resilience-item-icon">🧠</span>
+          <h4>Skills</h4>
+          <p>Higher earning power that can be converted into cash flow and future assets.</p>
+        </div>
+        <div class="resilience-item">
+          <span class="resilience-item-icon">⚙️</span>
+          <h4>Systems</h4>
+          <p>Businesses and repeatable processes that stop depending on your hourly labor.</p>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="sec-hdr red">🩺 Health Conditions (optional)</div>
-  <div class="form-group">
-    <div id="diseaseContainer"></div>
-    <div class="field-note" style="margin-top:4px">Each condition may reduce your estimated life expectancy. Diminishing returns applied for multiple conditions.</div>
-  </div>
+    <div class="section">
+      <div class="chapter">Obsession</div>
+      <h2>Escape Velocity Rewards People Who Care More Than Average</h2>
+      <p>Most people will never understand this part. Freedom at a high level is not built by mild interest. It is built by focused intensity. You care more. You study more. You optimize more. You detach from social pressure more. You refuse normality more.</p>
+      <p>The person who reaches escape velocity early often looks too serious in the beginning. Later, they look lucky. But luck had nothing to do with it. They simply decided that freedom was more important than fitting in.</p>
 
-  <div class="note-box">
-    <strong>What this measures:</strong> "Owned time" = waking hours remaining − hours you'll spend working until retirement. Work time is subtracted because your employer owns those hours, not you. This is your real balance — the only currency that cannot be printed, borrowed, or earned back.
-  </div>
-
-<button class="calc-btn" onclick="calculate()">⏳ Calculate My Remaining Owned Time</button>
-<button class="reset-btn" onclick="resetAll()">↺ Reset</button>
-
-  <div class="error-box" id="errorBox"></div>
-
-</div>
-</div>
-
-<div class="results-section" id="resultsSection">
-
-  <div class="bonus-section" id="bonusSection" style="display:none">
-    <div class="bonus-head">🎉 You Are Living on Bonus Time</div>
-    <p class="bonus-sub">Based on population averages, you have already lived beyond the statistical estimate for your profile. The model has been defeated. That is not a warning — it is evidence that you are more than a data point.</p>
-    <div class="bonus-hours" id="bonusHours">--</div>
-    <div class="bonus-unit">waking bonus hours already lived</div>
-    <div style="margin-top:20px;font-size:13px;color:var(--muted);line-height:1.8;max-width:500px;margin-left:auto;margin-right:auto">Statistics describe populations. They do not describe you. Keep going.</div>
-  </div>
-
-  <div class="hourglass-hero" id="hourglassHero" style="display:none">
-    <div class="hh-eyebrow">⏳ Your Remaining Owned Time</div>
-    <div class="hh-main" id="hhMain">--</div>
-    <div class="hh-unit" id="hhUnit">owned waking hours</div>
-    <div class="hh-divider"></div>
-    <div class="hh-sub" id="hhSub">Every hour in this number is a unit of your sovereignty.</div>
-  </div>
-
-  <div class="stat-grid" id="statGrid"></div>
-
-  <div class="time-breakdown" id="timeBreakdown" style="display:none">
-    <div class="tb-title">⏱ How Your Remaining Life Breaks Down</div>
-    <div class="tb-sub">Of all the time you have left, here is how it is allocated</div>
-    <div id="tbBars"></div>
-  </div>
-
-  <div class="btc-time-section" id="btcSection" style="display:none">
-    <div class="bts-head">₿ Time × Bitcoin — The Connection That Changes Everything</div>
-    <div class="bts-sub">Bitcoin is proof-of-work, but so is your life. Here is what your owned time means when you start measuring it in the hardest money ever created.</div>
-    <div class="btc-time-grid" id="btcGrid"></div>
-  </div>
-
-  <div class="chart-card" id="chartCard" style="display:none">
-    <div class="chart-tabs">
-      <button class="ct-btn active" onclick="switchChart('breakdown')">Time Breakdown</button>
-      <button class="ct-btn" onclick="switchChart('decades')">By Decade</button>
-      <button class="ct-btn" onclick="switchChart('work')">Work vs Free</button>
+      <blockquote>
+        <p>“You stop asking, ‘What do people usually do?’ You start asking, ‘What gets me free faster?’”</p>
+      </blockquote>
     </div>
-    <div class="chart-title-txt" id="chartTitleTxt">Your Remaining Time — Visual Breakdown</div>
-    <div class="chart-sub-text" id="chartSubText">How your remaining hours are actually distributed</div>
-    <canvas id="mainChart"></canvas>
-  </div>
 
-  <div class="conclusion" id="conclusionBox" style="display:none"></div>
+    <div class="section">
+      <div class="chapter">The Bend in the Line</div>
+      <h2>Compounding Is Psychological Liberation in Numerical Form</h2>
+      <p>In the beginning, your contributions matter more than growth. Your labor dominates the equation. But then something beautiful happens. The line bends. Your investments begin contributing more than your savings. Then more than a raise would. Then more than a side hustle would. Then more than months of work would.</p>
+      <p>And eventually, if you are disciplined long enough, your assets begin to grow faster than your expenses consume them. That is the exact moment we are chasing.</p>
 
-</div>
+      <div class="mono-fact">
+        Escape velocity does not care how old you are.<br>
+        It cares about the relationship between capital growth and living costs.
+      </div>
+    </div>
 
-<footer>
-  <div style="margin-bottom:10px"><a href="index.html" style="font-weight:800;font-size:15px">₿ SATOLOGY</a> · Understanding Bitcoin</div>
-  <div style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:12px">
-    <a href="why-bitcoin.html">Why Bitcoin? — 21 Steps</a>
-    <a href="Retireearlywithbitcoin.html">Retire Early</a>
-    <a href="raise-with-bitcoin.html">DCA Calculator</a>
-    <a href="real-estate-vs-bitcoin.html">Real Estate vs BTC</a>
-    <a href="BitcoinSupplyShock.html">Supply Shock</a>
-  </div>
-  <div>© 2026 SATOLOGY — Not financial or medical advice. Your time is your own.</div>
-</footer>
+    <div class="section">
+      <div class="chapter">Simplicity</div>
+      <h2>Freedom Does Not Love Complexity. Freedom Loves Simplicity.</h2>
+      <p>People think wealth creates freedom. Not exactly. Wealth combined with simplicity creates freedom. Without simplicity, more money often just funds more complexity. More bills. More obligations. More maintenance. More dependence on staying in the machine.</p>
+      <p>A simpler life has less drag. Less drag means less required income. Less required income means faster escape velocity. This is why the serious freedom-seeker becomes allergic to lifestyle inflation. Not because they hate life. Because they love freedom more.</p>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+      <div class="stat-block">
+        <span class="stat-number">Less Drag</span>
+        <span class="stat-label">Lower required income means fewer chains, faster optionality, and more control</span>
+      </div>
+    </div>
 
-<script>
-// ===== DATA =====
-const LIFE_DATA = { countries: [
-  {name:"United States",code:"USA",male:74.8,female:80.2},{name:"Canada",code:"CAN",male:79.8,female:83.9},{name:"Mexico",code:"MEX",male:70.9,female:76.9},
-  {name:"El Salvador",code:"SLV",male:69.4,female:77.4},{name:"Guatemala",code:"GTM",male:69.1,female:75.5},{name:"Honduras",code:"HND",male:69.6,female:75.6},
-  {name:"Costa Rica",code:"CRI",male:78.4,female:83.2},{name:"Panama",code:"PAN",male:74.3,female:80.4},{name:"Dominican Republic",code:"DOM",male:70.7,female:77.4},
-  {name:"Jamaica",code:"JAM",male:71.4,female:76.1},{name:"Brazil",code:"BRA",male:71.9,female:79.2},{name:"Argentina",code:"ARG",male:72.4,female:79.3},
-  {name:"Chile",code:"CHL",male:77.0,female:82.3},{name:"Colombia",code:"COL",male:72.3,female:78.5},{name:"Peru",code:"PER",male:72.7,female:78.4},
-  {name:"Ecuador",code:"ECU",male:73.0,female:79.1},{name:"Uruguay",code:"URY",male:73.9,female:81.4},
-  {name:"United Kingdom",code:"GBR",male:79.1,female:82.8},{name:"Ireland",code:"IRL",male:80.2,female:83.8},{name:"France",code:"FRA",male:79.5,female:85.3},
-  {name:"Germany",code:"DEU",male:78.7,female:83.3},{name:"Netherlands",code:"NLD",male:79.9,female:83.2},{name:"Belgium",code:"BEL",male:78.9,female:83.8},
-  {name:"Switzerland",code:"CHE",male:81.8,female:85.6},{name:"Austria",code:"AUT",male:78.9,female:84.0},{name:"Spain",code:"ESP",male:80.3,female:85.6},
-  {name:"Portugal",code:"PRT",male:78.9,female:84.7},{name:"Italy",code:"ITA",male:80.7,female:85.3},{name:"Sweden",code:"SWE",male:80.7,female:84.4},
-  {name:"Norway",code:"NOR",male:80.8,female:84.4},{name:"Denmark",code:"DNK",male:79.5,female:83.4},{name:"Finland",code:"FIN",male:79.0,female:84.3},
-  {name:"Poland",code:"POL",male:73.9,female:81.7},{name:"Czechia",code:"CZE",male:75.9,female:81.9},{name:"Hungary",code:"HUN",male:72.7,female:79.4},
-  {name:"Romania",code:"ROU",male:71.6,female:79.2},{name:"Greece",code:"GRC",male:78.6,female:83.9},{name:"Russia",code:"RUS",male:66.1,female:76.1},
-  {name:"Ukraine",code:"UKR",male:67.0,female:76.7},{name:"Turkey",code:"TUR",male:75.6,female:81.3},{name:"Israel",code:"ISR",male:81.0,female:84.6},
-  {name:"Saudi Arabia",code:"SAU",male:74.6,female:77.8},{name:"United Arab Emirates",code:"ARE",male:78.6,female:80.8},{name:"Qatar",code:"QAT",male:79.2,female:82.1},
-  {name:"Jordan",code:"JOR",male:72.0,female:76.1},{name:"India",code:"IND",male:67.5,female:70.2},{name:"Pakistan",code:"PAK",male:64.2,female:66.3},
-  {name:"Bangladesh",code:"BGD",male:71.2,female:74.3},{name:"Sri Lanka",code:"LKA",male:73.4,female:79.3},{name:"Nepal",code:"NPL",male:69.3,female:72.5},
-  {name:"China",code:"CHN",male:75.0,female:80.7},{name:"Japan",code:"JPN",male:81.6,female:87.5},{name:"South Korea",code:"KOR",male:81.2,female:86.7},
-  {name:"Singapore",code:"SGP",male:81.3,female:85.7},{name:"Thailand",code:"THA",male:71.7,female:79.4},{name:"Vietnam",code:"VNM",male:69.4,female:77.6},
-  {name:"Philippines",code:"PHL",male:67.2,female:73.7},{name:"Indonesia",code:"IDN",male:68.9,female:73.3},{name:"Malaysia",code:"MYS",male:72.7,female:77.4},
-  {name:"Australia",code:"AUS",male:81.3,female:85.2},{name:"New Zealand",code:"NZL",male:80.0,female:83.6},
-  {name:"South Africa",code:"ZAF",male:60.7,female:67.3},{name:"Nigeria",code:"NGA",male:53.5,female:55.0},{name:"Egypt",code:"EGY",male:69.1,female:74.2},
-  {name:"Morocco",code:"MAR",male:73.5,female:76.7},{name:"Kenya",code:"KEN",male:62.9,female:67.6},{name:"Ghana",code:"GHA",male:62.4,female:65.7},
-  {name:"Ethiopia",code:"ETH",male:65.7,female:69.5}
-]};
+    <div class="section">
+      <div class="chapter">The Shift</div>
+      <h2>Then Comes a Deeper Question</h2>
+      <p>And here the conversation changes. Because once you understand freedom, scarcity, time preference, compounding, monetary debasement, and the urgency of reaching escape velocity while you still have youth and life ahead of you, you start looking at assets differently.</p>
+      <p>Index funds can move you. Real estate can help you. Businesses can accelerate you. But eventually, the deeper question starts to burn: which assets are merely helpful, and which ones might materially compress the timeline?</p>
+      <p>This is where some people begin studying Bitcoin more seriously.</p>
 
-const DISEASES = [
-  {key:"none",label:"None / Prefer not to say",yearsLost:0},
-  {key:"hypertension",label:"Hypertension (high blood pressure)",yearsLost:1.0},
-  {key:"type2diabetes",label:"Type 2 Diabetes",yearsLost:3.5},
-  {key:"type1diabetes",label:"Type 1 Diabetes",yearsLost:6.0},
-  {key:"coronary_artery_disease",label:"Coronary artery disease",yearsLost:4.0},
-  {key:"heart_failure",label:"Heart failure",yearsLost:5.0},
-  {key:"stroke_history",label:"Stroke (history of)",yearsLost:4.5},
-  {key:"copd",label:"COPD",yearsLost:5.0},
-  {key:"asthma_severe",label:"Asthma (severe/persistent)",yearsLost:1.0},
-  {key:"chronic_kidney_disease",label:"Chronic kidney disease",yearsLost:5.0},
-  {key:"cancer_history",label:"Cancer (history of / active)",yearsLost:4.0},
-  {key:"cirrhosis",label:"Cirrhosis / chronic liver disease",yearsLost:6.0},
-  {key:"hiv",label:"HIV",yearsLost:4.0},
-  {key:"obesity",label:"Obesity",yearsLost:2.0},
-  {key:"sleep_apnea",label:"Sleep apnea",yearsLost:1.0},
-  {key:"depression_severe",label:"Depression (severe)",yearsLost:1.0},
-  {key:"substance_use",label:"Substance use disorder",yearsLost:6.0},
-  {key:"smoker",label:"Smoking (current)",yearsLost:7.0},
-  {key:"high_cholesterol",label:"High cholesterol (uncontrolled)",yearsLost:1.0},
-  {key:"afib",label:"Atrial fibrillation",yearsLost:2.0},
-  {key:"autoimmune",label:"Autoimmune disease (RA/Lupus etc.)",yearsLost:2.0},
-  {key:"dementia_risk",label:"Neurodegenerative disease (risk/early)",yearsLost:4.0},
-  {key:"parkinsons",label:"Parkinson's disease",yearsLost:3.0},
-  {key:"epilepsy",label:"Epilepsy",yearsLost:1.0},
-  {key:"tb_history",label:"Tuberculosis (history/complications)",yearsLost:1.5},
-  {key:"sickle_cell",label:"Sickle cell disease",yearsLost:15.0},
-  {key:"hemophilia",label:"Hemophilia (moderate/severe)",yearsLost:2.0},
-  {key:"ibd",label:"Inflammatory bowel disease",yearsLost:1.0},
-  {key:"osteoporosis_severe",label:"Osteoporosis (severe)",yearsLost:0.5},
-  {key:"anxiety_severe",label:"Anxiety disorder (severe)",yearsLost:0.5},
-  {key:"other_chronic",label:"Other chronic condition (unspecified)",yearsLost:1.5}
-];
-const WEIGHTS = [1.0,0.60,0.45,0.35,0.25,0.20,0.15,0.12,0.10,0.08];
+      <blockquote>
+        <p>“The old vehicles can help you leave the ground. Some people come to see Bitcoin as an asset that may accelerate the mission even further.”</p>
+      </blockquote>
 
-// ===== STATE =====
-const htmlEl = document.documentElement;
-let chartInstance = null;
-let currentChartType = 'breakdown';
-let lastCalcResult = null;
-let liveBtcPrice = 0;
+      <p>Not because it is trendy. Not because it is exciting. Not because it is volatile. But because it is built around something more powerful than comfort: scarcity in a world drowning in dilution.</p>
+    </div>
 
-// ===== THEME =====
-document.getElementById('themeToggle').addEventListener('click', function() {
-  var n = htmlEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  htmlEl.setAttribute('data-theme', n);
-  localStorage.setItem('satology-theme', n);
-  if (chartInstance && lastCalcResult) {
-    setTimeout(function(){ drawChart(lastCalcResult, currentChartType); }, 50);
-  }
-});
+    <div class="section">
+      <div class="chapter">Objection 03</div>
 
-// ===== SCROLL =====
-window.addEventListener('scroll', function() {
-  var d = document.documentElement;
-  var pct = d.scrollTop / (d.scrollHeight - d.clientHeight) * 100;
-  document.getElementById('scrollFill').style.width = pct + '%';
-}, {passive: true});
+      <div class="objection">
+        <div class="objection-label">⚠ The Critic</div>
+        <div class="objection-claim">“Bitcoin Is Just Another Risk Asset”</div>
+      </div>
 
-// ===== HERO CANVAS =====
-(function(){
-  var c = document.getElementById('heroCanvas');
-  if (!c) return;
-  var ctx = c.getContext('2d');
-  var P = [], W, H;
-  var COLS = ['rgba(6,182,212,','rgba(255,215,0,','rgba(34,197,94,','rgba(168,85,247,'];
-  function resize() {
-    W = c.width = c.offsetWidth;
-    H = c.height = c.offsetHeight;
-    P = [];
-    for (var i = 0; i < 110; i++) {
-      P.push({x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-.5)*.18, vy:(Math.random()-.5)*.18,
-        r:Math.random()*1.3+.3, col:COLS[Math.floor(Math.random()*COLS.length)],
-        ph:Math.random()*Math.PI*2, sp:Math.random()*.004+.001});
-    }
-  }
-  function draw(t) {
-    ctx.clearRect(0,0,W,H);
-    for (var i = 0; i < P.length; i++) {
-      var p = P[i];
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-      var op = .03 + .1 * ((Math.sin(t * p.sp * 1000 + p.ph) + 1) / 2);
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-      ctx.fillStyle = p.col + op + ')'; ctx.fill();
-    }
-    requestAnimationFrame(draw);
-  }
-  resize();
-  window.addEventListener('resize', resize);
-  requestAnimationFrame(draw);
-})();
+      <div class="rebuttal">
+        <div class="rebuttal-label">✓ The Collapse</div>
+        <p>That framing misses why some people take it seriously. The real distinction is not that Bitcoin goes up in a straight line. It does not. The distinction is that it presents itself as a scarce monetary asset with no central hand quietly widening the supply.</p>
+        <p>Everything before this point still matters. The overtime mattered. The side hustles mattered. The expense-cutting mattered. The investing habits mattered. All of it trained you to ask better questions about what kinds of assets best preserve labor across time.</p>
+        <p>Bitcoin does not have to be the whole thesis for everyone. But for some, it becomes part of a broader realization that not all stores of value are built the same.</p>
+      </div>
+    </div>
 
-// ===== LIVE CLOCK =====
-function updateClock() {
-  var now = new Date();
-  var pad = function(n){ return String(n).padStart(2,'0'); };
-  document.getElementById('liveClock').textContent = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
-  document.getElementById('liveDate').textContent = now.toLocaleDateString(undefined, {weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  var hoursGone = now.getHours() + now.getMinutes()/60 + now.getSeconds()/3600;
-  document.getElementById('clockHoursToday').textContent = hoursGone.toFixed(1) + 'h';
-  document.getElementById('clockDayPct').textContent = (hoursGone/24*100).toFixed(1) + '%';
-  var start = new Date(now.getFullYear(), 0, 0);
-  var dayOfYear = Math.floor((now - start) / 86400000);
-  var isLeap = (now.getFullYear()%4===0 && now.getFullYear()%100!==0) || now.getFullYear()%400===0;
-  document.getElementById('clockYearPct').textContent = (dayOfYear / (isLeap ? 366 : 365) * 100).toFixed(1) + '%';
-}
-updateClock();
-setInterval(updateClock, 1000);
+    <div class="section">
+      <div class="chapter">The Harder Truth</div>
+      <h2>Eventually You Realize Not All Assets Are Equal</h2>
+      <p>At first, you diversify because you are learning. Good. That stage has value. But eventually a person reaches a harder truth: not all assets are equally powerful, equally protected, equally scarce, or equally resistant to debasement.</p>
+      <p>And once you start thinking that way, the older playbook begins to look slower. Heavier. More diluted. More permissioned. More exposed to forces outside your control. That does not make traditional assets useless. It just means some people begin looking for stronger forms of long-term protection and upside.</p>
 
-// ===== BTC PRICE =====
-function refreshPrice() {
-  document.getElementById('priceHint').textContent = '⏳';
-  fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      liveBtcPrice = d.bitcoin.usd;
-      document.getElementById('btcPriceDisplay').textContent = '$' + liveBtcPrice.toLocaleString();
-      document.getElementById('priceHint').textContent = '↻';
-    })
-    .catch(function(){ document.getElementById('priceHint').textContent = '↻'; });
-}
-refreshPrice();
-setInterval(refreshPrice, 30000);
+      <div class="value-pulse">
+        <div class="value-pulse-label">The question that changes everything</div>
+        <div class="value-pulse-row">
+          <div class="pulse-dot"></div>
+          <div class="pulse-dot"></div>
+          <div class="pulse-dot"></div>
+          <div class="pulse-dot"></div>
+          <div class="pulse-dot"></div>
+          <div class="pulse-dot"></div>
+        </div>
+        <div class="value-pulse-sub">Not “what is normal?” but <span>what is strongest?</span></div>
+      </div>
 
-// ===== INIT =====
-(function init() {
-  // Populate country select
-  var sel = document.getElementById('country');
-  var sorted = LIFE_DATA.countries.slice().sort(function(a,b){ return a.name.localeCompare(b.name); });
-  for (var i = 0; i < sorted.length; i++) {
-    var o = document.createElement('option');
-    o.value = sorted[i].code;
-    o.textContent = sorted[i].name;
-    sel.appendChild(o);
-  }
-  // Default USA
-  sel.value = 'USA';
-  // Init disease rows
-  initDiseaseRows();
-})();
+      <p>What best protects your labor? What best converts discipline into future freedom? What best rewards long time horizons? What best resists debasement? That is where the road bends.</p>
+    </div>
 
-function initDiseaseRows() {
-  document.getElementById('diseaseContainer').innerHTML = '';
-  addDiseaseRow(true);
-}
+    <div class="section">
+      <div class="chapter">The Final Realization</div>
+      <h2>The Mission Is to Find the Strongest Path to Freedom</h2>
+      <p>For some, that search leads them to see Bitcoin as more than a curiosity. Not because every person must arrive at the same conclusion, but because once scarcity, debasement, and time preference become central to your thinking, certain assets start to look different.</p>
+      <p>That does not erase the value of earning more, spending less, and building traditional assets. It sharpens the mission. It makes the question more serious. What actually protects your effort best? What actually helps compress the path to freedom? What actually rewards discipline over the long term?</p>
 
-function addDiseaseRow(isFirst) {
-  var container = document.getElementById('diseaseContainer');
-  var row = document.createElement('div');
-  row.className = 'disease-row';
+      <blockquote>
+        <p>“The mission does not change: reduce the drag, build the engine, buy the right assets, and get free as fast as you can.”</p>
+      </blockquote>
+    </div>
 
-  var select = document.createElement('select');
-  for (var i = 0; i < DISEASES.length; i++) {
-    var o = document.createElement('option');
-    o.value = DISEASES[i].key;
-    o.textContent = DISEASES[i].label;
-    select.appendChild(o);
-  }
-  select.value = 'none';
-  select.addEventListener('change', function() {
-    var rows = container.querySelectorAll('.disease-row');
-    if (rows[rows.length - 1] === row && select.value !== 'none') {
-      addDiseaseRow(false);
-    }
-  });
-  row.appendChild(select);
+    <div class="divider"></div>
 
-  if (!isFirst) {
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'remove-btn';
-    btn.innerHTML = '&minus;';
-    btn.title = 'Remove';
-    btn.addEventListener('click', function() {
-      row.remove();
-      ensureTrailingEmptyRow();
-    });
-    row.appendChild(btn);
-  }
-  container.appendChild(row);
-  ensureTrailingEmptyRow();
-}
+    <div class="section">
+      <div class="chapter">The Conclusion</div>
+      <h2>Build Like Your Life Depends on It</h2>
+      <p>Because in a very real sense, it does. Your life is not measured only in years. It is measured in control. Control over your mornings. Control over your attention. Control over your location. Control over your standards. Control over your time.</p>
+      <p>That control must be purchased. Not with hope. Not with slogans. With sacrifice. With labor. With precision. With patience. With strategic aggression. Save more than is comfortable. Work harder than is fashionable. Spend less than your ego wants. Invest earlier than the crowd thinks is necessary. Choose freedom over applause. Choose simplicity over display. Choose long-term power over short-term pleasure.</p>
+      <p>Reach the point where your investments grow faster than your spending. Reach escape velocity.</p>
+    </div>
 
-function ensureTrailingEmptyRow() {
-  var container = document.getElementById('diseaseContainer');
-  var rows = container.querySelectorAll('.disease-row');
-  if (!rows.length) { addDiseaseRow(true); return; }
-  var last = rows[rows.length - 1].querySelector('select');
-  if (last && last.value !== 'none') addDiseaseRow(false);
-}
+    <div class="section finale">
+      <div class="chapter">The Final Line</div>
+      <h2 class="finale-question">The Old Vehicles Help You<span> Leave the Ground.</span></h2>
+      <p class="finale-sub">The real mission is bigger than any single asset: build the habits, reduce the drag, maximize the thrust, buy the right assets, and cross the threshold where growth outruns consumption — so you can take your time back.</p>
+    </div>
 
-// ===== HELPERS =====
-function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
-function formatInt(n) { return Math.round(n).toLocaleString(); }
+  </article>
 
-function computeConditionYearsLost(keys) {
-  if (!keys || !keys.length) return 0;
-  var vals = [];
-  for (var i = 0; i < keys.length; i++) {
-    for (var j = 0; j < DISEASES.length; j++) {
-      if (DISEASES[j].key === keys[i] && DISEASES[j].yearsLost > 0) {
-        vals.push(DISEASES[j].yearsLost);
-      }
-    }
-  }
-  vals.sort(function(a,b){ return b - a; });
-  var total = 0;
-  for (var i = 0; i < vals.length; i++) {
-    var w = i < WEIGHTS.length ? WEIGHTS[i] : WEIGHTS[WEIGHTS.length - 1];
-    total += vals[i] * w;
-  }
-  return clamp(total, 0, 25);
-}
-
-// ===== WEEKEND & FULL MOON HELPERS =====
-function countWeekendPairs(remainingCalendarYears) {
-  // Each week has exactly 1 weekend pair (Sat+Sun). Total weeks = days / 7.
-  var totalDays = remainingCalendarYears * 365.25;
-  return Math.floor(totalDays / 7);
-}
-
-function countFullMoons(remainingCalendarYears) {
-  // Synodic month = 29.53059 days
-  var totalDays = remainingCalendarYears * 365.25;
-  return Math.floor(totalDays / 29.53059);
-}
-
-// ===== CALCULATE =====
-function calculate() {
-  var eb = document.getElementById('errorBox');
-  eb.classList.remove('show');
-
-  var age = parseFloat(document.getElementById('age').value);
-  var gender = document.getElementById('gender').value;
-  var countryCode = document.getElementById('country').value;
-  var retireAge = parseFloat(document.getElementById('retireAge').value);
-  var workHPW = parseFloat(document.getElementById('workHoursPerWeek').value);
-  var weeksWorked = parseFloat(document.getElementById('weeksPerYearWorked').value);
-  var diseaseSelects = document.querySelectorAll('#diseaseContainer select');
-  var diseases = [];
-  for (var i = 0; i < diseaseSelects.length; i++) {
-    if (diseaseSelects[i].value && diseaseSelects[i].value !== 'none') {
-      diseases.push(diseaseSelects[i].value);
-    }
-  }
-
-  // Validate
-  var errs = [];
-  if (isNaN(age) || age < 0 || age > 120) errs.push('Age must be 0–120.');
-  if (!countryCode) errs.push('Please select a country.');
-  if (!['male','female'].includes(gender)) errs.push('Select a gender.');
-  if (isNaN(retireAge) || retireAge < 0 || retireAge > 120) errs.push('Retirement age must be 0–120.');
-  if (isNaN(workHPW) || workHPW < 0) errs.push('Work hours/week must be 0 or more.');
-  if (isNaN(weeksWorked) || weeksWorked < 0 || weeksWorked > 52) errs.push('Weeks/year must be 0–52.');
-  if (errs.length) { eb.textContent = errs.join(' '); eb.classList.add('show'); return; }
-
-  var country = null;
-  for (var i = 0; i < LIFE_DATA.countries.length; i++) {
-    if (LIFE_DATA.countries[i].code === countryCode) { country = LIFE_DATA.countries[i]; break; }
-  }
-  if (!country) { eb.textContent = 'Country data not found.'; eb.classList.add('show'); return; }
-
-  var baseLE = gender === 'female' ? country.female : country.male;
-  var condYearsLost = computeConditionYearsLost(diseases);
-  var estimatedDeathAge = clamp(baseLE - condYearsLost, 30, 130);
-  var remainingCalendarYears = estimatedDeathAge - age;
-
-  var SLEEP_H = 8;
-  var WAKING_H = 24 - SLEEP_H; // 16
-  var DAYS_PY = 365.25;
-  var WAKING_HRS_PY = WAKING_H * DAYS_PY;
-  var CALENDAR_HRS_PY = 24 * DAYS_PY;
-
-  // Show results section
-  document.getElementById('resultsSection').classList.add('show');
-
-  if (remainingCalendarYears <= 0) {
-    var bonusYears = Math.abs(remainingCalendarYears);
-    var bonusHours = bonusYears * WAKING_HRS_PY;
-    document.getElementById('bonusSection').style.display = 'block';
-    document.getElementById('bonusHours').textContent = formatInt(bonusHours);
-    document.getElementById('hourglassHero').style.display = 'none';
-    document.getElementById('statGrid').innerHTML = '';
-    document.getElementById('timeBreakdown').style.display = 'none';
-    document.getElementById('btcSection').style.display = 'none';
-    document.getElementById('chartCard').style.display = 'none';
-    document.getElementById('conclusionBox').style.display = 'none';
-    setTimeout(function(){ document.getElementById('resultsSection').scrollIntoView({behavior:'smooth',block:'start'}); }, 100);
-    return;
-  }
-
-  var totalWakingHrs = remainingCalendarYears * WAKING_HRS_PY;
-  var yearsToRetire = Math.max(0, retireAge - age);
-  var workHrsRemaining = yearsToRetire * workHPW * weeksWorked;
-  var ownedHours = Math.max(0, totalWakingHrs - workHrsRemaining);
-  var ownedYears = ownedHours / CALENDAR_HRS_PY;
-  var ownedDays = ownedHours / WAKING_H;
-  var retiredYears = Math.max(0, estimatedDeathAge - retireAge);
-  var retiredHrs = retiredYears * WAKING_HRS_PY;
-  var sleepHrsTotal = remainingCalendarYears * SLEEP_H * DAYS_PY;
-  var totalAllHrs = CALENDAR_HRS_PY * remainingCalendarYears;
-  var pctOwned = totalWakingHrs > 0 ? ownedHours / totalWakingHrs * 100 : 0;
-  var pctWork = totalWakingHrs > 0 ? workHrsRemaining / totalWakingHrs * 100 : 0;
-
-  lastCalcResult = {
-    age: age, gender: gender, retireAge: retireAge, workHPW: workHPW, weeksWorked: weeksWorked,
-    baseLE: baseLE, condYearsLost: condYearsLost, estimatedDeathAge: estimatedDeathAge,
-    remainingCalendarYears: remainingCalendarYears, totalWakingHrs: totalWakingHrs,
-    workHrsRemaining: workHrsRemaining, ownedHours: ownedHours, ownedYears: ownedYears,
-    ownedDays: ownedDays, retiredYears: retiredYears, retiredHrs: retiredHrs,
-    sleepHrsTotal: sleepHrsTotal, totalAllHrs: totalAllHrs, pctOwned: pctOwned,
-    pctWork: pctWork, yearsToRetire: yearsToRetire
-  };
-
-  document.getElementById('bonusSection').style.display = 'none';
-
-  // Hourglass hero
-  document.getElementById('hhMain').textContent = formatInt(ownedHours);
-  document.getElementById('hhUnit').textContent = 'owned waking hours — ' + ownedYears.toFixed(1) + ' years · ' + formatInt(ownedDays) + ' days';
-  document.getElementById('hhSub').textContent = 'Estimated to live to age ' + estimatedDeathAge.toFixed(1) +
-    ' · ' + (yearsToRetire > 0 ? yearsToRetire.toFixed(1) + ' years until retirement · ' : 'Already retired · ') +
-    formatInt(workHrsRemaining) + ' work hours subtracted.';
-  document.getElementById('hourglassHero').style.display = 'block';
-
-  // Stat cards — original 8 + 2 new ones for weekends and full moons
-  var weekendPairs = countWeekendPairs(remainingCalendarYears);
-  var fullMoons = countFullMoons(remainingCalendarYears);
-
-  var cards = [
-    {icon:'⌛',label:'Owned Hours Remaining',val:formatInt(ownedHours),sub:'Waking hours fully yours',cls:'teal-c',vcls:'tv'},
-    {icon:'📆',label:'Owned Years',val:ownedYears.toFixed(1)+' yrs',sub:'Same time as years',cls:'gold-c',vcls:'gv'},
-    {icon:'🌙',label:'Calendar Years Remaining',val:remainingCalendarYears.toFixed(1)+' yrs',sub:'To estimated age '+estimatedDeathAge.toFixed(1),cls:'purple-c',vcls:'pv'},
-    {icon:'💼',label:'Work Hours Remaining',val:formatInt(workHrsRemaining),sub:'Until retirement at '+retireAge,cls:'red-c',vcls:'rv'},
-    {icon:'🏖️',label:'Retired Free Hours',val:formatInt(retiredHrs),sub:'Waking hours after retirement',cls:'green-c',vcls:'grv'},
-    {icon:'😴',label:'Sleep Hours Remaining',val:formatInt(sleepHrsTotal),sub:'Excluded from owned time',cls:'btc-c',vcls:'bv'},
-    {icon:'📊',label:'Owned Time %',val:pctOwned.toFixed(1)+'%',sub:'Of remaining waking hours',cls:'teal-c',vcls:'tv'},
-    {icon:'🧮',label:'Life Expectancy',val:baseLE.toFixed(1)+' − '+condYearsLost.toFixed(1),sub:'= '+estimatedDeathAge.toFixed(1)+' estimated age at death',cls:'gold-c',vcls:'gv'},
-    {icon:'📅',label:'Weekend Pairs Remaining',val:formatInt(weekendPairs),sub:'Saturdays + Sundays left',cls:'green-c',vcls:'grv'},
-    {icon:'🌕',label:'Full Moons Remaining',val:formatInt(fullMoons),sub:'One every 29.5 days',cls:'purple-c',vcls:'pv'}
-  ];
-  document.getElementById('statGrid').innerHTML = cards.map(function(c) {
-    return '<div class="stat-card '+c.cls+'"><span class="s-icon">'+c.icon+'</span><div class="s-label">'+c.label+'</div><div class="s-val '+c.vcls+'">'+c.val+'</div><div class="s-sub">'+c.sub+'</div></div>';
-  }).join('');
-
-  // Time breakdown bars
-  var totalForBars = totalWakingHrs + sleepHrsTotal;
-  var bars = [
-    {name:'⏳ Owned Waking Time (yours)', hours:ownedHours, color:'var(--teal)'},
-    {name:'💼 Work Hours (employer\'s)', hours:workHrsRemaining, color:'var(--red)'},
-    {name:'🏖️ Retired Free Hours', hours:retiredHrs, color:'var(--green)'},
-    {name:'😴 Sleep Hours', hours:sleepHrsTotal, color:'var(--muted)'}
-  ];
-  var maxH = 0;
-  for (var i = 0; i < bars.length; i++) { if (bars[i].hours > maxH) maxH = bars[i].hours; }
-  document.getElementById('tbBars').innerHTML = bars.map(function(b) {
-    var pct = maxH > 0 ? (b.hours / maxH * 100).toFixed(1) : 0;
-    var pctTotal = totalForBars > 0 ? (b.hours / totalForBars * 100).toFixed(1) : 0;
-    return '<div class="tb-bar-row">' +
-      '<div class="tb-label"><span class="tb-name">'+b.name+'</span><span class="tb-pct">'+formatInt(b.hours)+' hrs &nbsp;('+pctTotal+'% of all remaining time)</span></div>' +
-      '<div class="tb-bar"><div class="tb-fill" style="width:'+pct+'%;background:'+b.color+'"></div></div>' +
-      '</div>';
-  }).join('');
-  document.getElementById('timeBreakdown').style.display = 'block';
-
-  // BTC section
-  var price = liveBtcPrice || 85000;
-  var usdPerOwnedHour = ownedHours > 0 ? (price / ownedHours).toFixed(4) : '0';
-  var satsPerOwnedHour = ownedHours > 0 ? (100000000 / ownedHours).toFixed(2) : '0';
-  var hrsToEarnBtc = price > 0 ? formatInt(price / 25) : '--';
-  var btcCards = [
-    {icon:'₿',label:'USD per Owned Hour',val:'$'+Number(usdPerOwnedHour).toFixed(4),sub:'If 1 BTC = $'+formatInt(price)+' today'},
-    {icon:'⚡',label:'Sats per Owned Hour',val:Number(satsPerOwnedHour).toFixed(2),sub:'Satoshis your free time is worth at today\'s BTC price'},
-    {icon:'⏱️',label:'Hours to Earn 1 BTC',val:hrsToEarnBtc+'h',sub:'At $25/hr wage — without stacking'},
-    {icon:'🔑',label:'Time Sovereignty',val:pctOwned.toFixed(0)+'%',sub:'Of waking time you own outright'}
-  ];
-  document.getElementById('btcGrid').innerHTML = btcCards.map(function(c) {
-    return '<div class="btc-time-card"><span class="btc-tc-icon">'+c.icon+'</span><div class="btc-tc-label">'+c.label+'</div><div class="btc-tc-val">'+c.val+'</div><div class="btc-tc-sub">'+c.sub+'</div></div>';
-  }).join('');
-  document.getElementById('btcSection').style.display = 'block';
-
-  // Chart
-  document.getElementById('chartCard').style.display = 'block';
-  drawChart(lastCalcResult, currentChartType);
-
-  // Conclusion
-  renderConclusion(lastCalcResult);
-  document.getElementById('conclusionBox').style.display = 'block';
-
-  setTimeout(function(){ document.getElementById('resultsSection').scrollIntoView({behavior:'smooth',block:'start'}); }, 100);
-}
-
-// ===== CHART =====
-function switchChart(type) {
-  currentChartType = type;
-  var btns = document.querySelectorAll('.ct-btn');
-  var types = ['breakdown','decades','work'];
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].classList.toggle('active', types[i] === type);
-  }
-  if (lastCalcResult) drawChart(lastCalcResult, type);
-}
-
-function drawChart(r, type) {
-  var ctx = document.getElementById('mainChart').getContext('2d');
-  if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
-  var isDark = htmlEl.getAttribute('data-theme') === 'dark';
-  var gc = isDark ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.05)';
-  var tc = isDark ? '#555' : '#999';
-  var tooltipBg = isDark ? 'rgba(17,17,20,.96)' : 'rgba(255,255,255,.96)';
-  var tooltipTitle = isDark ? '#e8e8e8' : '#111';
-  var tooltipBody = isDark ? '#c8c8c8' : '#444';
-  var tooltipBorder = isDark ? '#2a2a32' : '#e0ddd5';
-  var legendColor = isDark ? '#e8e8e8' : '#333';
-
-  var config;
-
-  if (type === 'breakdown') {
-    document.getElementById('chartTitleTxt').textContent = 'Your Remaining Time — Full Breakdown';
-    document.getElementById('chartSubText').textContent = 'All remaining hours in your life, categorised';
-    config = {
-      type: 'doughnut',
-      data: {
-        labels: ['Owned Waking Time','Work Hours','Retired Free Hours','Sleep'],
-        datasets: [{
-          data: [Math.round(r.ownedHours), Math.round(r.workHrsRemaining), Math.round(r.retiredHrs), Math.round(r.sleepHrsTotal)],
-          backgroundColor: ['rgba(6,182,212,.8)','rgba(230,57,70,.7)','rgba(34,197,94,.75)','rgba(100,100,120,.5)'],
-          borderColor: isDark ? '#080808' : '#f5f4f0',
-          borderWidth: 3,
-          hoverOffset: 8
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { labels: { color: legendColor, font: { family:'Inter', weight:'700', size:12 } } },
-          tooltip: {
-            backgroundColor: tooltipBg, titleColor: tooltipTitle, bodyColor: tooltipBody,
-            borderColor: tooltipBorder, borderWidth: 1, padding: 12,
-            callbacks: {
-              label: function(ctx) {
-                var total = ctx.dataset.data.reduce(function(a,b){ return a+b; }, 0);
-                return ' ' + ctx.label + ': ' + formatInt(ctx.parsed) + ' hrs (' + (ctx.parsed/total*100).toFixed(1) + '%)';
-              }
-            }
-          }
+  <script>
+    const sections = document.querySelectorAll('.section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
         }
-      }
-    };
+      });
+    }, { threshold: 0.12 });
 
-  } else if (type === 'decades') {
-    document.getElementById('chartTitleTxt').textContent = 'Owned Time by Decade of Life';
-    document.getElementById('chartSubText').textContent = 'How your owned hours are distributed across each decade from now';
-    var currentAge = Math.floor(r.age);
-    var deathAge = Math.floor(r.estimatedDeathAge);
-    var retireAge = r.retireAge;
-    var labels = [], ownedData = [], workData = [];
-    for (var d = Math.floor(currentAge/10)*10; d < deathAge; d += 10) {
-      var start = Math.max(currentAge, d);
-      var end = Math.min(deathAge, d + 10);
-      if (start >= end) continue;
-      var yrs = end - start;
-      var workYrs = Math.max(0, Math.min(end, retireAge) - start);
-      var WAKING_HRS_PY2 = 16 * 365.25;
-      var workH = workYrs * r.workHPW * r.weeksWorked;
-      var wakingH = yrs * WAKING_HRS_PY2;
-      var ownedH = Math.max(0, wakingH - workH);
-      labels.push('Age ' + Math.floor(start) + '-' + Math.floor(end));
-      ownedData.push(Math.round(ownedH));
-      workData.push(Math.round(workH));
-    }
-    config = {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [
-          {label:'Owned Hours', data:ownedData, backgroundColor:'rgba(6,182,212,.75)', borderColor:'rgba(6,182,212,1)', borderWidth:1},
-          {label:'Work Hours', data:workData, backgroundColor:'rgba(230,57,70,.6)', borderColor:'rgba(230,57,70,1)', borderWidth:1}
-        ]
-      },
-      options: {
-        responsive: true,
-        interaction: { mode:'index', intersect:false },
-        scales: {
-          x: { stacked:true, grid:{color:gc}, ticks:{color:tc} },
-          y: { stacked:true, grid:{color:gc}, ticks:{color:tc, callback:function(v){ return v>=1e6?(v/1e6).toFixed(1)+'M h':v>=1e3?(v/1e3).toFixed(0)+'k h':v+' h'; }} }
-        },
-        plugins: {
-          legend: { labels:{color:legendColor, font:{family:'Inter',weight:'700',size:12}} },
-          tooltip: {
-            backgroundColor:tooltipBg, titleColor:tooltipTitle, bodyColor:tooltipBody,
-            borderColor:tooltipBorder, borderWidth:1, padding:12,
-            callbacks: { label: function(ctx){ return ' '+ctx.dataset.label+': '+formatInt(ctx.parsed.y)+' hrs'; } }
-          }
-        }
-      }
-    };
-
-  } else {
-    document.getElementById('chartTitleTxt').textContent = 'Work Time vs Free Time Per Year';
-    document.getElementById('chartSubText').textContent = 'Each year until retirement — your employer\'s hours vs yours';
-    var WAKING_HRS_PY3 = 16 * 365.25;
-    var WORK_H_Y = r.workHPW * r.weeksWorked;
-    var labels2 = [], freeData = [], workData2 = [];
-    var yearsToShow = Math.min(Math.ceil(r.yearsToRetire), 40);
-    for (var y = 0; y < yearsToShow; y++) {
-      labels2.push('Yr ' + (y+1) + ' (Age ' + Math.floor(r.age+y) + ')');
-      workData2.push(Math.round(WORK_H_Y));
-      freeData.push(Math.round(WAKING_HRS_PY3 - WORK_H_Y));
-    }
-    if (yearsToShow === 0) {
-      labels2 = ['Already Retired']; freeData = [Math.round(WAKING_HRS_PY3)]; workData2 = [0];
-    }
-    config = {
-      type: 'bar',
-      data: {
-        labels: labels2,
-        datasets: [
-          {label:'Free Waking Hours', data:freeData, backgroundColor:'rgba(6,182,212,.7)', borderColor:'rgba(6,182,212,1)', borderWidth:1},
-          {label:'Work Hours', data:workData2, backgroundColor:'rgba(230,57,70,.6)', borderColor:'rgba(230,57,70,1)', borderWidth:1}
-        ]
-      },
-      options: {
-        responsive: true,
-        interaction: { mode:'index', intersect:false },
-        scales: {
-          x: { stacked:true, grid:{color:gc}, ticks:{color:tc, maxTicksLimit:12} },
-          y: { stacked:true, grid:{color:gc}, ticks:{color:tc, callback:function(v){ return (v/1e3).toFixed(1)+'k h'; }} }
-        },
-        plugins: {
-          legend: { labels:{color:legendColor, font:{family:'Inter',weight:'700',size:12}} },
-          tooltip: {
-            backgroundColor:tooltipBg, titleColor:tooltipTitle, bodyColor:tooltipBody,
-            borderColor:tooltipBorder, borderWidth:1, padding:12,
-            callbacks: { label: function(ctx){ return ' '+ctx.dataset.label+': '+formatInt(ctx.parsed.y)+' hrs'; } }
-          }
-        }
-      }
-    };
-  }
-
-  chartInstance = new Chart(ctx, config);
-}
-
-// ===== CONCLUSION =====
-function renderConclusion(r) {
-  var price = liveBtcPrice || 85000;
-  var usdPerHour = r.ownedHours > 0 ? (price / r.ownedHours).toFixed(4) : '0';
-  var workYearsLeft = r.yearsToRetire.toFixed(1);
-
-  document.getElementById('conclusionBox').innerHTML =
-    '<div class="con-eyebrow">⏳ Your Time — The Full Picture</div>' +
-    '<div class="con-headline">' +
-      '<span style="color:var(--teal)">' + formatInt(r.ownedHours) + ' hours.</span><br>' +
-      '<span style="color:var(--gold)">' + r.ownedYears.toFixed(1) + ' years.</span><br>' +
-      '<span style="color:var(--green)">Every single one is already ticking.</span>' +
-    '</div>' +
-    '<div class="con-stats">' +
-      '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--teal)">' + formatInt(r.ownedHours) + '</div><div class="cs-lbl-c">Owned Hours</div></div>' +
-      '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--gold)">' + r.pctOwned.toFixed(1) + '%</div><div class="cs-lbl-c">Of Waking Time Yours</div></div>' +
-      '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--red)">' + r.pctWork.toFixed(1) + '%</div><div class="cs-lbl-c">Waking Time at Work</div></div>' +
-      '<div class="cs-item-c"><div class="cs-val-c" style="color:var(--btc)">$' + usdPerHour + '</div><div class="cs-lbl-c">USD per Owned Hour (BTC)</div></div>' +
-    '</div>' +
-    '<div class="con-body">' +
-      '<p>You have <strong>' + formatInt(r.ownedHours) + ' owned waking hours remaining</strong> — that is your real balance. Not the number in your bank account. Not your salary. Not your net worth on paper. <em>The hours that belong entirely to you</em>, where no employer, no system, and no obligation has a claim.</p>' +
-      '<p>Of all your remaining waking hours, only <strong>' + r.pctOwned.toFixed(1) + '% are fully yours</strong>. The remaining ' + r.pctWork.toFixed(1) + '% are allocated to work' + (r.yearsToRetire > 0 ? ' for the next ' + workYearsLeft + ' years' : ' — though you have already retired, meaning all remaining waking time is yours') + '. Most people never see this number. Most people never ask the question. You just did, and that alone changes something.</p>' +
-      '<p>Here is the connection that most people miss: <em>money is stored time.</em> When you work an hour, the system gives you a number. That number is supposed to preserve the value of that hour until you spend it. But fiat currency fails at this. Inflation silently drains the purchasing power of every hour you have already traded. Bitcoin does not do this. When you stack sats, you are converting your most irreplaceable asset — <strong>your owned hours</strong> — into a form of stored value that cannot be inflated away, cannot be debased, and cannot be confiscated by anyone running a printing press.</p>' +
-      '<p>At today\'s price of $' + formatInt(price) + ', each of your owned hours is worth <strong>$' + usdPerHour + ' in Bitcoin terms</strong>. That is not your hourly wage. That is the value of your <em>free, sovereign, unencumbered time</em> measured in the hardest money ever created. Use that lens the next time someone asks you to work late, or the next time you spend a free afternoon on something that does not matter.</p>' +
-      '<p>The question is not "how do I earn more?" The question is: <strong>"how do I buy back more of my own hours?"</strong> Retiring early is not about luxury — it is about the fundamental human act of reclaiming your time from a system that profits from your continued participation in it. Bitcoin, used with patience and discipline, is one of the most powerful tools in history for doing exactly that.</p>' +
-    '</div>' +
-    '<div class="con-pledge">' +
-      '<span class="pt">' + formatInt(r.ownedHours) + ' hours left.</span><br>' +
-      '<span class="pgo">Spend fewer of them working for others.</span><br>' +
-      '<span class="pg">Stack more of them for yourself.</span><br>' +
-      '<span class="pb">Bitcoin helps. Time demands it. &#128273;</span>' +
-    '</div>';
-}
-
-// ===== RESET =====
-function resetAll() {
-  document.getElementById('age').value = '';
-  document.getElementById('gender').value = 'male';
-  document.getElementById('country').value = 'USA';
-  document.getElementById('retireAge').value = '65';
-  document.getElementById('workHoursPerWeek').value = '40';
-  document.getElementById('weeksPerYearWorked').value = '48';
-  initDiseaseRows();
-  document.getElementById('errorBox').classList.remove('show');
-  document.getElementById('resultsSection').classList.remove('show');
-  document.getElementById('bonusSection').style.display = 'none';
-  document.getElementById('hourglassHero').style.display = 'none';
-  document.getElementById('timeBreakdown').style.display = 'none';
-  document.getElementById('btcSection').style.display = 'none';
-  document.getElementById('chartCard').style.display = 'none';
-  document.getElementById('conclusionBox').style.display = 'none';
-  lastCalcResult = null;
-  if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
-}
-</script>
-
+    sections.forEach(section => observer.observe(section));
+  </script>
 </body>
-</html> 
+</html>
