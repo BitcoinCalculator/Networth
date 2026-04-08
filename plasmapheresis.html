@@ -1,673 +1,551 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DART Tools — Plasmapheresis Calculator</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#070b11;--bg2:#0c121b;--bg3:#101926;--card:#111a27;--card2:#0f1722;
-      --border:rgba(149, 173, 205, .14);--border-strong:rgba(122, 162, 255, .28);
-      --text:#e9f0fa;--muted:#96a7bf;--muted-2:#6f819c;--primary:#61a8ff;
-      --primary-2:#3b82f6;--accent:#7ef0d2;--accent-2:#3dd9b4;--gold:#cfa95f;
-      --danger:#ff7c7c;--warning:#ffcd70;--success:#98f5cc;--shadow:0 20px 60px rgba(0,0,0,.35);
-      --nav-bg:rgba(7,11,17,.78);--grid:rgba(255,255,255,.03);
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{
-      font-family:'Inter',sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(97,168,255,.10), transparent 30%),
-        radial-gradient(circle at 80% 20%, rgba(126,240,210,.08), transparent 24%),
-        linear-gradient(180deg, var(--bg), #05080d 100%);
-      color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;
-    }
-    body::before{
-      content:"";position:fixed;inset:0;pointer-events:none;
-      background:linear-gradient(var(--grid) 1px, transparent 1px),linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-      background-size:40px 40px;mask-image:linear-gradient(to bottom, rgba(0,0,0,.35), transparent 80%);opacity:.45;
-    }
-    a{text-decoration:none;color:inherit}
-    .container{width:min(1240px, calc(100% - 40px)); margin:0 auto}
-    .scroll-progress{position:fixed; top:0; left:0; right:0; height:3px; z-index:999;}
-    .scroll-fill{height:100%; width:0%;background:linear-gradient(90deg, var(--accent), var(--primary), var(--gold));box-shadow:0 0 18px rgba(97,168,255,.45);}
-    .ticker{position:relative;overflow:hidden;border-bottom:1px solid var(--border);background:linear-gradient(90deg, rgba(97,168,255,.12), rgba(126,240,210,.10));}
-    .ticker-inner{display:flex;gap:34px;white-space:nowrap;padding:11px 0;width:max-content;animation:ticker 34s linear infinite;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#d8e8ff;}
-    @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-    nav{position:sticky;top:0;z-index:200;backdrop-filter:blur(18px);background:var(--nav-bg);border-bottom:1px solid var(--border);}
-    .nav-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
-    .brand{display:flex;align-items:center;gap:14px;}
-    .brand-mark{width:42px; height:42px;border-radius:13px;display:grid;place-items:center;font-size:18px;font-weight:900;color:white;background:linear-gradient(135deg, var(--primary), var(--accent));box-shadow:inset 0 1px 0 rgba(255,255,255,.2), 0 10px 30px rgba(59,130,246,.28);}
-    .brand-text{display:flex; flex-direction:column; gap:3px}
-    .brand-title{font-size:18px; font-weight:900; letter-spacing:-.03em}
-    .brand-sub{font-size:10px;text-transform:uppercase;letter-spacing:.20em;color:var(--muted);font-weight:700;}
-    .nav-right{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.02);color:var(--muted);font-size:13px;font-weight:700;}
-    .status-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(126,240,210,.6);animation:pulse 2s infinite;}
-    @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.75);opacity:.5}}
-    .hero{position:relative;padding:56px 0 28px;overflow:hidden;}
-    .orbs{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
-    .orb{position:absolute;border-radius:50%;filter:blur(10px);opacity:.36;animation:float 10s ease-in-out infinite;}
-    .orb-1{width:380px;height:380px;background:radial-gradient(circle, rgba(97,168,255,.22), transparent 68%);top:-60px; left:-100px;}
-    .orb-2{width:300px;height:300px;background:radial-gradient(circle, rgba(126,240,210,.18), transparent 70%);bottom:-50px; right:-80px;animation-delay:-2s;}
-    .orb-3{width:220px;height:220px;background:radial-gradient(circle, rgba(207,169,95,.16), transparent 70%);top:24%; right:16%;animation-delay:-4s;}
-    @keyframes float{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-18px) translateX(10px)}}
-    .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:9px 16px;border-radius:999px;border:1px solid rgba(97,168,255,.22);background:rgba(97,168,255,.08);color:#bad7ff;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;margin-bottom:22px;}
-    .eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--primary);box-shadow:0 0 10px rgba(97,168,255,.55);}
-    h1{font-size:clamp(36px, 7vw, 72px);line-height:.98;letter-spacing:-.06em;font-weight:900;margin-bottom:18px;}
-    h1 .thin{display:block;font-size:.34em;line-height:1.1;color:var(--muted);letter-spacing:.02em;font-weight:600;margin-bottom:12px;}
-    h1 .accent{background:linear-gradient(135deg, #eaf3ff 0%, #99c9ff 45%, #7ef0d2 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
-    .hero-sub{max-width:920px;font-size:clamp(16px, 2vw, 20px);line-height:1.8;color:var(--muted);margin-bottom:26px;}
-    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;padding:18px 0 78px;}
-    .panel{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));border:1px solid var(--border);border-radius:28px;padding:24px;box-shadow:var(--shadow);overflow:hidden;}
-    .panel-title{font-size:20px;font-weight:900;letter-spacing:-.03em;margin-bottom:8px;}
-    .panel-sub{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:22px;}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-    .field{display:flex;flex-direction:column;gap:8px;}
-    .field.full{grid-column:1 / -1}
-    .label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);}
-    input, select, button{font:inherit;}
-    input, select{width:100%;min-height:50px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);padding:0 14px;outline:none;transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;}
-    input:focus, select:focus{border-color:rgba(97,168,255,.45);box-shadow:0 0 0 4px rgba(97,168,255,.12);background:rgba(255,255,255,.05);}
-    input::placeholder{color:#70829a}
-    .inline-toggle{display:flex;gap:10px;flex-wrap:wrap;}
-    .toggle-btn{min-height:46px;padding:0 16px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);font-weight:800;cursor:pointer;transition:all .2s ease;}
-    .toggle-btn.active{background:linear-gradient(135deg, rgba(97,168,255,.18), rgba(126,240,210,.12));border-color:rgba(97,168,255,.38);color:#eef6ff;box-shadow:0 10px 24px rgba(0,0,0,.20);}
-    .sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-    .note{border:1px solid rgba(126,240,210,.18);background:rgba(126,240,210,.06);color:#d5fff2;border-radius:16px;padding:14px 16px;font-size:14px;line-height:1.75;}
-    .note.warning{border-color:rgba(255,205,112,.20);background:rgba(255,205,112,.08);color:#ffe8b6;}
-    .note.danger{border-color:rgba(255,124,124,.20);background:rgba(255,124,124,.08);color:#ffd3d3;}
-    .calc-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px;}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 22px;border-radius:14px;border:1px solid transparent;font-weight:800;font-size:15px;transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease, background .22s ease, color .22s ease;cursor:pointer;}
-    .btn:hover{transform:translateY(-2px)}
-    .btn-primary{color:white;background:linear-gradient(135deg, var(--primary), var(--primary-2));box-shadow:0 14px 34px rgba(59,130,246,.28);}
-    .btn-secondary{color:var(--text);background:rgba(255,255,255,.03);border-color:var(--border);}
-    .result-stack{display:grid;gap:14px;}
-    .result-card{border:1px solid var(--border);border-radius:20px;background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));padding:18px 18px;}
-    .result-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:800;margin-bottom:8px;}
-    .result-value{font-size:clamp(24px, 4vw, 38px);letter-spacing:-.05em;line-height:1;font-weight:900;color:#f4f8ff;margin-bottom:8px;}
-    .result-meta{color:var(--muted);font-size:13px;line-height:1.7;}
-    .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-    .math-box{border:1px solid rgba(97,168,255,.18);background:rgba(97,168,255,.05);color:#d8e9ff;border-radius:18px;padding:16px;font-size:14px;line-height:1.8;}
-    .math-box strong{color:#ffffff;}
-    .calc-line{padding:11px 0;border-bottom:1px solid rgba(255,255,255,.06);}
-    .calc-line:last-child{border-bottom:none}
-    .replace-split{display:none;}
-    .replace-split.show{display:block;}
-    .hidden{display:none !important;}
-    .footer-wrap{border-top:1px solid var(--border);background:rgba(255,255,255,.02);}
-    footer{padding:28px 0 44px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
-    .footer-left{display:flex;align-items:center;gap:12px;color:#dce8fb;font-weight:800;}
-    .footer-copy{font-size:12px;color:var(--muted);max-width:760px;line-height:1.7;}
-    .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease, transform .7s ease;}
-    .reveal.visible{opacity:1;transform:translateY(0);}
-    @media (max-width: 980px){.grid{grid-template-columns:1fr}}
-    @media (max-width: 760px){
-      .container{width:min(1240px, calc(100% - 24px))}
-      .form-grid,.sub-grid,.mini-grid{grid-template-columns:1fr}
-      .panel{padding:18px}
-      .nav-inner{min-height:68px}
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DART Tools — Plasmapheresis Calculator v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070b11;--card:#111a27;--card2:#0f1722;--border:rgba(149,173,205,.14);
+  --text:#e9f0fa;--muted:#96a7bf;--primary:#61a8ff;--primary2:#3b82f6;
+  --accent:#7ef0d2;--gold:#cfa95f;--shadow:0 20px 60px rgba(0,0,0,.35);
+  --nav-bg:rgba(7,11,17,.78);--grid:rgba(255,255,255,.03);--warn:#ffcd70;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(97,168,255,.10), transparent 30%),
+    radial-gradient(circle at 80% 20%, rgba(126,240,210,.08), transparent 24%),
+    linear-gradient(180deg, var(--bg), #05080d 100%);
+  color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;
+  background:linear-gradient(var(--grid) 1px, transparent 1px),linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:40px 40px;opacity:.45;
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,.35), transparent 80%);
+}
+a{text-decoration:none;color:inherit}
+.container{width:min(1240px, calc(100% - 28px));margin:0 auto}
+.scroll-progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:999}
+.scroll-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--primary),var(--gold))}
+.ticker{overflow:hidden;border-bottom:1px solid var(--border);background:linear-gradient(90deg, rgba(97,168,255,.12), rgba(126,240,210,.10))}
+.ticker-inner{display:flex;gap:34px;white-space:nowrap;padding:11px 0;width:max-content;animation:ticker 34s linear infinite;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#d8e8ff}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+nav{position:sticky;top:0;z-index:200;backdrop-filter:blur(18px);background:var(--nav-bg);border-bottom:1px solid var(--border)}
+.nav-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-mark{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:18px;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--primary),var(--accent));box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 10px 30px rgba(59,130,246,.28)}
+.brand-title{font-size:18px;font-weight:900}
+.brand-sub{font-size:10px;text-transform:uppercase;letter-spacing:.20em;color:var(--muted);font-weight:700}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.02);color:var(--muted);font-size:13px;font-weight:700}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(126,240,210,.6);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.75);opacity:.5}}
+.hero{padding:52px 0 22px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;padding:9px 16px;border-radius:999px;border:1px solid rgba(97,168,255,.22);background:rgba(97,168,255,.08);color:#bad7ff;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;margin-bottom:20px}
+.eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--primary)}
+h1{font-size:clamp(36px,7vw,72px);line-height:.98;letter-spacing:-.06em;font-weight:900;margin-bottom:16px}
+h1 .thin{display:block;font-size:.34em;color:var(--muted);font-weight:600;margin-bottom:12px}
+h1 .accent{background:linear-gradient(135deg,#eaf3ff 0%,#99c9ff 45%,#7ef0d2 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-sub{max-width:950px;font-size:clamp(16px,2vw,20px);line-height:1.8;color:var(--muted)}
+.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;padding:20px 0 72px}
+.panel{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));border:1px solid var(--border);border-radius:28px;padding:24px;box-shadow:var(--shadow)}
+.panel-title{font-size:20px;font-weight:900;margin-bottom:8px}
+.panel-sub{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:22px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{display:flex;flex-direction:column;gap:8px}
+.field.full{grid-column:1 / -1}
+.label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+input,select,button{font:inherit}
+input,select{width:100%;min-height:50px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);padding:0 14px;outline:none}
+input:focus,select:focus{border-color:rgba(97,168,255,.45);box-shadow:0 0 0 4px rgba(97,168,255,.12)}
+input::placeholder{color:#70829a}
+.inline-toggle{display:flex;gap:10px;flex-wrap:wrap}
+.toggle-btn{min-height:46px;padding:0 16px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);font-weight:800;cursor:pointer}
+.toggle-btn.active{background:linear-gradient(135deg, rgba(97,168,255,.18), rgba(126,240,210,.12));border-color:rgba(97,168,255,.38)}
+.sub-grid,.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.note{border:1px solid rgba(126,240,210,.18);background:rgba(126,240,210,.06);color:#d5fff2;border-radius:16px;padding:14px 16px;font-size:14px;line-height:1.75}
+.note.warning{border-color:rgba(255,205,112,.20);background:rgba(255,205,112,.08);color:#ffe8b6}
+.calc-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 22px;border-radius:14px;border:1px solid transparent;font-weight:800;font-size:15px;cursor:pointer}
+.btn-primary{color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary2));box-shadow:0 14px 34px rgba(59,130,246,.28)}
+.btn-secondary{color:var(--text);background:rgba(255,255,255,.03);border-color:var(--border)}
+.result-stack{display:grid;gap:14px}
+.result-card{border:1px solid var(--border);border-radius:20px;background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));padding:18px}
+.result-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:800;margin-bottom:8px}
+.result-value{font-size:clamp(24px,4vw,38px);letter-spacing:-.05em;line-height:1;font-weight:900;color:#f4f8ff;margin-bottom:8px}
+.result-meta{color:var(--muted);font-size:13px;line-height:1.7}
+.math-box{border:1px solid rgba(97,168,255,.18);background:rgba(97,168,255,.05);color:#d8e9ff;border-radius:18px;padding:16px;font-size:14px;line-height:1.8}
+.math-box strong{color:#fff}
+.calc-line{padding:11px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.calc-line:last-child{border-bottom:none}
+.hidden{display:none!important}
+.replace-split{display:none}
+.replace-split.show{display:block}
+.footer-wrap{border-top:1px solid var(--border);background:rgba(255,255,255,.02)}
+footer{padding:28px 0 44px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.footer-left{display:flex;align-items:center;gap:12px;color:#dce8fb;font-weight:800}
+.footer-copy{font-size:12px;color:var(--muted);max-width:780px;line-height:1.7}
+@media (max-width:980px){.grid{grid-template-columns:1fr}}
+@media (max-width:760px){.form-grid,.sub-grid,.mini-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-  <div class="scroll-progress"><div class="scroll-fill" id="scrollFill"></div></div>
+<div class="scroll-progress"><div class="scroll-fill" id="scrollFill"></div></div>
 
-  <div class="ticker" aria-hidden="true">
-    <div class="ticker-inner">
-      <span>DART TOOLS</span><span>•</span>
-      <span>PLASMAPHERESIS CALCULATOR</span><span>•</span>
-      <span>TBV • PLASMA VOLUME • REPLACEMENT • CALCIUM</span><span>•</span>
-      <span>PROFESSIONAL CLINICAL WORKFLOW</span><span>•</span>
-      <span>DARK MODE INTERFACE</span><span>•</span>
-      <span>DART TOOLS</span><span>•</span>
-      <span>PLASMAPHERESIS CALCULATOR</span><span>•</span>
-      <span>TBV • PLASMA VOLUME • REPLACEMENT • CALCIUM</span><span>•</span>
-      <span>PROFESSIONAL CLINICAL WORKFLOW</span><span>•</span>
-      <span>DARK MODE INTERFACE</span><span>•</span>
+<div class="ticker"><div class="ticker-inner">
+  <span>DART TOOLS</span><span>•</span><span>PLASMAPHERESIS CALCULATOR</span><span>•</span>
+  <span>TBV • PLASMA VOLUME • REPLACEMENT • CALCIUM</span><span>•</span>
+  <span>OPTIONAL DIAGNOSIS / ASFA CATEGORY SUPPORT</span><span>•</span>
+  <span>DART TOOLS</span><span>•</span><span>PLASMAPHERESIS CALCULATOR</span><span>•</span>
+  <span>TBV • PLASMA VOLUME • REPLACEMENT • CALCIUM</span><span>•</span>
+  <span>OPTIONAL DIAGNOSIS / ASFA CATEGORY SUPPORT</span><span>•</span>
+</div></div>
+
+<nav><div class="container nav-inner">
+  <a class="brand" href="index.html">
+    <div class="brand-mark">D</div>
+    <div>
+      <div class="brand-title">DART Tools</div>
+      <div class="brand-sub">Clinical calculator suite</div>
     </div>
+  </a>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <div class="pill"><span class="status-dot"></span><span>Plasmapheresis v2</span></div>
+    <a class="pill" href="index.html">← Back to index</a>
+  </div>
+</div></nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="eyebrow">DART Tools Calculator</div>
+    <h1><span class="thin">Therapeutic plasma exchange support for</span><span class="accent">Plasmapheresis</span></h1>
+    <p class="hero-sub">This version adds an optional diagnosis dropdown with ASFA 2023 category support and nurse-facing rationale. The diagnosis section is educational and does not change the math unless you choose the weight basis in the BMI section.</p>
   </div>
 
-  <nav>
-    <div class="container nav-inner">
-      <a class="brand" href="index.html">
-        <div class="brand-mark">D</div>
-        <div class="brand-text">
-          <div class="brand-title">DART Tools</div>
-          <div class="brand-sub">Clinical calculator suite</div>
-        </div>
-      </a>
+  <div class="container grid">
+    <section class="panel">
+      <div class="panel-title">Patient Inputs</div>
+      <div class="panel-sub">Fill in the fields below, then press calculate. Height and weight can be entered in metric or English units.</div>
 
-      <div class="nav-right">
-        <div class="pill"><span class="status-dot"></span><span>Plasmapheresis module</span></div>
-        <a class="pill" href="index.html">← Back to index</a>
+      <div class="form-grid">
+        <div class="field">
+          <label class="label" for="sex">Sex</label>
+          <select id="sex">
+            <option value="">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label" for="hct">Hematocrit (Hct)</label>
+          <input id="hct" type="number" step="0.1" min="0" placeholder="Example: 32" />
+        </div>
+
+        <div class="field full">
+          <label class="label">Height Unit</label>
+          <div class="inline-toggle">
+            <button class="toggle-btn active" type="button" id="heightMetricBtn">cm</button>
+            <button class="toggle-btn" type="button" id="heightEnglishBtn">ft + in</button>
+          </div>
+        </div>
+
+        <div class="field" id="heightCmWrap">
+          <label class="label" for="heightCm">Height (cm)</label>
+          <input id="heightCm" type="number" step="0.1" min="0" placeholder="Example: 175" />
+        </div>
+
+        <div class="field full hidden" id="heightEnglishWrap">
+          <label class="label">Height (ft + in)</label>
+          <div class="sub-grid">
+            <input id="heightFt" type="number" step="1" min="0" placeholder="Feet" />
+            <input id="heightIn" type="number" step="0.1" min="0" placeholder="Inches" />
+          </div>
+        </div>
+
+        <div class="field full">
+          <label class="label">Weight Unit</label>
+          <div class="inline-toggle">
+            <button class="toggle-btn active" type="button" id="weightMetricBtn">kg</button>
+            <button class="toggle-btn" type="button" id="weightEnglishBtn">lb</button>
+          </div>
+        </div>
+
+        <div class="field" id="weightKgWrap">
+          <label class="label" for="weightKg">Weight (kg)</label>
+          <input id="weightKg" type="number" step="0.1" min="0" placeholder="Example: 72" />
+        </div>
+
+        <div class="field hidden" id="weightLbWrap">
+          <label class="label" for="weightLb">Weight (lb)</label>
+          <input id="weightLb" type="number" step="0.1" min="0" placeholder="Example: 180" />
+        </div>
+
+        <div class="field full">
+          <label class="label" for="diagnosis">Diagnosis / Indication (optional)</label>
+          <select id="diagnosis">
+            <option value="">Select diagnosis / indication</option>
+            <option value="ttp">Thrombotic thrombocytopenic purpura (TTP)</option>
+            <option value="aidp">Guillain-Barré syndrome / AIDP</option>
+            <option value="cidp">CIDP</option>
+            <option value="mg-acute">Myasthenia gravis — acute short-term treatment</option>
+            <option value="mg-long">Myasthenia gravis — long-term treatment</option>
+            <option value="anti-gbm-dah">Anti-GBM disease — diffuse alveolar hemorrhage</option>
+            <option value="anti-gbm-dialysis-independent">Anti-GBM disease — dialysis-independent</option>
+            <option value="anti-gbm-dialysis-dependent">Anti-GBM disease — dialysis-dependent, no DAH</option>
+            <option value="sle-severe">Systemic lupus erythematosus — severe</option>
+            <option value="aav-mpa">ANCA vasculitis — microscopic polyangiitis</option>
+            <option value="aav-gpa">ANCA vasculitis — granulomatosis with polyangiitis</option>
+            <option value="kidney-abo-compatible-amr">Kidney transplant, ABO compatible — antibody-mediated rejection</option>
+            <option value="kidney-abo-compatible-desens">Kidney transplant, ABO compatible — desensitization / prophylaxis, living donor</option>
+            <option value="kidney-abo-incompatible-desens">Kidney transplant, ABO incompatible — desensitization, living donor</option>
+            <option value="kidney-abo-incompatible-amr">Kidney transplant, ABO incompatible — antibody-mediated rejection</option>
+            <option value="heart-desens">Heart transplant — desensitization</option>
+            <option value="heart-amr">Heart transplant — antibody-mediated rejection</option>
+            <option value="liver-aboi-desens">Liver transplant — ABO incompatible desensitization, living donor</option>
+            <option value="thyroid-storm">Thyroid storm</option>
+            <option value="wilson-fulminant">Wilson disease, fulminant</option>
+            <option value="other">Other / not listed</option>
+          </select>
+        </div>
+
+        <div class="field full hidden" id="diagnosisInfoWrap">
+          <div id="diagnosisInfoCard" class="math-box"></div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="replacementType">Replacement Type</label>
+          <select id="replacementType">
+            <option value="">Select</option>
+            <option value="albumin">Albumin</option>
+            <option value="ffp">FFP</option>
+            <option value="both">Both</option>
+          </select>
+        </div>
+
+        <div class="field replace-split" id="splitWrap">
+          <label class="label" for="splitType">If Both</label>
+          <select id="splitType">
+            <option value="half">1/2 = half Albumin / half FFP</option>
+            <option value="third">1/3 = 2/3 Albumin / 1/3 FFP</option>
+          </select>
+        </div>
+
+        <div class="field full hidden" id="ibwUseWrap">
+          <div class="note warning">BMI is greater than 30. Some centers consider ideal body weight in obesity. Verify the weight basis with physician direction and local protocol.</div>
+          <div style="height:12px"></div>
+          <label class="label">TBV / Replacement Weight Basis</label>
+          <div class="inline-toggle">
+            <button class="toggle-btn active" type="button" id="actualBasisBtn">Use Entered Weight</button>
+            <button class="toggle-btn" type="button" id="ibwBasisBtn">Use Ideal Body Weight</button>
+          </div>
+        </div>
+
+        <div class="field full">
+          <div class="note">This is not an order. Only a physician can determine which weight should be used for the procedure.</div>
+        </div>
       </div>
-    </div>
-  </nav>
 
-  <section class="hero">
-    <div class="orbs">
-      <div class="orb orb-1"></div>
-      <div class="orb orb-2"></div>
-      <div class="orb orb-3"></div>
-    </div>
+      <div class="calc-row">
+        <button class="btn btn-primary" id="calculateBtn" type="button">Calculate</button>
+        <button class="btn btn-secondary" id="resetBtn" type="button">Reset</button>
+      </div>
 
-    <div class="container reveal">
-      <div class="eyebrow">DART Tools Calculator</div>
-      <h1>
-        <span class="thin">Therapeutic plasma exchange support for</span>
-        <span class="accent">Plasmapheresis</span>
-      </h1>
-      <p class="hero-sub">
-        Enter sex, height, weight, hematocrit, and replacement selection to estimate BMI, ideal body weight, total blood volume, plasma volume replacement, and calcium replacement support. The layout is intentionally clean and expandable for future additions.
-      </p>
-    </div>
+      <div style="height:18px"></div>
+      <div class="note warning">Diagnosis / ASFA information below is educational support for nurses and users. It does not replace physician judgment, institutional policy, or the full ASFA fact sheet.</div>
+    </section>
 
-    <div class="container grid">
-      <section class="panel reveal">
-        <div class="panel-title">Patient Inputs</div>
-        <div class="panel-sub">
-          Fill in the fields below, then press calculate. Height and weight can be entered in metric or English units.
-        </div>
-
-        <div class="form-grid">
-          <div class="field">
-            <label class="label" for="sex">Sex</label>
-            <select id="sex">
-              <option value="">Select</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label class="label" for="hct">Hematocrit (Hct)</label>
-            <input id="hct" type="number" step="0.1" min="0" placeholder="Example: 32" />
-          </div>
-
-          <div class="field full">
-            <label class="label">Height Unit</label>
-            <div class="inline-toggle">
-              <button class="toggle-btn active" type="button" id="heightMetricBtn">cm</button>
-              <button class="toggle-btn" type="button" id="heightEnglishBtn">ft + in</button>
-            </div>
-          </div>
-
-          <div class="field" id="heightCmWrap">
-            <label class="label" for="heightCm">Height (cm)</label>
-            <input id="heightCm" type="number" step="0.1" min="0" placeholder="Example: 175" />
-          </div>
-
-          <div class="field full hidden" id="heightEnglishWrap">
-            <label class="label">Height (ft + in)</label>
-            <div class="sub-grid">
-              <input id="heightFt" type="number" step="1" min="0" placeholder="Feet" />
-              <input id="heightIn" type="number" step="0.1" min="0" placeholder="Inches" />
-            </div>
-          </div>
-
-          <div class="field full">
-            <label class="label">Weight Unit</label>
-            <div class="inline-toggle">
-              <button class="toggle-btn active" type="button" id="weightMetricBtn">kg</button>
-              <button class="toggle-btn" type="button" id="weightEnglishBtn">lb</button>
-            </div>
-          </div>
-
-          <div class="field" id="weightKgWrap">
-            <label class="label" for="weightKg">Weight (kg)</label>
-            <input id="weightKg" type="number" step="0.1" min="0" placeholder="Example: 72" />
-          </div>
-
-          <div class="field hidden" id="weightLbWrap">
-            <label class="label" for="weightLb">Weight (lb)</label>
-            <input id="weightLb" type="number" step="0.1" min="0" placeholder="Example: 180" />
-          </div>
-
-          <div class="field">
-            <label class="label" for="replacementType">Replacement Type</label>
-            <select id="replacementType">
-              <option value="">Select</option>
-              <option value="albumin">Albumin</option>
-              <option value="ffp">FFP</option>
-              <option value="both">Both</option>
-            </select>
-          </div>
-
-          <div class="field replace-split" id="splitWrap">
-            <label class="label" for="splitType">If Both</label>
-            <select id="splitType">
-              <option value="half">1/2 = half Albumin / half FFP</option>
-              <option value="third">1/3 = 2/3 Albumin / 1/3 FFP</option>
-            </select>
-          </div>
-
-          <div class="field full hidden" id="ibwUseWrap">
-            <div class="note warning">
-              BMI is greater than 30. Consider using ideal body weight. This calculator can show values using the entered weight or ideal body weight for reference.
-            </div>
-            <div style="height:12px"></div>
-            <label class="label">TBV / Replacement Weight Basis</label>
-            <div class="inline-toggle">
-              <button class="toggle-btn active" type="button" id="actualBasisBtn">Use Entered Weight</button>
-              <button class="toggle-btn" type="button" id="ibwBasisBtn">Use Ideal Body Weight</button>
-            </div>
-          </div>
-
-          <div class="field full">
-            <div class="note">
-              This is not an order. Only a physician can determine which weight should be used for the procedure.
-            </div>
-          </div>
-        </div>
-
-        <div class="calc-row">
-          <button class="btn btn-primary" id="calculateBtn" type="button">Calculate</button>
-          <button class="btn btn-secondary" id="resetBtn" type="button">Reset</button>
-        </div>
-
-        <div style="height:18px"></div>
-        <div class="note warning">
-          This tool estimates one plasma volume replacement using entered inputs. Verify all values, replacement selections, and calcium strategy with your facility protocol and physician direction.
-        </div>
-      </section>
-
-      <aside class="panel reveal">
-        <div class="panel-title">Results</div>
-        <div class="panel-sub">
-          Calculated values will appear below after you press calculate.
-        </div>
-
-        <div class="result-stack" id="results">
-          <div class="result-card">
-            <div class="result-kicker">Waiting for calculation</div>
-            <div class="result-value">—</div>
-            <div class="result-meta">No results yet.</div>
-          </div>
-        </div>
-      </aside>
-    </div>
-  </section>
-
-  <div class="footer-wrap">
-    <div class="container">
-      <footer>
-        <div class="footer-left">
-          <div class="brand-mark" style="width:32px;height:32px;border-radius:10px;font-size:14px;">D</div>
-          <span>DART Tools</span>
-        </div>
-        <div class="footer-copy">
-          Formula basis used in this page: Spectra Optia TBV formula table for metric/English units, BMI threshold note at 30, and a standard adult Devine ideal body weight equation. This page is for workflow support and does not replace physician judgment, institutional policy, or manufacturer instructions.
-        </div>
-      </footer>
-    </div>
-  </div>
-
-  <script>
-    const state = { heightMode: 'cm', weightMode: 'kg', weightBasis: 'actual' };
-
-    const el = {
-      sex: document.getElementById('sex'),
-      hct: document.getElementById('hct'),
-      heightCm: document.getElementById('heightCm'),
-      heightFt: document.getElementById('heightFt'),
-      heightIn: document.getElementById('heightIn'),
-      weightKg: document.getElementById('weightKg'),
-      weightLb: document.getElementById('weightLb'),
-      replacementType: document.getElementById('replacementType'),
-      splitType: document.getElementById('splitType'),
-      splitWrap: document.getElementById('splitWrap'),
-      results: document.getElementById('results'),
-      calculateBtn: document.getElementById('calculateBtn'),
-      resetBtn: document.getElementById('resetBtn'),
-      heightMetricBtn: document.getElementById('heightMetricBtn'),
-      heightEnglishBtn: document.getElementById('heightEnglishBtn'),
-      weightMetricBtn: document.getElementById('weightMetricBtn'),
-      weightEnglishBtn: document.getElementById('weightEnglishBtn'),
-      heightCmWrap: document.getElementById('heightCmWrap'),
-      heightEnglishWrap: document.getElementById('heightEnglishWrap'),
-      weightKgWrap: document.getElementById('weightKgWrap'),
-      weightLbWrap: document.getElementById('weightLbWrap'),
-      ibwUseWrap: document.getElementById('ibwUseWrap'),
-      actualBasisBtn: document.getElementById('actualBasisBtn'),
-      ibwBasisBtn: document.getElementById('ibwBasisBtn')
-    };
-
-    function setActive(buttons, activeButton){
-      buttons.forEach(btn => btn.classList.remove('active'));
-      activeButton.classList.add('active');
-    }
-
-    function fmt(num, digits = 1){
-      return Number(num).toLocaleString(undefined, {
-        minimumFractionDigits: digits,
-        maximumFractionDigits: digits
-      });
-    }
-
-    function heightToCm(){
-      if(state.heightMode === 'cm') return parseFloat(el.heightCm.value);
-      const ft = parseFloat(el.heightFt.value || 0);
-      const inches = parseFloat(el.heightIn.value || 0);
-      return ((ft * 12) + inches) * 2.54;
-    }
-
-    function heightToInches(){ return heightToCm() / 2.54; }
-
-    function weightToKg(){
-      if(state.weightMode === 'kg') return parseFloat(el.weightKg.value);
-      return parseFloat(el.weightLb.value) * 0.45359237;
-    }
-
-    function devineIBWKg(sex, heightInches){
-      if(sex === 'male') return 50 + 2.3 * (heightInches - 60);
-      return 45.5 + 2.3 * (heightInches - 60);
-    }
-
-    function nadlerTBVml(sex, heightCm, weightKg){
-      const heightM = heightCm / 100;
-      if(sex === 'male') return 604 + (367 * Math.pow(heightM, 3)) + (32.2 * weightKg);
-      return 183 + (356 * Math.pow(heightM, 3)) + (33.1 * weightKg);
-    }
-
-    function createResultHTML(data){
-      const calciumMg = data.totalReplacementMl * (400 / 500);
-      const calciumMl = calciumMg / 100;
-
-      let albuminText = '—';
-      let ffpText = '—';
-      let mixNote = '';
-
-      if(data.replacementType === 'albumin'){
-        albuminText = `${fmt(data.totalReplacementMl)} mL`;
-        ffpText = `0.0 mL`;
-        mixNote = 'Replacement selected: Albumin only.';
-      } else if(data.replacementType === 'ffp'){
-        albuminText = `0.0 mL`;
-        ffpText = `${fmt(data.totalReplacementMl)} mL`;
-        mixNote = 'Replacement selected: FFP only.';
-      } else if(data.replacementType === 'both' && data.splitType === 'half'){
-        albuminText = `${fmt(data.totalReplacementMl * 0.5)} mL`;
-        ffpText = `${fmt(data.totalReplacementMl * 0.5)} mL`;
-        mixNote = 'Split selected: 1/2 = half Albumin and half FFP.';
-      } else if(data.replacementType === 'both' && data.splitType === 'third'){
-        albuminText = `${fmt(data.totalReplacementMl * (2/3))} mL`;
-        ffpText = `${fmt(data.totalReplacementMl * (1/3))} mL`;
-        mixNote = 'Split selected: 1/3 = two-thirds Albumin and one-third FFP.';
-      }
-
-      const bmiNote = data.bmi > 30
-        ? `<div class="note warning">BMI is <strong>${fmt(data.bmi,1)}</strong>, which is greater than 30. Consider using ideal body weight. This page is currently showing calculations using <strong>${data.weightBasisLabel}</strong>.</div>`
-        : `<div class="note">BMI is <strong>${fmt(data.bmi,1)}</strong>. Current calculation is using <strong>${data.weightBasisLabel}</strong>.</div>`;
-
-      const ibwReference = data.bmi > 30
-        ? `<div class="result-card">
-             <div class="result-kicker">Reference TBV using ideal body weight</div>
-             <div class="result-value">${fmt(data.tbvIbwMl)} <span style="font-size:.48em;font-weight:800;letter-spacing:0;color:var(--muted)">mL</span></div>
-             <div class="result-meta">Shown for reference when BMI is greater than 30.</div>
-           </div>`
-        : '';
-
-      return `
-        <div class="result-card">
-          <div class="result-kicker">Body Mass Index</div>
-          <div class="result-value">${fmt(data.bmi,1)}</div>
-          <div class="result-meta">Calculated from entered height and weight.</div>
-        </div>
-
-        ${bmiNote}
-
-        <div class="mini-grid">
-          <div class="result-card">
-            <div class="result-kicker">Ideal Body Weight</div>
-            <div class="result-value">${fmt(data.ibwKg)} <span style="font-size:.48em;font-weight:800;letter-spacing:0;color:var(--muted)">kg</span></div>
-            <div class="result-meta">${fmt(data.ibwLb)} lb</div>
-          </div>
-
-          <div class="result-card">
-            <div class="result-kicker">Weight Basis Used</div>
-            <div class="result-value" style="font-size:24px">${data.weightBasisLabel}</div>
-            <div class="result-meta">This is not an order. Only a physician can determine which weight should be used for the procedure.</div>
-          </div>
-        </div>
-
-        <div class="mini-grid">
-          <div class="result-card">
-            <div class="result-kicker">Total Blood Volume (TBV)</div>
-            <div class="result-value">${fmt(data.tbvMl)} <span style="font-size:.48em;font-weight:800;letter-spacing:0;color:var(--muted)">mL</span></div>
-            <div class="result-meta">Calculated using sex, height, and selected weight basis.</div>
-          </div>
-
-          <div class="result-card">
-            <div class="result-kicker">Estimated Plasma Volume</div>
-            <div class="result-value">${fmt(data.totalReplacementMl)} <span style="font-size:.48em;font-weight:800;letter-spacing:0;color:var(--muted)">mL</span></div>
-            <div class="result-meta">One plasma volume based on TBV × (1 − Hct).</div>
-          </div>
-        </div>
-
-        ${ibwReference}
-
-        <div class="result-card">
-          <div class="result-kicker">Replacement Summary</div>
-          <div class="result-value">${fmt(data.totalReplacementMl)} <span style="font-size:.48em;font-weight:800;letter-spacing:0;color:var(--muted)">mL total</span></div>
-          <div class="result-meta">${mixNote}</div>
-        </div>
-
-        <div class="mini-grid">
-          <div class="result-card">
-            <div class="result-kicker">Total Albumin</div>
-            <div class="result-value">${albuminText}</div>
-            <div class="result-meta">Albumin component of replacement.</div>
-          </div>
-
-          <div class="result-card">
-            <div class="result-kicker">Total FFP</div>
-            <div class="result-value">${ffpText}</div>
-            <div class="result-meta">FFP component of replacement.</div>
-          </div>
-        </div>
-
-        <div class="math-box">
-          <div class="calc-line"><strong>Replacement calculation:</strong> Plasma Volume = TBV × (1 − Hct)</div>
-          <div class="calc-line">TBV = ${fmt(data.tbvMl)} mL</div>
-          <div class="calc-line">Hct = ${fmt(data.hctFraction * 100,1)}% → (1 − Hct) = ${fmt(1 - data.hctFraction,3)}</div>
-          <div class="calc-line"><strong>Total replacement = ${fmt(data.tbvMl)} × ${fmt(1 - data.hctFraction,3)} = ${fmt(data.totalReplacementMl)} mL</strong></div>
-        </div>
-
-        <div class="result-card">
-          <div class="result-kicker">Calcium Gluconate Needed</div>
-          <div class="result-meta" style="margin-bottom:12px">
-            Formula: 400 mg calcium gluconate for every 500 mL of replacement. Concentration used here: 1000 mg per 10 mL.
-          </div>
-          <div class="math-box">
-            <div class="calc-line">Calcium gluconate mg = Replacement × (400 / 500)</div>
-            <div class="calc-line">${fmt(data.totalReplacementMl)} × 0.8 = <strong>${fmt(calciumMg)} mg</strong></div>
-            <div class="calc-line">Calcium gluconate volume = mg ÷ 100 mg/mL</div>
-            <div class="calc-line"><strong>${fmt(calciumMg)} mg</strong> ÷ 100 = <strong>${fmt(calciumMl)} mL</strong></div>
-          </div>
-        </div>
-
-        <div class="result-card">
-          <div class="result-kicker">Calcium Chloride Option</div>
-          <div class="result-meta" style="margin-bottom:12px">
-            Would you like to calculate calcium chloride instead?
-          </div>
-          <div class="calc-row" style="margin-top:0">
-            <button class="btn btn-secondary" type="button" onclick="showCalciumChloride(false)">No</button>
-            <button class="btn btn-primary" type="button" onclick="showCalciumChloride(true, ${data.totalReplacementMl})">Yes, calculate calcium chloride</button>
-          </div>
-          <div id="cacl2Box" class="hidden" style="margin-top:14px"></div>
-        </div>
-      `;
-    }
-
-    function showCalciumChloride(show, replacementMl = 0){
-      const box = document.getElementById('cacl2Box');
-      if(!show){
-        box.classList.add('hidden');
-        box.innerHTML = '';
-        return;
-      }
-      const mg = replacementMl * (133 / 500);
-      box.classList.remove('hidden');
-      box.innerHTML = `
-        <div class="math-box">
-          <div class="calc-line"><strong>Calcium chloride calculation</strong></div>
-          <div class="calc-line">Formula: 133 mg calcium chloride for every 500 mL of replacement</div>
-          <div class="calc-line">${fmt(replacementMl)} × (133 / 500) = <strong>${fmt(mg)} mg</strong></div>
-          <div class="calc-line"><strong>Total calcium chloride needed: ${fmt(mg)} mg</strong></div>
-        </div>
-      `;
-    }
-
-    function validatePositive(value, name){
-      if(!Number.isFinite(value) || value <= 0) throw new Error(`Please enter a valid ${name}.`);
-    }
-
-    function calculate(){
-      try{
-        const sex = el.sex.value;
-        const hctRaw = parseFloat(el.hct.value);
-        const heightCm = heightToCm();
-        const weightKgActual = weightToKg();
-        const heightInches = heightToInches();
-
-        if(!sex) throw new Error('Please select sex.');
-        validatePositive(hctRaw, 'hematocrit');
-        validatePositive(heightCm, 'height');
-        validatePositive(weightKgActual, 'weight');
-
-        if(hctRaw >= 100) throw new Error('Hematocrit must be less than 100.');
-        if(heightCm < 50 || heightCm > 260) throw new Error('Please enter a reasonable height.');
-        if(weightKgActual < 10 || weightKgActual > 400) throw new Error('Please enter a reasonable weight.');
-
-        const hctFraction = hctRaw / 100;
-        const heightM = heightCm / 100;
-        const bmi = weightKgActual / (heightM * heightM);
-
-        const ibwKg = devineIBWKg(sex, heightInches);
-        const ibwLb = ibwKg / 0.45359237;
-
-        if(bmi > 30){
-          el.ibwUseWrap.classList.remove('hidden');
-        } else {
-          el.ibwUseWrap.classList.add('hidden');
-          state.weightBasis = 'actual';
-          setActive([el.actualBasisBtn, el.ibwBasisBtn], el.actualBasisBtn);
-        }
-
-        const calculationWeightKg = (bmi > 30 && state.weightBasis === 'ibw') ? ibwKg : weightKgActual;
-        const tbvMl = nadlerTBVml(sex, heightCm, calculationWeightKg);
-        const tbvIbwMl = nadlerTBVml(sex, heightCm, ibwKg);
-        const totalReplacementMl = tbvMl * (1 - hctFraction);
-
-        const replacementType = el.replacementType.value;
-        if(!replacementType) throw new Error('Please select a replacement type.');
-
-        const data = {
-          bmi, ibwKg, ibwLb, tbvMl, tbvIbwMl, hctFraction, totalReplacementMl,
-          replacementType, splitType: el.splitType.value,
-          weightBasisLabel: (bmi > 30 && state.weightBasis === 'ibw') ? 'Ideal Body Weight' : 'Entered Weight'
-        };
-
-        el.results.innerHTML = createResultHTML(data);
-      } catch(err){
-        el.results.innerHTML = `
-          <div class="result-card">
-            <div class="result-kicker">Input Error</div>
-            <div class="result-value" style="font-size:24px">Unable to calculate</div>
-            <div class="result-meta">${err.message}</div>
-          </div>
-        `;
-      }
-    }
-
-    function resetForm(){
-      el.sex.value = ''; el.hct.value = ''; el.heightCm.value = ''; el.heightFt.value = '';
-      el.heightIn.value = ''; el.weightKg.value = ''; el.weightLb.value = '';
-      el.replacementType.value = ''; el.splitType.value = 'half';
-      el.splitWrap.classList.remove('show'); el.ibwUseWrap.classList.add('hidden');
-      state.heightMode = 'cm'; state.weightMode = 'kg'; state.weightBasis = 'actual';
-
-      setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightMetricBtn);
-      setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightMetricBtn);
-      setActive([el.actualBasisBtn, el.ibwBasisBtn], el.actualBasisBtn);
-
-      el.heightCmWrap.classList.remove('hidden');
-      el.heightEnglishWrap.classList.add('hidden');
-      el.weightKgWrap.classList.remove('hidden');
-      el.weightLbWrap.classList.add('hidden');
-
-      el.results.innerHTML = `
+    <aside class="panel">
+      <div class="panel-title">Results</div>
+      <div class="panel-sub">Calculated values will appear below after you press calculate.</div>
+      <div class="result-stack" id="results">
         <div class="result-card">
           <div class="result-kicker">Waiting for calculation</div>
           <div class="result-value">—</div>
           <div class="result-meta">No results yet.</div>
         </div>
-      `;
-    }
+      </div>
+    </aside>
+  </div>
+</section>
 
-    el.heightMetricBtn.addEventListener('click', () => {
-      state.heightMode = 'cm';
-      setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightMetricBtn);
-      el.heightCmWrap.classList.remove('hidden');
-      el.heightEnglishWrap.classList.add('hidden');
-    });
+<div class="footer-wrap"><div class="container"><footer>
+  <div class="footer-left"><div class="brand-mark" style="width:32px;height:32px;border-radius:10px;font-size:14px;">D</div><span>DART Tools</span></div>
+  <div class="footer-copy">TBV math uses the Spectra Optia/Nadler-style equations and the optional diagnosis categories are mapped to ASFA 2023 indications selected for common plasmapheresis workflows.</div>
+</footer></div></div>
 
-    el.heightEnglishBtn.addEventListener('click', () => {
-      state.heightMode = 'ftin';
-      setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightEnglishBtn);
-      el.heightCmWrap.classList.add('hidden');
-      el.heightEnglishWrap.classList.remove('hidden');
-    });
+<script>
+const diagnosisLibrary = {
+  "ttp": {label:"Thrombotic thrombocytopenic purpura (TTP)", category:"Category I", grade:"1A", rationale:"TPE is used as first-line therapy because it rapidly removes the circulating inhibitor and ultra-large von Willebrand factor multimers while replacing deficient ADAMTS13 with plasma.", nurse:"Medical emergency. Expedite therapy, confirm plasma replacement, and closely watch neurologic change, hemolysis markers, platelet recovery, and reaction/access issues."},
+  "aidp": {label:"Guillain-Barré syndrome / AIDP", category:"Category I", grade:"1A", rationale:"TPE is used as primary treatment to remove pathogenic antibodies and inflammatory mediators in acute inflammatory demyelinating polyradiculoneuropathy.", nurse:"Watch respiratory status, bulbar weakness, autonomic instability, pain, mobility, and tolerance of serial exchanges."},
+  "cidp": {label:"CIDP", category:"Category I", grade:"1B", rationale:"TPE is used for autoimmune demyelinating neuropathy to reduce circulating immune factors and improve symptoms, often as a rescue or short-term response strategy.", nurse:"Trend strength, gait, sensory symptoms, interval response, and whether apheresis is being used as bridge or maintenance."},
+  "mg-acute": {label:"Myasthenia gravis — acute short-term treatment", category:"Category I", grade:"1B", rationale:"TPE is used as rapid, short-acting immunomodulating therapy for myasthenic crisis, unstable or refractory disease, and unstable pre-thymectomy settings.", nurse:"Watch bulbar symptoms, respiratory fatigue, secretion burden, aspiration risk, and timing with other therapies."},
+  "mg-long": {label:"Myasthenia gravis — long-term treatment", category:"Category II", grade:"2B", rationale:"TPE is accepted as second-line therapy when longer-term apheresis support is needed in selected patients with persistent or refractory disease.", nurse:"Clarify treatment cadence, access durability, symptom interval, and whether this is bridging another immunotherapy."},
+  "anti-gbm-dah": {label:"Anti-GBM disease — diffuse alveolar hemorrhage", category:"Category I", grade:"1C", rationale:"TPE is used early to remove circulating anti-GBM antibodies in pulmonary hemorrhage and reduce ongoing immune-mediated capillary injury.", nurse:"Respiratory status is critical. Plasma may be used for part or all replacement when DAH is present; verify protocol and monitor oxygenation closely."},
+  "anti-gbm-dialysis-independent": {label:"Anti-GBM disease — dialysis-independent", category:"Category I", grade:"1B", rationale:"TPE is used early with immunosuppression to rapidly clear anti-GBM antibodies and improve the chance of kidney recovery before dialysis dependence develops.", nurse:"Trend creatinine, urine output, pulmonary symptoms, and timing relative to immunosuppressive therapy."},
+  "anti-gbm-dialysis-dependent": {label:"Anti-GBM disease — dialysis-dependent, no DAH", category:"Category III", grade:"2B", rationale:"The role of TPE is individualized when the patient is already dialysis-dependent without pulmonary hemorrhage because benefit is less certain.", nurse:"Confirm the exact treatment goal with the team because the expected benefit is less established in this scenario."},
+  "sle-severe": {label:"Systemic lupus erythematosus — severe", category:"Category II", grade:"2C", rationale:"TPE is accepted as second-line therapy in selected severe SLE presentations when rapid removal of circulating immune mediators is desired in addition to immunosuppression.", nurse:"Clarify the target organ manifestation because nursing priorities differ for nephritis, DAH, neuro involvement, or overlap syndromes."},
+  "aav-mpa": {label:"ANCA vasculitis — microscopic polyangiitis", category:"Category III", grade:"1B", rationale:"The optimum role of TPE is not established and use should be individualized, especially in severe renal disease or DAH contexts.", nurse:"Know whether the team is targeting severe renal failure, DAH, or rescue after incomplete response to induction therapy."},
+  "aav-gpa": {label:"ANCA vasculitis — granulomatosis with polyangiitis", category:"Category III", grade:"1B", rationale:"The optimum role of TPE is not established and treatment decisions are individualized in severe disease.", nurse:"Track renal trajectory, pulmonary status, bleeding, and coordination with steroids, rituximab, or cyclophosphamide."},
+  "kidney-abo-compatible-amr": {label:"Kidney transplant, ABO compatible — antibody-mediated rejection", category:"Category I", grade:"1B", rationale:"TPE is used as first-line therapy to reduce donor-specific antibodies in antibody-mediated rejection, usually alongside immunomodulatory therapy.", nurse:"Know if this is active rejection versus desensitization and coordinate timing with IVIG or other adjunct agents."},
+  "kidney-abo-compatible-desens": {label:"Kidney transplant, ABO compatible — desensitization / prophylaxis, living donor", category:"Category I", grade:"1B", rationale:"TPE is used pre-transplant in selected sensitized living-donor candidates to lower antibody burden and improve transplant feasibility.", nurse:"Verify target timeline to transplant and any antibody endpoint or adjunct medication plan."},
+  "kidney-abo-incompatible-desens": {label:"Kidney transplant, ABO incompatible — desensitization, living donor", category:"Category I", grade:"1B", rationale:"TPE is used pre-transplant to reduce isoagglutinin levels in ABO-incompatible living-donor transplantation.", nurse:"Confirm the transplant center protocol, target endpoint, and replacement strategy."},
+  "kidney-abo-incompatible-amr": {label:"Kidney transplant, ABO incompatible — antibody-mediated rejection", category:"Category II", grade:"1B", rationale:"TPE is accepted as second-line therapy for antibody-mediated rejection in this transplant setting, generally as part of a multimodal strategy.", nurse:"Monitor graft dysfunction, fluid balance, product tolerance, and concurrent immunotherapy timing."},
+  "heart-desens": {label:"Heart transplant — desensitization", category:"Category II", grade:"1C", rationale:"TPE is accepted as second-line therapy for selected sensitized heart-transplant candidates to reduce antibody burden before transplant.", nurse:"Clarify whether the goal is pre-transplant desensitization or peri-transplant support and track the transplant timeline."},
+  "heart-amr": {label:"Heart transplant — antibody-mediated rejection", category:"Category III", grade:"2C", rationale:"The optimum role of TPE is not established and decisions are individualized with the transplant team.", nurse:"Watch hemodynamics, volume status, graft dysfunction signs, and which adjunct therapies are paired with the procedure."},
+  "liver-aboi-desens": {label:"Liver transplant — ABO incompatible desensitization, living donor", category:"Category I", grade:"1C", rationale:"TPE is used as first-line desensitization support in ABO-incompatible living-donor liver transplantation to reduce isoagglutinin burden.", nurse:"Verify transplant timing, target titers if provided, and the product strategy dictated by the transplant protocol."},
+  "thyroid-storm": {label:"Thyroid storm", category:"Category II", grade:"2C", rationale:"TPE is accepted as second-line therapy when rapid reduction of circulating thyroid hormone and protein-bound mediators is needed in severe or refractory disease.", nurse:"Monitor rhythm, temperature, blood pressure, mental status, and coordination with antithyroid drugs and beta blockade."},
+  "wilson-fulminant": {label:"Wilson disease, fulminant", category:"Category I", grade:"1C", rationale:"TPE is used as first-line supportive therapy to rapidly remove circulating copper while stabilizing the patient, often as a bridge to transplant evaluation.", nurse:"Closely monitor hemolysis, liver failure status, coagulopathy, and whether treatment is a bridge to urgent transplant."},
+  "other": {label:"Other / not listed", category:"Unspecified", grade:"—", rationale:"This indication is not mapped in the dropdown. Verify the diagnosis-specific role of TPE with the current guideline, physician order, and local protocol.", nurse:"Make sure the team has clearly documented the indication, target endpoint, replacement plan, and adjunct medication schedule."}
+};
 
-    el.weightMetricBtn.addEventListener('click', () => {
-      state.weightMode = 'kg';
-      setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightMetricBtn);
-      el.weightKgWrap.classList.remove('hidden');
-      el.weightLbWrap.classList.add('hidden');
-    });
+const state = {heightMode:'cm', weightMode:'kg', weightBasis:'actual'};
+const el = {
+  sex:document.getElementById('sex'), hct:document.getElementById('hct'),
+  heightCm:document.getElementById('heightCm'), heightFt:document.getElementById('heightFt'), heightIn:document.getElementById('heightIn'),
+  weightKg:document.getElementById('weightKg'), weightLb:document.getElementById('weightLb'),
+  diagnosis:document.getElementById('diagnosis'), diagnosisInfoWrap:document.getElementById('diagnosisInfoWrap'), diagnosisInfoCard:document.getElementById('diagnosisInfoCard'),
+  replacementType:document.getElementById('replacementType'), splitType:document.getElementById('splitType'), splitWrap:document.getElementById('splitWrap'),
+  results:document.getElementById('results'),
+  calculateBtn:document.getElementById('calculateBtn'), resetBtn:document.getElementById('resetBtn'),
+  heightMetricBtn:document.getElementById('heightMetricBtn'), heightEnglishBtn:document.getElementById('heightEnglishBtn'),
+  weightMetricBtn:document.getElementById('weightMetricBtn'), weightEnglishBtn:document.getElementById('weightEnglishBtn'),
+  heightCmWrap:document.getElementById('heightCmWrap'), heightEnglishWrap:document.getElementById('heightEnglishWrap'),
+  weightKgWrap:document.getElementById('weightKgWrap'), weightLbWrap:document.getElementById('weightLbWrap'),
+  ibwUseWrap:document.getElementById('ibwUseWrap'), actualBasisBtn:document.getElementById('actualBasisBtn'), ibwBasisBtn:document.getElementById('ibwBasisBtn')
+};
 
-    el.weightEnglishBtn.addEventListener('click', () => {
-      state.weightMode = 'lb';
-      setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightEnglishBtn);
-      el.weightKgWrap.classList.add('hidden');
-      el.weightLbWrap.classList.remove('hidden');
-    });
+function setActive(buttons, activeButton){ buttons.forEach(b=>b.classList.remove('active')); activeButton.classList.add('active'); }
+function fmt(num, digits=1){ return Number(num).toLocaleString(undefined,{minimumFractionDigits:digits, maximumFractionDigits:digits}); }
+function heightToCm(){ if(state.heightMode==='cm') return parseFloat(el.heightCm.value); const ft=parseFloat(el.heightFt.value||0); const inches=parseFloat(el.heightIn.value||0); return ((ft*12)+inches)*2.54; }
+function heightToInches(){ return heightToCm()/2.54; }
+function weightToKg(){ if(state.weightMode==='kg') return parseFloat(el.weightKg.value); return parseFloat(el.weightLb.value)*0.45359237; }
+function devineIBWKg(sex, heightInches){ return sex==='male' ? 50 + 2.3*(heightInches-60) : 45.5 + 2.3*(heightInches-60); }
+function nadlerTBVml(sex, heightCm, weightKg){ const h=heightCm/100; return sex==='male' ? 604 + (367*Math.pow(h,3)) + (32.2*weightKg) : 183 + (356*Math.pow(h,3)) + (33.1*weightKg); }
 
-    el.actualBasisBtn.addEventListener('click', () => {
+function renderDiagnosisInfo(){
+  const key = el.diagnosis.value;
+  if(!key){ el.diagnosisInfoWrap.classList.add('hidden'); el.diagnosisInfoCard.innerHTML=''; return; }
+  const d = diagnosisLibrary[key];
+  el.diagnosisInfoWrap.classList.remove('hidden');
+  el.diagnosisInfoCard.innerHTML = `
+    <div class="calc-line"><strong>ASFA 2023 Category:</strong> ${d.category}${d.grade && d.grade !== '—' ? ` · Grade ${d.grade}` : ''}</div>
+    <div class="calc-line"><strong>Why TPE may be used:</strong> ${d.rationale}</div>
+    <div class="calc-line"><strong>Nurse rationale / practical focus:</strong> ${d.nurse}</div>
+    <div class="calc-line"><strong>Selected indication:</strong> ${d.label}</div>
+  `;
+}
+
+function showCalciumChloride(show, replacementMl=0){
+  const box = document.getElementById('cacl2Box');
+  if(!show){ box.classList.add('hidden'); box.innerHTML=''; return; }
+  const mg = replacementMl * (133/500);
+  box.classList.remove('hidden');
+  box.innerHTML = `
+    <div class="math-box">
+      <div class="calc-line"><strong>Calcium chloride calculation</strong></div>
+      <div class="calc-line">Formula: 133 mg calcium chloride for every 500 mL of replacement</div>
+      <div class="calc-line">${fmt(replacementMl)} × (133 / 500) = <strong>${fmt(mg)} mg</strong></div>
+      <div class="calc-line"><strong>Total calcium chloride needed: ${fmt(mg)} mg</strong></div>
+    </div>
+  `;
+}
+
+function createResultHTML(data){
+  const calciumMg = data.totalReplacementMl * 0.8;
+  const calciumMl = calciumMg / 100;
+
+  let albuminText='—', ffpText='—', mixNote='';
+  if(data.replacementType==='albumin'){ albuminText=`${fmt(data.totalReplacementMl)} mL`; ffpText='0.0 mL'; mixNote='Replacement selected: Albumin only.'; }
+  else if(data.replacementType==='ffp'){ albuminText='0.0 mL'; ffpText=`${fmt(data.totalReplacementMl)} mL`; mixNote='Replacement selected: FFP only.'; }
+  else if(data.replacementType==='both' && data.splitType==='half'){ albuminText=`${fmt(data.totalReplacementMl*0.5)} mL`; ffpText=`${fmt(data.totalReplacementMl*0.5)} mL`; mixNote='Split selected: 1/2 = half Albumin and half FFP.'; }
+  else if(data.replacementType==='both' && data.splitType==='third'){ albuminText=`${fmt(data.totalReplacementMl*(2/3))} mL`; ffpText=`${fmt(data.totalReplacementMl*(1/3))} mL`; mixNote='Split selected: 1/3 = two-thirds Albumin and one-third FFP.'; }
+
+  return `
+    ${data.diagnosis ? `
+    <div class="result-card">
+      <div class="result-kicker">Optional Diagnosis Context</div>
+      <div class="result-value" style="font-size:24px">${data.diagnosis.label}</div>
+      <div class="result-meta">ASFA 2023: <strong>${data.diagnosis.category}</strong>${data.diagnosis.grade && data.diagnosis.grade !== '—' ? ` · Grade ${data.diagnosis.grade}` : ''}</div>
+      <div style="height:10px"></div>
+      <div class="math-box">
+        <div class="calc-line"><strong>Why TPE may be used:</strong> ${data.diagnosis.rationale}</div>
+        <div class="calc-line"><strong>Nurse rationale:</strong> ${data.diagnosis.nurse}</div>
+      </div>
+    </div>` : ''}
+
+    <div class="result-card">
+      <div class="result-kicker">Body Mass Index</div>
+      <div class="result-value">${fmt(data.bmi,1)}</div>
+      <div class="result-meta">Calculated from entered height and weight.</div>
+    </div>
+
+    <div class="note ${data.bmi > 30 ? 'warning' : ''}">
+      BMI is <strong>${fmt(data.bmi,1)}</strong>${data.bmi > 30 ? ', which is greater than 30.' : '.'} Current calculation is using <strong>${data.weightBasisLabel}</strong>.
+    </div>
+
+    <div class="mini-grid">
+      <div class="result-card">
+        <div class="result-kicker">Ideal Body Weight</div>
+        <div class="result-value">${fmt(data.ibwKg)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">kg</span></div>
+        <div class="result-meta">${fmt(data.ibwLb)} lb</div>
+      </div>
+      <div class="result-card">
+        <div class="result-kicker">Weight Basis Used</div>
+        <div class="result-value" style="font-size:24px">${data.weightBasisLabel}</div>
+        <div class="result-meta">This is not an order. Only a physician can determine which weight should be used for the procedure.</div>
+      </div>
+    </div>
+
+    <div class="mini-grid">
+      <div class="result-card">
+        <div class="result-kicker">Total Blood Volume (TBV)</div>
+        <div class="result-value">${fmt(data.tbvMl)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">mL</span></div>
+        <div class="result-meta">Calculated using sex, height, and selected weight basis.</div>
+      </div>
+      <div class="result-card">
+        <div class="result-kicker">Estimated Plasma Volume</div>
+        <div class="result-value">${fmt(data.totalReplacementMl)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">mL</span></div>
+        <div class="result-meta">One plasma volume based on TBV × (1 − Hct).</div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-kicker">Replacement Summary</div>
+      <div class="result-value">${fmt(data.totalReplacementMl)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">mL total</span></div>
+      <div class="result-meta">${mixNote}</div>
+    </div>
+
+    <div class="mini-grid">
+      <div class="result-card">
+        <div class="result-kicker">Total Albumin</div>
+        <div class="result-value">${albuminText}</div>
+        <div class="result-meta">Albumin component of replacement.</div>
+      </div>
+      <div class="result-card">
+        <div class="result-kicker">Total FFP</div>
+        <div class="result-value">${ffpText}</div>
+        <div class="result-meta">FFP component of replacement.</div>
+      </div>
+    </div>
+
+    <div class="math-box">
+      <div class="calc-line"><strong>Replacement calculation:</strong> Plasma Volume = TBV × (1 − Hct)</div>
+      <div class="calc-line">TBV = ${fmt(data.tbvMl)} mL</div>
+      <div class="calc-line">Hct = ${fmt(data.hctFraction * 100,1)}% → (1 − Hct) = ${fmt(1 - data.hctFraction,3)}</div>
+      <div class="calc-line"><strong>Total replacement = ${fmt(data.tbvMl)} × ${fmt(1 - data.hctFraction,3)} = ${fmt(data.totalReplacementMl)} mL</strong></div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-kicker">Calcium Gluconate Needed</div>
+      <div class="result-meta" style="margin-bottom:12px">Formula: 400 mg calcium gluconate for every 500 mL of replacement. Concentration used here: 1000 mg per 10 mL.</div>
+      <div class="math-box">
+        <div class="calc-line">Calcium gluconate mg = Replacement × (400 / 500)</div>
+        <div class="calc-line">${fmt(data.totalReplacementMl)} × 0.8 = <strong>${fmt(calciumMg)} mg</strong></div>
+        <div class="calc-line">Calcium gluconate volume = mg ÷ 100 mg/mL</div>
+        <div class="calc-line"><strong>${fmt(calciumMg)} mg</strong> ÷ 100 = <strong>${fmt(calciumMl)} mL</strong></div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-kicker">Calcium Chloride Option</div>
+      <div class="result-meta" style="margin-bottom:12px">Would you like to calculate calcium chloride instead?</div>
+      <div class="calc-row" style="margin-top:0">
+        <button class="btn btn-secondary" type="button" onclick="showCalciumChloride(false)">No</button>
+        <button class="btn btn-primary" type="button" onclick="showCalciumChloride(true, ${data.totalReplacementMl})">Yes, calculate calcium chloride</button>
+      </div>
+      <div id="cacl2Box" class="hidden" style="margin-top:14px"></div>
+    </div>
+  `;
+}
+
+function validatePositive(value, name){
+  if(!Number.isFinite(value) || value <= 0) throw new Error(`Please enter a valid ${name}.`);
+}
+
+function calculate(){
+  try{
+    const sex = el.sex.value;
+    const hctRaw = parseFloat(el.hct.value);
+    const heightCm = heightToCm();
+    const weightKgActual = weightToKg();
+    const heightInches = heightToInches();
+
+    if(!sex) throw new Error('Please select sex.');
+    validatePositive(hctRaw, 'hematocrit');
+    validatePositive(heightCm, 'height');
+    validatePositive(weightKgActual, 'weight');
+    if(hctRaw >= 100) throw new Error('Hematocrit must be less than 100.');
+
+    const hctFraction = hctRaw / 100;
+    const bmi = weightKgActual / Math.pow(heightCm/100, 2);
+    const ibwKg = devineIBWKg(sex, heightInches);
+    const ibwLb = ibwKg / 0.45359237;
+
+    if(bmi > 30) el.ibwUseWrap.classList.remove('hidden');
+    else{
+      el.ibwUseWrap.classList.add('hidden');
       state.weightBasis = 'actual';
       setActive([el.actualBasisBtn, el.ibwBasisBtn], el.actualBasisBtn);
-    });
+    }
 
-    el.ibwBasisBtn.addEventListener('click', () => {
-      state.weightBasis = 'ibw';
-      setActive([el.actualBasisBtn, el.ibwBasisBtn], el.ibwBasisBtn);
-    });
+    const calculationWeightKg = (bmi > 30 && state.weightBasis === 'ibw') ? ibwKg : weightKgActual;
+    const tbvMl = nadlerTBVml(sex, heightCm, calculationWeightKg);
+    const totalReplacementMl = tbvMl * (1 - hctFraction);
 
-    el.replacementType.addEventListener('change', () => {
-      if(el.replacementType.value === 'both') el.splitWrap.classList.add('show');
-      else el.splitWrap.classList.remove('show');
-    });
+    const replacementType = el.replacementType.value;
+    if(!replacementType) throw new Error('Please select a replacement type.');
 
-    el.calculateBtn.addEventListener('click', calculate);
-    el.resetBtn.addEventListener('click', resetForm);
+    const diagnosisKey = el.diagnosis.value;
+    const data = {
+      bmi, ibwKg, ibwLb, tbvMl, hctFraction, totalReplacementMl,
+      replacementType, splitType: el.splitType.value,
+      weightBasisLabel: (bmi > 30 && state.weightBasis === 'ibw') ? 'Ideal Body Weight' : 'Entered Weight',
+      diagnosis: diagnosisKey ? diagnosisLibrary[diagnosisKey] : null
+    };
 
-    window.addEventListener('scroll', () => {
-      const d = document.documentElement;
-      const pct = (d.scrollTop / (d.scrollHeight - d.clientHeight)) * 100;
-      document.getElementById('scrollFill').style.width = pct + '%';
-    }, { passive:true });
+    el.results.innerHTML = createResultHTML(data);
+  }catch(err){
+    el.results.innerHTML = `
+      <div class="result-card">
+        <div class="result-kicker">Input Error</div>
+        <div class="result-value" style="font-size:24px">Unable to calculate</div>
+        <div class="result-meta">${err.message}</div>
+      </div>
+    `;
+  }
+}
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); });
-    }, { threshold: 0.08 });
+function resetForm(){
+  el.sex.value=''; el.hct.value=''; el.heightCm.value=''; el.heightFt.value=''; el.heightIn.value='';
+  el.weightKg.value=''; el.weightLb.value=''; el.diagnosis.value=''; el.replacementType.value=''; el.splitType.value='half';
+  el.splitWrap.classList.remove('show'); el.ibwUseWrap.classList.add('hidden'); el.diagnosisInfoWrap.classList.add('hidden'); el.diagnosisInfoCard.innerHTML='';
+  state.heightMode='cm'; state.weightMode='kg'; state.weightBasis='actual';
+  setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightMetricBtn);
+  setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightMetricBtn);
+  setActive([el.actualBasisBtn, el.ibwBasisBtn], el.actualBasisBtn);
+  el.heightCmWrap.classList.remove('hidden'); el.heightEnglishWrap.classList.add('hidden');
+  el.weightKgWrap.classList.remove('hidden'); el.weightLbWrap.classList.add('hidden');
+  el.results.innerHTML = `<div class="result-card"><div class="result-kicker">Waiting for calculation</div><div class="result-value">—</div><div class="result-meta">No results yet.</div></div>`;
+}
 
-    document.querySelectorAll('.reveal').forEach(elm => observer.observe(elm));
-  </script>
+el.heightMetricBtn.addEventListener('click', ()=>{ state.heightMode='cm'; setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightMetricBtn); el.heightCmWrap.classList.remove('hidden'); el.heightEnglishWrap.classList.add('hidden'); });
+el.heightEnglishBtn.addEventListener('click', ()=>{ state.heightMode='ftin'; setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightEnglishBtn); el.heightCmWrap.classList.add('hidden'); el.heightEnglishWrap.classList.remove('hidden'); });
+el.weightMetricBtn.addEventListener('click', ()=>{ state.weightMode='kg'; setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightMetricBtn); el.weightKgWrap.classList.remove('hidden'); el.weightLbWrap.classList.add('hidden'); });
+el.weightEnglishBtn.addEventListener('click', ()=>{ state.weightMode='lb'; setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightEnglishBtn); el.weightKgWrap.classList.add('hidden'); el.weightLbWrap.classList.remove('hidden'); });
+el.actualBasisBtn.addEventListener('click', ()=>{ state.weightBasis='actual'; setActive([el.actualBasisBtn, el.ibwBasisBtn], el.actualBasisBtn); });
+el.ibwBasisBtn.addEventListener('click', ()=>{ state.weightBasis='ibw'; setActive([el.actualBasisBtn, el.ibwBasisBtn], el.ibwBasisBtn); });
+el.diagnosis.addEventListener('change', renderDiagnosisInfo);
+el.replacementType.addEventListener('change', ()=>{ if(el.replacementType.value==='both') el.splitWrap.classList.add('show'); else el.splitWrap.classList.remove('show'); });
+el.calculateBtn.addEventListener('click', calculate);
+el.resetBtn.addEventListener('click', resetForm);
+window.addEventListener('scroll', ()=>{ const d=document.documentElement; document.getElementById('scrollFill').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%'; }, {passive:true});
+</script>
 </body>
 </html>
