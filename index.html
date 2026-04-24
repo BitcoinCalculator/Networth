@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DART Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070b11;
+  --card:#111a27;
+  --card2:#0f1722;
+  --border:rgba(149,173,205,.14);
+  --border-strong:rgba(122,162,255,.28);
+  --text:#e9f0fa;
+  --muted:#96a7bf;
+  --primary:#61a8ff;
+  --primary2:#3b82f6;
+  --accent:#7ef0d2;
+  --gold:#cfa95f;
+  --shadow:0 20px 60px rgba(0,0,0,.35);
+  --nav-bg:rgba(7,11,17,.82);
+  --grid:rgba(255,255,255,.03);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(97,168,255,.10), transparent 30%),
+    radial-gradient(circle at 80% 20%, rgba(126,240,210,.08), transparent 24%),
+    linear-gradient(180deg, var(--bg), #05080d 100%);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:40px 40px;opacity:.45;
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,.35), transparent 80%);
+}
+a{text-decoration:none;color:inherit}
+.container{width:min(1280px, calc(100% - 28px));margin:0 auto}
+
+/* ── nav ──────────────────────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:200;
+  backdrop-filter:blur(18px);
+  background:var(--nav-bg);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{
+  min-height:58px;display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;padding:8px 0;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{
+  width:36px;height:36px;border-radius:11px;
+  display:grid;place-items:center;
+  font-size:16px;font-weight:900;color:#fff;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 24px rgba(59,130,246,.24);
+}
+.brand-title{font-size:15px;font-weight:900;letter-spacing:-.02em;line-height:1.15}
+.brand-sub{font-size:9.5px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 13px;border-radius:999px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.02);
+  color:var(--muted);font-size:12px;font-weight:700;
+}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px rgba(126,240,210,.6);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.5}}
+
+/* ── head bar ─────────────────────────────────────── */
+.head-bar{
+  padding:26px 0 18px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  border-bottom:1px solid var(--border);margin-bottom:22px;
+}
+.head-kicker{
+  font-size:11px;text-transform:uppercase;letter-spacing:.16em;
+  color:var(--accent);font-weight:800;margin-bottom:8px;
+}
+.head-title{
+  font-size:clamp(28px,4.2vw,44px);
+  line-height:1.02;letter-spacing:-.04em;font-weight:900;
+}
+.head-title .accent{
+  background:linear-gradient(135deg,#eaf3ff 0%,#99c9ff 45%,#7ef0d2 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.head-meta{font-size:13px;color:var(--muted);max-width:420px;line-height:1.65;text-align:right}
+
+/* ── tool grid ────────────────────────────────────── */
+.tools{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:14px;
+  padding-bottom:28px;
+}
+.tool{
+  display:flex;flex-direction:column;justify-content:space-between;
+  gap:16px;padding:20px;min-height:180px;
+  border-radius:20px;
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  transition:transform .22s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease;
+  position:relative;overflow:hidden;
+}
+.tool::before{
+  content:"";position:absolute;inset:0 auto auto 0;width:100%;height:1px;
+  background:linear-gradient(90deg, rgba(255,255,255,.12), transparent 60%);
+}
+.tool:hover{
+  transform:translateY(-3px);
+  border-color:rgba(97,168,255,.34);
+  background:linear-gradient(180deg, rgba(97,168,255,.09), rgba(255,255,255,.02));
+  box-shadow:0 24px 48px rgba(0,0,0,.32);
+}
+.tool-head{display:flex;align-items:center;gap:12px}
+.tool-icon{
+  width:44px;height:44px;border-radius:13px;
+  display:grid;place-items:center;flex-shrink:0;
+  font-size:20px;
+  background:linear-gradient(135deg, rgba(97,168,255,.16), rgba(126,240,210,.12));
+  border:1px solid rgba(97,168,255,.18);
+}
+.tool-title{font-size:16px;font-weight:900;color:#eff5ff;letter-spacing:-.01em}
+.tool-desc{font-size:13px;color:var(--muted);line-height:1.65}
+.tool-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:10px;border-top:1px solid var(--border);
+}
+.tool-tag{
+  font-size:10px;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--muted);font-weight:800;
+}
+.tool-tag.ready{color:var(--accent)}
+.tool-tag.wip{color:var(--gold)}
+.tool-arrow{
+  font-size:18px;color:var(--primary);font-weight:900;
+  transition:transform .2s ease;
+}
+.tool:hover .tool-arrow{transform:translateX(4px)}
+
+.tool.wip{opacity:.78}
+.tool.wip:hover{opacity:1}
+
+/* ── footer ───────────────────────────────────────── */
+.foot{
+  padding:18px 0 34px;border-top:1px solid var(--border);
+  color:var(--muted);font-size:11.5px;
+  display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  margin-top:8px;
+}
+
+@media (max-width:900px){.tools{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){
+  .tools{grid-template-columns:1fr}
+  .head-meta{text-align:left}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">D</div>
+      <div>
+        <div class="brand-title">DART Tools</div>
+        <div class="brand-sub">Clinical calculator suite</div>
+      </div>
+    </a>
+    <span class="chip"><span class="dot"></span>Optia workflows</span>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="head-bar">
+    <div>
+      <div class="head-kicker">Tool Directory</div>
+      <div class="head-title"><span class="accent">Apheresis &amp; Exchange Calculators</span></div>
+    </div>
+    <div class="head-meta">Select a procedure below to open its calculator.</div>
+  </div>
+
+  <div class="tools" id="toolGrid"></div>
+
+  <div class="foot">
+    <span>DART Tools · Optia workflows</span>
+    <span>Educational support — not a substitute for physician judgment</span>
+  </div>
+
+</div>
+
+<script>
+const tools = [
+  { title:"Plasmapheresis",                title_short:"TPE",   href:"plasmapheresis.html",                icon:"🩸", desc:"TBV, plasma volume, PVE-scaled replacement, calcium dosing.", status:"ready" },
+  { title:"Red Blood Cell Exchange",       title_short:"RBCx",  href:"rbcx.html",                           icon:"🔴", desc:"RBCx volumes, FCR target, product requirements.",             status:"ready" },
+  { title:"Stem Cell Collection",          title_short:"HPC",   href:"stem-cell-collection.html",           icon:"🧬", desc:"CD34 yield, blood volumes processed, ACD, product targets.",  status:"wip"   },
+  { title:"White Blood Cell Depletion",    title_short:"WBCx",  href:"white-blood-cell-depletion.html",     icon:"⚪", desc:"Leukoreduction targets and processed-volume planning.",       status:"wip"   },
+  { title:"LDL Apheresis",                 title_short:"LDL",   href:"ldl-apheresis.html",                  icon:"🫀", desc:"LDL removal volume and session planning.",                    status:"wip"   },
+  { title:"Extracorporeal Photopheresis",  title_short:"ECP",   href:"extracorporeal-photopheresis.html",   icon:"☀️", desc:"ECP buffy coat and treatment volume support.",                status:"wip"   }
+];
+
+const grid = document.getElementById('toolGrid');
+tools.forEach(t => {
+  const a = document.createElement('a');
+  a.className = 'tool' + (t.status==='wip' ? ' wip' : '');
+  a.href = t.href;
+  a.innerHTML = `
+    <div>
+      <div class="tool-head">
+        <div class="tool-icon">${t.icon}</div>
+        <div class="tool-title">${t.title}</div>
+      </div>
+      <div style="height:10px"></div>
+      <div class="tool-desc">${t.desc}</div>
+    </div>
+    <div class="tool-foot">
+      <span class="tool-tag ${t.status==='ready'?'ready':'wip'}">${t.status==='ready'?'● Ready':'○ In progress'}</span>
+      <span class="tool-arrow">→</span>
+    </div>`;
+  grid.appendChild(a);
+});
+</script>
+</body>
+</html>
