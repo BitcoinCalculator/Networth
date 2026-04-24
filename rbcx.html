@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DART Tools — Red Blood Cell Exchange</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070b11;
+  --card:#111a27;
+  --card2:#0f1722;
+  --border:rgba(149,173,205,.14);
+  --border-strong:rgba(122,162,255,.28);
+  --text:#e9f0fa;
+  --muted:#96a7bf;
+  --primary:#61a8ff;
+  --primary2:#3b82f6;
+  --accent:#7ef0d2;
+  --gold:#cfa95f;
+  --warn:#ffcd70;
+  --danger:#ff7c7c;
+  --shadow:0 20px 60px rgba(0,0,0,.35);
+  --nav-bg:rgba(7,11,17,.82);
+  --grid:rgba(255,255,255,.03);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(97,168,255,.10), transparent 30%),
+    radial-gradient(circle at 80% 20%, rgba(126,240,210,.08), transparent 24%),
+    linear-gradient(180deg, var(--bg), #05080d 100%);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:40px 40px;opacity:.45;
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,.35), transparent 80%);
+}
+a{text-decoration:none;color:inherit}
+.container{width:min(1280px, calc(100% - 28px));margin:0 auto}
+
+/* ── compact sticky nav ───────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:200;
+  backdrop-filter:blur(18px);
+  background:var(--nav-bg);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{
+  min-height:58px;display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;padding:8px 0;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{
+  width:36px;height:36px;border-radius:11px;
+  display:grid;place-items:center;
+  font-size:16px;font-weight:900;color:#fff;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 24px rgba(59,130,246,.24);
+}
+.brand-title{font-size:15px;font-weight:900;letter-spacing:-.02em;line-height:1.15}
+.brand-sub{font-size:9.5px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700}
+.nav-right{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 13px;border-radius:999px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.02);
+  color:var(--muted);font-size:12px;font-weight:700;
+  transition:all .2s ease;
+}
+.chip-home{
+  background:linear-gradient(135deg,rgba(97,168,255,.14),rgba(126,240,210,.10));
+  border-color:rgba(97,168,255,.3); color:#d8ecff;
+}
+.chip-home:hover{border-color:rgba(97,168,255,.55);color:#fff;transform:translateY(-1px)}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px rgba(126,240,210,.6);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.5}}
+
+/* ── title bar ────────────────────────────────────── */
+.head-bar{
+  padding:22px 0 14px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  border-bottom:1px solid var(--border);margin-bottom:18px;
+}
+.head-kicker{
+  font-size:11px;text-transform:uppercase;letter-spacing:.16em;
+  color:var(--accent);font-weight:800;margin-bottom:6px;
+}
+.head-title{
+  font-size:clamp(22px,3.4vw,32px);
+  line-height:1.05;letter-spacing:-.03em;font-weight:900;
+}
+.head-title .accent{
+  background:linear-gradient(135deg,#eaf3ff 0%,#99c9ff 45%,#7ef0d2 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.head-meta{font-size:13px;color:var(--muted);max-width:520px;line-height:1.65;text-align:right}
+
+/* ── layout ───────────────────────────────────────── */
+.grid-wrap{display:grid;grid-template-columns:1.02fr .98fr;gap:18px;padding-bottom:44px}
+.panel{
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border:1px solid var(--border);
+  border-radius:22px;padding:20px;
+  box-shadow:var(--shadow);
+}
+.panel-title{font-size:16px;font-weight:900;margin-bottom:4px}
+.panel-sub{font-size:12.5px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+
+/* ── form ─────────────────────────────────────────── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field.full{grid-column:1 / -1}
+.label{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.11em;color:var(--muted)}
+
+input,select,button{font:inherit}
+input,select{
+  width:100%;min-height:42px;border-radius:11px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.03);
+  color:var(--text);padding:0 12px;outline:none;
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+input:focus,select:focus{border-color:rgba(97,168,255,.45);box-shadow:0 0 0 3px rgba(97,168,255,.12)}
+input::placeholder{color:#70829a}
+select{
+  appearance:none;-webkit-appearance:none;
+  background-image:linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+                   linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+  background-size:5px 5px, 5px 5px;background-repeat:no-repeat;padding-right:30px;
+}
+
+.inline-toggle{display:flex;gap:6px;flex-wrap:wrap}
+.toggle-btn{
+  flex:1;min-width:60px;min-height:40px;padding:0 10px;
+  border-radius:10px;border:1px solid var(--border);
+  background:rgba(255,255,255,.03);color:var(--text);
+  font-weight:700;font-size:13px;cursor:pointer;
+  transition:all .2s ease;
+}
+.toggle-btn:hover{border-color:rgba(97,168,255,.34)}
+.toggle-btn.active{
+  background:linear-gradient(135deg,rgba(97,168,255,.22),rgba(126,240,210,.14));
+  border-color:rgba(97,168,255,.45);color:#eaf3ff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+.sub-grid,.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.note{
+  border:1px solid rgba(126,240,210,.18);
+  background:rgba(126,240,210,.06);color:#d5fff2;
+  border-radius:12px;padding:10px 12px;
+  font-size:12.5px;line-height:1.65;
+}
+.note.warning{border-color:rgba(255,205,112,.20);background:rgba(255,205,112,.08);color:#ffe8b6}
+.note.info{border-color:rgba(97,168,255,.2);background:rgba(97,168,255,.05);color:#cfe2ff}
+.note.red{border-color:rgba(255,124,124,.22);background:rgba(255,124,124,.06);color:#ffd6d6}
+
+.calc-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:46px;padding:0 20px;border-radius:12px;
+  border:1px solid transparent;font-weight:800;font-size:14px;
+  cursor:pointer;transition:all .22s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{
+  color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary2));
+  box-shadow:0 10px 26px rgba(59,130,246,.26);
+}
+.btn-primary:hover{box-shadow:0 14px 32px rgba(59,130,246,.38)}
+.btn-secondary{
+  color:var(--text);background:rgba(255,255,255,.03);
+  border-color:var(--border);
+}
+.btn-secondary:hover{border-color:rgba(97,168,255,.34)}
+
+/* ── results ──────────────────────────────────────── */
+.result-stack{display:grid;gap:12px}
+.result-card{
+  border:1px solid var(--border);border-radius:16px;
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+  padding:14px 16px;
+}
+.result-kicker{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);font-weight:800;margin-bottom:6px}
+.result-value{font-size:clamp(20px,3vw,30px);letter-spacing:-.04em;line-height:1;font-weight:900;color:#f4f8ff;margin-bottom:6px}
+.result-meta{color:var(--muted);font-size:12px;line-height:1.6}
+.math-box{
+  border:1px solid rgba(97,168,255,.18);
+  background:rgba(97,168,255,.05);color:#d8e9ff;
+  border-radius:14px;padding:12px 14px;
+  font-size:12.5px;line-height:1.7;
+}
+.math-box strong{color:#fff}
+.calc-line{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.calc-line:last-child{border-bottom:none}
+.hidden{display:none!important}
+
+/* ── footer ──────────────────────────────────────── */
+.foot{
+  padding:18px 0 32px;border-top:1px solid var(--border);
+  color:var(--muted);font-size:11.5px;
+  display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  margin-top:8px;
+}
+
+@media (max-width:980px){
+  .grid-wrap{grid-template-columns:1fr}
+  .head-meta{text-align:left}
+}
+@media (max-width:540px){
+  .form-grid,.sub-grid,.mini-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">D</div>
+      <div>
+        <div class="brand-title">DART Tools</div>
+        <div class="brand-sub">Clinical calculator suite</div>
+      </div>
+    </a>
+    <div class="nav-right">
+      <span class="chip"><span class="dot"></span>RBC Exchange</span>
+      <a class="chip chip-home" href="index.html">← Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="head-bar">
+    <div>
+      <div class="head-kicker">Red Blood Cell Exchange</div>
+      <div class="head-title"><span class="accent">RBCx Calculator</span></div>
+    </div>
+    <div class="head-meta">Estimated PRBC volume for exchange, FCR-based, with calcium dosing support.</div>
+  </div>
+
+  <div class="grid-wrap">
+
+    <section class="panel">
+      <div class="form-grid">
+
+        <div class="field">
+          <label class="label" for="sex">Sex</label>
+          <select id="sex" autofocus>
+            <option value="">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label" for="hct">Pre-procedure Hct (%)</label>
+          <input id="hct" type="number" step="0.1" min="0" placeholder="e.g. 25" />
+        </div>
+
+        <div class="field">
+          <label class="label">Height Unit</label>
+          <div class="inline-toggle">
+            <button class="toggle-btn active" type="button" id="heightMetricBtn">cm</button>
+            <button class="toggle-btn" type="button" id="heightEnglishBtn">ft + in</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Weight Unit</label>
+          <div class="inline-toggle">
+            <button class="toggle-btn active" type="button" id="weightMetricBtn">kg</button>
+            <button class="toggle-btn" type="button" id="weightEnglishBtn">lb</button>
+          </div>
+        </div>
+
+        <div class="field" id="heightCmWrap">
+          <label class="label" for="heightCm">Height (cm)</label>
+          <input id="heightCm" type="number" step="0.1" min="0" placeholder="e.g. 170" />
+        </div>
+        <div class="field hidden" id="heightEnglishWrap">
+          <label class="label">Height (ft + in)</label>
+          <div class="sub-grid">
+            <input id="heightFt" type="number" step="1" min="0" placeholder="ft" />
+            <input id="heightIn" type="number" step="0.1" min="0" placeholder="in" />
+          </div>
+        </div>
+
+        <div class="field" id="weightKgWrap">
+          <label class="label" for="weightKg">Weight (kg)</label>
+          <input id="weightKg" type="number" step="0.1" min="0" placeholder="e.g. 70" />
+        </div>
+        <div class="field hidden" id="weightLbWrap">
+          <label class="label" for="weightLb">Weight (lb)</label>
+          <input id="weightLb" type="number" step="0.1" min="0" placeholder="e.g. 154" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="targetHct">Target Hct (%)</label>
+          <input id="targetHct" type="number" step="0.1" min="0" placeholder="e.g. 30" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="fcr">FCR (%)</label>
+          <input id="fcr" type="number" step="0.1" min="0" placeholder="e.g. 30" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="exchangeFluidHct">Exchange Fluid Hct (%)</label>
+          <input id="exchangeFluidHct" type="number" step="0.1" min="0" value="60" placeholder="typical 55–60" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="warmerVolume">Warmer / Tubing Vol (mL)</label>
+          <input id="warmerVolume" type="number" step="0.1" min="0" value="30" />
+        </div>
+
+        <div class="field full hidden" id="ibwUseWrap">
+          <div class="note warning">BMI &gt; 30. Some protocols use ideal body weight. Verify with physician.</div>
+          <div style="height:8px"></div>
+          <label class="label">Weight Basis</label>
+          <div class="inline-toggle">
+            <button class="toggle-btn active" type="button" id="actualBasisBtn">Entered Weight</button>
+            <button class="toggle-btn" type="button" id="ibwBasisBtn">Ideal Body Weight</button>
+          </div>
+        </div>
+
+        <div class="field full">
+          <div class="note info">Not an order. Physician direction required for target Hct, FCR, and product selection.</div>
+        </div>
+
+        <div class="field full">
+          <div class="note red">Consider premedication (Tylenol, Benadryl, steroid) per physician order and local protocol.</div>
+        </div>
+
+      </div>
+
+      <div class="calc-row">
+        <button class="btn btn-primary" id="calculateBtn" type="button">Calculate</button>
+        <button class="btn btn-secondary" id="resetBtn" type="button">Reset</button>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panel-title">Results</div>
+      <div class="panel-sub">Planning estimate for PRBC volume to order from the blood bank.</div>
+      <div class="result-stack" id="results">
+        <div class="result-card">
+          <div class="result-kicker">Awaiting inputs</div>
+          <div class="result-value">—</div>
+          <div class="result-meta">Fill the form and press Calculate.</div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <div class="foot">
+    <span>DART Tools · RBC Exchange</span>
+    <span>TBV: Nadler · IBW: Devine · Planning estimate only</span>
+  </div>
+
+</div>
+
+<script>
+/* ─── state + refs ─── */
+const state = {heightMode:'cm', weightMode:'kg', weightBasis:'actual'};
+const $ = (id) => document.getElementById(id);
+const el = {
+  sex:$('sex'), hct:$('hct'),
+  exchangeFluidHct:$('exchangeFluidHct'),
+  targetHct:$('targetHct'), fcr:$('fcr'),
+  warmerVolume:$('warmerVolume'),
+  heightCm:$('heightCm'), heightFt:$('heightFt'), heightIn:$('heightIn'),
+  weightKg:$('weightKg'), weightLb:$('weightLb'),
+  results:$('results'),
+  calculateBtn:$('calculateBtn'), resetBtn:$('resetBtn'),
+  heightMetricBtn:$('heightMetricBtn'), heightEnglishBtn:$('heightEnglishBtn'),
+  weightMetricBtn:$('weightMetricBtn'), weightEnglishBtn:$('weightEnglishBtn'),
+  heightCmWrap:$('heightCmWrap'), heightEnglishWrap:$('heightEnglishWrap'),
+  weightKgWrap:$('weightKgWrap'), weightLbWrap:$('weightLbWrap'),
+  ibwUseWrap:$('ibwUseWrap'), actualBasisBtn:$('actualBasisBtn'), ibwBasisBtn:$('ibwBasisBtn')
+};
+
+/* ─── helpers ─── */
+function setActive(buttons, activeButton){ buttons.forEach(b=>b.classList.remove('active')); activeButton.classList.add('active'); }
+function fmt(num, digits=1){ return Number(num).toLocaleString(undefined,{minimumFractionDigits:digits, maximumFractionDigits:digits}); }
+function heightToCm(){ if(state.heightMode==='cm') return parseFloat(el.heightCm.value); const ft=parseFloat(el.heightFt.value||0); const inches=parseFloat(el.heightIn.value||0); return ((ft*12)+inches)*2.54; }
+function heightToInches(){ return heightToCm()/2.54; }
+function weightToKg(){ if(state.weightMode==='kg') return parseFloat(el.weightKg.value); return parseFloat(el.weightLb.value)*0.45359237; }
+function devineIBWKg(sex, heightInches){ return sex==='male' ? 50 + 2.3*(heightInches-60) : 45.5 + 2.3*(heightInches-60); }
+function nadlerTBVml(sex, heightCm, weightKg){ const h=heightCm/100; return sex==='male' ? 604 + (367*Math.pow(h,3)) + (32.2*weightKg) : 183 + (356*Math.pow(h,3)) + (33.1*weightKg); }
+function validatePositive(v, n){ if(!Number.isFinite(v) || v<=0) throw new Error(`Please enter a valid ${n}.`); }
+
+/* ─── calcium chloride (on demand) ─── */
+function showCalciumChloride(show, exchangeMl=0){
+  const box = document.getElementById('cacl2Box');
+  if(!box) return;
+  if(!show){ box.classList.add('hidden'); box.innerHTML=''; return; }
+  const mg = exchangeMl * (133/500);
+  box.classList.remove('hidden');
+  box.innerHTML = `
+    <div class="math-box">
+      <div class="calc-line"><strong>Calcium chloride</strong></div>
+      <div class="calc-line">Rule: 133 mg per 500 mL exchange</div>
+      <div class="calc-line">${fmt(exchangeMl)} × (133 / 500) = <strong>${fmt(mg)} mg</strong></div>
+    </div>`;
+}
+
+/* ─── result render ─── */
+function createResultHTML(d){
+  const calciumMg = d.estimatedPrbcMl * 0.8;
+  const calciumMl = calciumMg / 100;
+
+  return `
+    <div class="mini-grid">
+      <div class="result-card">
+        <div class="result-kicker">BMI</div>
+        <div class="result-value">${fmt(d.bmi,1)}</div>
+        <div class="result-meta">Weight basis: <strong>${d.weightBasisLabel}</strong></div>
+      </div>
+      <div class="result-card">
+        <div class="result-kicker">Ideal Body Weight</div>
+        <div class="result-value">${fmt(d.ibwKg)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">kg</span></div>
+        <div class="result-meta">${fmt(d.ibwLb)} lb · Devine</div>
+      </div>
+    </div>
+
+    ${d.bmi > 30 ? `<div class="note warning">BMI &gt; 30. Calculation currently using <strong>${d.weightBasisLabel}</strong>.</div>` : ''}
+
+    <div class="mini-grid">
+      <div class="result-card">
+        <div class="result-kicker">Total Blood Volume</div>
+        <div class="result-value">${fmt(d.tbvMl)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">mL</span></div>
+        <div class="result-meta">Nadler equation</div>
+      </div>
+      <div class="result-card">
+        <div class="result-kicker">Effective TBV</div>
+        <div class="result-value">${fmt(d.effectiveTbvMl)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">mL</span></div>
+        <div class="result-meta">TBV − warmer/tubing volume</div>
+      </div>
+    </div>
+
+    <div class="result-card" style="border-color:rgba(126,240,210,.32);background:linear-gradient(180deg, rgba(126,240,210,.06), rgba(97,168,255,.04));">
+      <div class="result-kicker">Estimated PRBC Volume for Exchange</div>
+      <div class="result-value">${fmt(d.estimatedPrbcMl)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">mL</span></div>
+      <div class="result-meta">Planning estimate for blood bank order.</div>
+    </div>
+
+    <div class="math-box">
+      <div class="calc-line"><strong>Formula:</strong> Effective TBV × (Avg Hct ÷ Fluid Hct) × ln(100 ÷ FCR)</div>
+      <div class="calc-line">Effective TBV = ${fmt(d.tbvMl)} − ${fmt(d.warmerVolumeMl)} = ${fmt(d.effectiveTbvMl)} mL</div>
+      <div class="calc-line">Avg Hct = (${fmt(d.preHctPercent,1)} + ${fmt(d.targetHctPercent,1)}) ÷ 2 = ${fmt(d.averageHctPercent,1)}%</div>
+      <div class="calc-line"><strong>${fmt(d.effectiveTbvMl)} × (${fmt(d.averageHctPercent,1)} ÷ ${fmt(d.exchangeFluidHctPercent,1)}) × ln(100 ÷ ${fmt(d.fcrPercent,1)}) = ${fmt(d.estimatedPrbcMl)} mL</strong></div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-kicker">Calcium Gluconate</div>
+      <div class="result-meta" style="margin-bottom:8px">Rule: 400 mg per 500 mL exchange · 1000 mg / 10 mL</div>
+      <div class="math-box">
+        <div class="calc-line">${fmt(d.estimatedPrbcMl)} × 0.8 = <strong>${fmt(calciumMg)} mg</strong></div>
+        <div class="calc-line"><strong>${fmt(calciumMg)} mg</strong> ÷ 100 mg/mL = <strong>${fmt(calciumMl)} mL</strong></div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-kicker">Calcium Chloride Option</div>
+      <div class="result-meta" style="margin-bottom:10px">Calculate calcium chloride instead?</div>
+      <div class="calc-row" style="margin-top:0">
+        <button class="btn btn-secondary" type="button" onclick="showCalciumChloride(false)">No</button>
+        <button class="btn btn-primary" type="button" onclick="showCalciumChloride(true, ${d.estimatedPrbcMl})">Yes, calculate CaCl₂</button>
+      </div>
+      <div id="cacl2Box" class="hidden" style="margin-top:12px"></div>
+    </div>
+
+    <div class="note red">Consider premedication (Tylenol, Benadryl, steroid) per physician order and local protocol.</div>
+  `;
+}
+
+/* ─── calculate ─── */
+function calculate(){
+  try{
+    const sex = el.sex.value;
+    const preHctPercent = parseFloat(el.hct.value);
+    const exchangeFluidHctPercent = parseFloat(el.exchangeFluidHct.value);
+    const targetHctPercent = parseFloat(el.targetHct.value);
+    const fcrPercent = parseFloat(el.fcr.value);
+    const warmerVolumeMl = parseFloat(el.warmerVolume.value);
+    const heightCm = heightToCm();
+    const weightKgActual = weightToKg();
+    const heightInches = heightToInches();
+
+    if(!sex) throw new Error('Please select sex.');
+    validatePositive(preHctPercent, 'pre-procedure hematocrit');
+    validatePositive(exchangeFluidHctPercent, 'exchange fluid hematocrit');
+    validatePositive(targetHctPercent, 'target hematocrit');
+    validatePositive(fcrPercent, 'FCR');
+    validatePositive(heightCm, 'height');
+    validatePositive(weightKgActual, 'weight');
+
+    if(preHctPercent >= 100 || exchangeFluidHctPercent >= 100 || targetHctPercent >= 100 || fcrPercent >= 100){
+      throw new Error('Percent values must be less than 100.');
+    }
+    if(warmerVolumeMl < 0) throw new Error('Warmer/tubing volume cannot be negative.');
+
+    const bmi = weightKgActual / Math.pow(heightCm/100, 2);
+    const ibwKg = devineIBWKg(sex, heightInches);
+    const ibwLb = ibwKg / 0.45359237;
+
+    if(bmi > 30){
+      el.ibwUseWrap.classList.remove('hidden');
+    } else {
+      el.ibwUseWrap.classList.add('hidden');
+      state.weightBasis = 'actual';
+      setActive([el.actualBasisBtn, el.ibwBasisBtn], el.actualBasisBtn);
+    }
+
+    const calcWeightKg = (bmi > 30 && state.weightBasis === 'ibw') ? ibwKg : weightKgActual;
+    const tbvMl = nadlerTBVml(sex, heightCm, calcWeightKg);
+    const effectiveTbvMl = tbvMl - warmerVolumeMl;
+    if(effectiveTbvMl <= 0) throw new Error('Effective TBV is not positive. Recheck warmer/tubing volume.');
+
+    const averageHctPercent = (preHctPercent + targetHctPercent) / 2;
+    const estimatedPrbcMl = effectiveTbvMl * (averageHctPercent / exchangeFluidHctPercent) * Math.log(100 / fcrPercent);
+    if(estimatedPrbcMl <= 0) throw new Error('Calculated PRBC volume is not positive. Recheck inputs.');
+
+    const data = {
+      bmi, ibwKg, ibwLb, tbvMl, effectiveTbvMl, estimatedPrbcMl,
+      preHctPercent, exchangeFluidHctPercent, targetHctPercent, fcrPercent,
+      averageHctPercent, warmerVolumeMl,
+      weightBasisLabel: (bmi > 30 && state.weightBasis === 'ibw') ? 'Ideal Body Weight' : 'Entered Weight'
+    };
+
+    el.results.innerHTML = createResultHTML(data);
+  } catch(err){
+    el.results.innerHTML = `
+      <div class="result-card">
+        <div class="result-kicker">Input Error</div>
+        <div class="result-value" style="font-size:18px;color:#ffb4b4">Unable to calculate</div>
+        <div class="result-meta">${err.message}</div>
+      </div>`;
+  }
+}
+
+/* ─── reset ─── */
+function resetForm(){
+  el.sex.value=''; el.hct.value='';
+  el.exchangeFluidHct.value='60'; el.targetHct.value=''; el.fcr.value='';
+  el.warmerVolume.value='30';
+  el.heightCm.value=''; el.heightFt.value=''; el.heightIn.value='';
+  el.weightKg.value=''; el.weightLb.value='';
+  el.ibwUseWrap.classList.add('hidden');
+  state.heightMode='cm'; state.weightMode='kg'; state.weightBasis='actual';
+  setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightMetricBtn);
+  setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightMetricBtn);
+  setActive([el.actualBasisBtn, el.ibwBasisBtn], el.actualBasisBtn);
+  el.heightCmWrap.classList.remove('hidden'); el.heightEnglishWrap.classList.add('hidden');
+  el.weightKgWrap.classList.remove('hidden'); el.weightLbWrap.classList.add('hidden');
+  el.results.innerHTML = `<div class="result-card"><div class="result-kicker">Awaiting inputs</div><div class="result-value">—</div><div class="result-meta">Fill the form and press Calculate.</div></div>`;
+}
+
+/* ─── wiring ─── */
+el.heightMetricBtn.addEventListener('click', ()=>{ state.heightMode='cm'; setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightMetricBtn); el.heightCmWrap.classList.remove('hidden'); el.heightEnglishWrap.classList.add('hidden'); });
+el.heightEnglishBtn.addEventListener('click', ()=>{ state.heightMode='ftin'; setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightEnglishBtn); el.heightCmWrap.classList.add('hidden'); el.heightEnglishWrap.classList.remove('hidden'); });
+el.weightMetricBtn.addEventListener('click', ()=>{ state.weightMode='kg'; setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightMetricBtn); el.weightKgWrap.classList.remove('hidden'); el.weightLbWrap.classList.add('hidden'); });
+el.weightEnglishBtn.addEventListener('click', ()=>{ state.weightMode='lb'; setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightEnglishBtn); el.weightKgWrap.classList.add('hidden'); el.weightLbWrap.classList.remove('hidden'); });
+el.actualBasisBtn.addEventListener('click', ()=>{ state.weightBasis='actual'; setActive([el.actualBasisBtn, el.ibwBasisBtn], el.actualBasisBtn); });
+el.ibwBasisBtn.addEventListener('click', ()=>{ state.weightBasis='ibw'; setActive([el.actualBasisBtn, el.ibwBasisBtn], el.ibwBasisBtn); });
+
+el.calculateBtn.addEventListener('click', calculate);
+el.resetBtn.addEventListener('click', resetForm);
+
+/* Enter key calculates */
+document.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); calculate(); } });
+</script>
+</body>
+</html>
