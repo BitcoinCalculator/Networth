@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DART Tools — WBC Depletion / Leukapheresis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070b11;
+  --card:#111a27;
+  --card2:#0f1722;
+  --border:rgba(149,173,205,.14);
+  --border-strong:rgba(122,162,255,.28);
+  --text:#e9f0fa;
+  --muted:#96a7bf;
+  --primary:#61a8ff;
+  --primary2:#3b82f6;
+  --accent:#7ef0d2;
+  --gold:#cfa95f;
+  --warn:#ffcd70;
+  --danger:#ff7c7c;
+  --shadow:0 20px 60px rgba(0,0,0,.35);
+  --nav-bg:rgba(7,11,17,.82);
+  --grid:rgba(255,255,255,.03);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(97,168,255,.10), transparent 30%),
+    radial-gradient(circle at 80% 20%, rgba(126,240,210,.08), transparent 24%),
+    linear-gradient(180deg, var(--bg), #05080d 100%);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:40px 40px;opacity:.45;
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,.35), transparent 80%);
+}
+a{text-decoration:none;color:inherit}
+.container{width:min(1280px, calc(100% - 28px));margin:0 auto}
+
+/* ── compact sticky nav ───────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:200;
+  backdrop-filter:blur(18px);
+  background:var(--nav-bg);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{
+  min-height:58px;display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;padding:8px 0;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{
+  width:36px;height:36px;border-radius:11px;
+  display:grid;place-items:center;
+  font-size:16px;font-weight:900;color:#fff;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 24px rgba(59,130,246,.24);
+}
+.brand-title{font-size:15px;font-weight:900;letter-spacing:-.02em;line-height:1.15}
+.brand-sub{font-size:9.5px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700}
+.nav-right{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 13px;border-radius:999px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.02);
+  color:var(--muted);font-size:12px;font-weight:700;
+  transition:all .2s ease;
+}
+.chip-home{
+  background:linear-gradient(135deg,rgba(97,168,255,.14),rgba(126,240,210,.10));
+  border-color:rgba(97,168,255,.3); color:#d8ecff;
+}
+.chip-home:hover{border-color:rgba(97,168,255,.55);color:#fff;transform:translateY(-1px)}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px rgba(126,240,210,.6);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.5}}
+
+/* ── title bar ────────────────────────────────────── */
+.head-bar{
+  padding:22px 0 14px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  border-bottom:1px solid var(--border);margin-bottom:18px;
+}
+.head-kicker{
+  font-size:11px;text-transform:uppercase;letter-spacing:.16em;
+  color:var(--accent);font-weight:800;margin-bottom:6px;
+}
+.head-title{
+  font-size:clamp(22px,3.4vw,32px);
+  line-height:1.05;letter-spacing:-.03em;font-weight:900;
+}
+.head-title .accent{
+  background:linear-gradient(135deg,#eaf3ff 0%,#99c9ff 45%,#7ef0d2 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.head-meta{font-size:13px;color:var(--muted);max-width:520px;line-height:1.65;text-align:right}
+
+/* ── layout ───────────────────────────────────────── */
+.grid-wrap{display:grid;grid-template-columns:1.02fr .98fr;gap:18px;padding-bottom:44px}
+.panel{
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border:1px solid var(--border);
+  border-radius:22px;padding:20px;
+  box-shadow:var(--shadow);
+}
+.panel-title{font-size:16px;font-weight:900;margin-bottom:4px}
+.panel-sub{font-size:12.5px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+
+/* ── form ─────────────────────────────────────────── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field.full{grid-column:1 / -1}
+.label{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.11em;color:var(--muted)}
+
+input,select,button{font:inherit}
+input,select{
+  width:100%;min-height:42px;border-radius:11px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.03);
+  color:var(--text);padding:0 12px;outline:none;
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+input:focus,select:focus{border-color:rgba(97,168,255,.45);box-shadow:0 0 0 3px rgba(97,168,255,.12)}
+input::placeholder{color:#70829a}
+select{
+  appearance:none;-webkit-appearance:none;
+  background-image:linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+                   linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+  background-size:5px 5px, 5px 5px;background-repeat:no-repeat;padding-right:30px;
+}
+
+.inline-toggle{display:flex;gap:6px;flex-wrap:wrap}
+.toggle-btn{
+  flex:1;min-width:60px;min-height:40px;padding:0 10px;
+  border-radius:10px;border:1px solid var(--border);
+  background:rgba(255,255,255,.03);color:var(--text);
+  font-weight:700;font-size:13px;cursor:pointer;
+  transition:all .2s ease;
+}
+.toggle-btn:hover{border-color:rgba(97,168,255,.34)}
+.toggle-btn.active{
+  background:linear-gradient(135deg,rgba(97,168,255,.22),rgba(126,240,210,.14));
+  border-color:rgba(97,168,255,.45);color:#eaf3ff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+.sub-grid,.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.note{
+  border:1px solid rgba(126,240,210,.18);
+  background:rgba(126,240,210,.06);color:#d5fff2;
+  border-radius:12px;padding:10px 12px;
+  font-size:12.5px;line-height:1.65;
+}
+.note.warning{border-color:rgba(255,205,112,.20);background:rgba(255,205,112,.08);color:#ffe8b6}
+.note.info{border-color:rgba(97,168,255,.2);background:rgba(97,168,255,.05);color:#cfe2ff}
+.note.red{border-color:rgba(255,124,124,.22);background:rgba(255,124,124,.06);color:#ffd6d6}
+
+.calc-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:46px;padding:0 20px;border-radius:12px;
+  border:1px solid transparent;font-weight:800;font-size:14px;
+  cursor:pointer;transition:all .22s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{
+  color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary2));
+  box-shadow:0 10px 26px rgba(59,130,246,.26);
+}
+.btn-primary:hover{box-shadow:0 14px 32px rgba(59,130,246,.38)}
+.btn-secondary{
+  color:var(--text);background:rgba(255,255,255,.03);
+  border-color:var(--border);
+}
+.btn-secondary:hover{border-color:rgba(97,168,255,.34)}
+
+/* ── results ──────────────────────────────────────── */
+.result-stack{display:grid;gap:12px}
+.result-card{
+  border:1px solid var(--border);border-radius:16px;
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+  padding:14px 16px;
+}
+.result-kicker{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);font-weight:800;margin-bottom:6px}
+.result-value{font-size:clamp(20px,3vw,30px);letter-spacing:-.04em;line-height:1;font-weight:900;color:#f4f8ff;margin-bottom:6px}
+.result-meta{color:var(--muted);font-size:12px;line-height:1.6}
+.math-box{
+  border:1px solid rgba(97,168,255,.18);
+  background:rgba(97,168,255,.05);color:#d8e9ff;
+  border-radius:14px;padding:12px 14px;
+  font-size:12.5px;line-height:1.7;
+}
+.math-box strong{color:#fff}
+.calc-line{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.calc-line:last-child{border-bottom:none}
+.hidden{display:none!important}
+
+.alert-banner{
+  border:1px solid rgba(255,124,124,.45);
+  background:linear-gradient(180deg, rgba(255,124,124,.14), rgba(255,124,124,.06));
+  color:#ffe1e1;border-radius:14px;padding:14px 16px;
+  font-size:13px;line-height:1.65;
+  display:flex;gap:12px;align-items:flex-start;
+}
+.alert-banner .alert-icon{font-size:22px;line-height:1;flex-shrink:0}
+.alert-banner strong{color:#fff}
+
+details{margin-top:2px}
+details summary{
+  cursor:pointer;list-style:none;
+  padding:10px 12px;border-radius:11px;
+  border:1px dashed var(--border);
+  background:rgba(255,255,255,.02);
+  font-size:12px;font-weight:700;color:var(--muted);
+  display:flex;align-items:center;justify-content:space-between;
+  transition:all .2s ease;
+}
+details summary:hover{color:var(--text);border-color:rgba(97,168,255,.3)}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";font-size:16px;color:var(--accent);font-weight:900}
+details[open] summary::after{content:"−"}
+details[open] summary{margin-bottom:10px;border-style:solid}
+
+/* ── footer ──────────────────────────────────────── */
+.foot{
+  padding:18px 0 32px;border-top:1px solid var(--border);
+  color:var(--muted);font-size:11.5px;
+  display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  margin-top:8px;
+}
+
+@media (max-width:980px){
+  .grid-wrap{grid-template-columns:1fr}
+  .head-meta{text-align:left}
+}
+@media (max-width:540px){
+  .form-grid,.sub-grid,.mini-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">D</div>
+      <div>
+        <div class="brand-title">DART Tools</div>
+        <div class="brand-sub">Clinical calculator suite</div>
+      </div>
+    </a>
+    <div class="nav-right">
+      <span class="chip"><span class="dot"></span>Leukapheresis</span>
+      <a class="chip chip-home" href="index.html">← Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="head-bar">
+    <div>
+      <div class="head-kicker">Therapeutic WBC Depletion · Leukapheresis</div>
+      <div class="head-title"><span class="accent">WBC Depletion Calculator</span></div>
+    </div>
+    <div class="head-meta">Optia CMNC-based cytoreduction planning · TBV processed, ACD, calcium dosing, post-procedure WBC estimate.</div>
+  </div>
+
+  <div class="grid-wrap">
+
+    <section class="panel">
+      <div class="form-grid">
+
+        <div class="field">
+          <label class="label" for="sex">Sex</label>
+          <select id="sex" autofocus>
+            <option value="">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label" for="wbc">Pre-procedure WBC (×10³/µL)</label>
+          <input id="wbc" type="number" step="0.1" min="0" placeholder="e.g. 220" />
+        </div>
+
+        <div class="field">
+          <label class="label">Height Unit</label>
+          <div class="inline-toggle">
+            <button class="toggle-btn active" type="button" id="heightMetricBtn">cm</button>
+            <button class="toggle-btn" type="button" id="heightEnglishBtn">ft + in</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Weight Unit</label>
+          <div class="inline-toggle">
+            <button class="toggle-btn active" type="button" id="weightMetricBtn">kg</button>
+            <button class="toggle-btn" type="button" id="weightEnglishBtn">lb</button>
+          </div>
+        </div>
+
+        <div class="field" id="heightCmWrap">
+          <label class="label" for="heightCm">Height (cm)</label>
+          <input id="heightCm" type="number" step="0.1" min="0" placeholder="e.g. 170" />
+        </div>
+        <div class="field hidden" id="heightEnglishWrap">
+          <label class="label">Height (ft + in)</label>
+          <div class="sub-grid">
+            <input id="heightFt" type="number" step="1" min="0" placeholder="ft" />
+            <input id="heightIn" type="number" step="0.1" min="0" placeholder="in" />
+          </div>
+        </div>
+
+        <div class="field" id="weightKgWrap">
+          <label class="label" for="weightKg">Weight (kg)</label>
+          <input id="weightKg" type="number" step="0.1" min="0" placeholder="e.g. 70" />
+        </div>
+        <div class="field hidden" id="weightLbWrap">
+          <label class="label" for="weightLb">Weight (lb)</label>
+          <input id="weightLb" type="number" step="0.1" min="0" placeholder="e.g. 154" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="hct">Hematocrit (%)</label>
+          <input id="hct" type="number" step="0.1" min="0" placeholder="e.g. 28" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="goalWbc">Goal WBC (×10³/µL)</label>
+          <input id="goalWbc" type="number" step="0.1" min="0" value="100" />
+        </div>
+
+        <div class="field full">
+          <label class="label">Blood Volumes to Process (TBV)</label>
+          <div class="inline-toggle" id="bvToggle">
+            <button class="toggle-btn" type="button" data-bv="1.5">1.5 TBV</button>
+            <button class="toggle-btn active" type="button" data-bv="2">2.0 TBV</button>
+            <button class="toggle-btn" type="button" data-bv="2.5">2.5 TBV</button>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label class="label">ACD-A Ratio (inlet : AC)</label>
+          <div class="inline-toggle" id="acdToggle">
+            <button class="toggle-btn active" type="button" data-acd="12">12 : 1</button>
+            <button class="toggle-btn" type="button" data-acd="13">13 : 1</button>
+            <button class="toggle-btn" type="button" data-acd="14">14 : 1</button>
+            <button class="toggle-btn" type="button" data-acd="16">16 : 1</button>
+          </div>
+        </div>
+
+        <div class="field full hidden" id="ibwUseWrap">
+          <div class="note warning">BMI &gt; 30. Some protocols use ideal body weight. Verify with physician.</div>
+          <div style="height:8px"></div>
+          <label class="label">Weight Basis</label>
+          <div class="inline-toggle">
+            <button class="toggle-btn active" type="button" id="actualBasisBtn">Entered Weight</button>
+            <button class="toggle-btn" type="button" id="ibwBasisBtn">Ideal Body Weight</button>
+          </div>
+        </div>
+
+        <div class="field full">
+          <details>
+            <summary>Optional — Diagnosis / clinical context</summary>
+            <select id="diagnosis">
+              <option value="">Select diagnosis (optional)</option>
+              <option value="aml-leukostasis">AML with hyperleukocytosis + leukostasis (EMERGENCY)</option>
+              <option value="aml-asymptomatic">AML hyperleukocytosis, asymptomatic</option>
+              <option value="apl">Acute promyelocytic leukemia (APL) — caution</option>
+              <option value="cml-blast-crisis">CML — blast crisis</option>
+              <option value="cml-chronic">CML — chronic phase, symptomatic hyperleukocytosis</option>
+              <option value="all-hyperleuk">ALL with extreme hyperleukocytosis</option>
+              <option value="cll-symptomatic">CLL — symptomatic hyperleukocytosis (rare)</option>
+              <option value="priapism-leukostasis">Priapism from leukostasis</option>
+              <option value="other">Other / not listed</option>
+            </select>
+            <div id="diagnosisInfoCard" class="math-box hidden" style="margin-top:10px"></div>
+          </details>
+        </div>
+
+        <div class="field full">
+          <details>
+            <summary>Symptoms of leukostasis (check all that apply)</summary>
+            <div class="sub-grid" style="grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+              <label style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);padding:6px 0;cursor:pointer"><input type="checkbox" class="symptom" data-symptom="pulm" style="width:auto;min-height:auto"> Dyspnea / hypoxia</label>
+              <label style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);padding:6px 0;cursor:pointer"><input type="checkbox" class="symptom" data-symptom="neuro" style="width:auto;min-height:auto"> Confusion / vision change</label>
+              <label style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);padding:6px 0;cursor:pointer"><input type="checkbox" class="symptom" data-symptom="priapism" style="width:auto;min-height:auto"> Priapism</label>
+              <label style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);padding:6px 0;cursor:pointer"><input type="checkbox" class="symptom" data-symptom="aki" style="width:auto;min-height:auto"> Acute kidney injury</label>
+              <label style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);padding:6px 0;cursor:pointer"><input type="checkbox" class="symptom" data-symptom="bleed" style="width:auto;min-height:auto"> Retinal / mucosal bleed</label>
+              <label style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);padding:6px 0;cursor:pointer"><input type="checkbox" class="symptom" data-symptom="seizure" style="width:auto;min-height:auto"> Seizure / stroke sx</label>
+            </div>
+          </details>
+        </div>
+
+        <div class="field full">
+          <div class="note info">Not an order. Physician direction required for procedure initiation, cytoreduction, and replacement strategy.</div>
+        </div>
+
+      </div>
+
+      <div class="calc-row">
+        <button class="btn btn-primary" id="calculateBtn" type="button">Calculate</button>
+        <button class="btn btn-secondary" id="resetBtn" type="button">Reset</button>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panel-title">Results</div>
+      <div class="panel-sub">TBV processed, ACD volume, predicted post-WBC, calcium dosing, and treatment guidance.</div>
+      <div class="result-stack" id="results">
+        <div class="result-card">
+          <div class="result-kicker">Awaiting inputs</div>
+          <div class="result-value">—</div>
+          <div class="result-meta">Fill the form and press Calculate.</div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Optimization Tips Section (therapeutic WBC depletion) -->
+  <section class="panel" style="margin-bottom:18px">
+    <div class="panel-title" style="margin-bottom:6px">Therapeutic WBC Depletion — Quality Optimization Tips</div>
+    <div class="panel-sub">Goal here is <em>maximal WBC removal per session</em>, not preservation of a clean cellular product. Different from HPC-A — settings shift accordingly.</div>
+
+    <div class="mini-grid">
+      <details open>
+        <summary>Collection Preference (Optia color tool)</summary>
+        <div class="math-box">
+          <div class="calc-line"><strong>Where it lives:</strong> the Spectra Optia "Collection Preference Tool" — printed color strip from <strong>dark red/brown</strong> (denser, more cells in product) to <strong>light peach</strong> (more plasma, fewer cells).</div>
+          <div class="calc-line"><strong>For WBC depletion:</strong> a <strong>moderate-to-slightly-darker</strong> setting captures more white cells per pass. Going too dark removes too much RBC and can drop patient Hct.</div>
+          <div class="calc-line"><strong>How to adjust:</strong> only after the message bar reads "Collecting MNC". Increment by 10, wait ≥ 2 min, then assess collect-line color.</div>
+          <div class="calc-line"><strong>Watch product Hct:</strong> if product Hct climbs &gt; 5–6%, you're losing too many RBCs — pull back lighter.</div>
+          <div class="calc-line"><strong>Verify with your institutional protocol</strong> — collection-preference targets for therapeutic depletion vary by center.</div>
+        </div>
+      </details>
+      <details open>
+        <summary>Inlet Flow &amp; Alarm Discipline</summary>
+        <div class="math-box">
+          <div class="calc-line"><strong>Steady &gt; fast.</strong> Slower with no alarms removes more WBC than fast with alarms — every alarm pause halts the collection layer.</div>
+          <div class="calc-line"><strong>Hyperleukocytosis blood is viscous.</strong> Expect higher inlet pressures; consider lower starting flow and titrate up.</div>
+          <div class="calc-line"><strong>Access:</strong> central catheter strongly preferred for therapeutic depletion. Femoral often necessary for emergent leukostasis cases.</div>
+        </div>
+      </details>
+    </div>
+
+    <div style="height:10px"></div>
+
+    <div class="mini-grid">
+      <details>
+        <summary>Anticoagulation Balance</summary>
+        <div class="math-box">
+          <div class="calc-line"><strong>Standard:</strong> ACD-A 12:1.</div>
+          <div class="calc-line"><strong>Hyperleukocytosis caveat:</strong> very high WBC + clumping risk → may need richer ratio (10:1 or 8:1). Watch for citrate symptoms in renal failure / pediatric patients.</div>
+          <div class="calc-line"><strong>Heparin add-on</strong> (per institutional protocol) sometimes used to reduce clumping in extreme hyperleukocytosis.</div>
+        </div>
+      </details>
+      <details>
+        <summary>Citrate &amp; Calcium Strategy</summary>
+        <div class="math-box">
+          <div class="calc-line"><strong>Calcium gluconate</strong> per the calculator (1.5–2 g per 4000 mL processed) — continuous infusion or scheduled boluses.</div>
+          <div class="calc-line"><strong>Pre-procedure</strong> calcium load (oral or IV) blunts symptom onset.</div>
+          <div class="calc-line"><strong>Renal failure / oliguria:</strong> citrate clears more slowly — expect more symptoms; use ionized Ca trends.</div>
+        </div>
+      </details>
+    </div>
+
+    <div style="height:10px"></div>
+
+    <div class="mini-grid">
+      <details>
+        <summary>Patient Monitoring</summary>
+        <div class="math-box">
+          <div class="calc-line"><strong>Q15-min vitals</strong> for first hour, then per protocol. Continuous SpO₂ and telemetry for severe hyperleukocytosis (leukostasis risk persists during run).</div>
+          <div class="calc-line"><strong>Neuro checks</strong> at start, midpoint, and end — leukostasis can deteriorate during procedure if delayed.</div>
+          <div class="calc-line"><strong>Watch for TLS:</strong> hyperK, hyperPO₄, hyperuric, hypoCa — coordinate with rasburicase / IV fluids per oncology team.</div>
+        </div>
+      </details>
+      <details>
+        <summary>Replacement &amp; Post-Procedure</summary>
+        <div class="math-box">
+          <div class="calc-line"><strong>Replacement fluid:</strong> typically NS or LR; albumin (5%) if removal &gt; 15% TBV.</div>
+          <div class="calc-line"><strong>Post-procedure CBC</strong> within 1–4 h to confirm WBC drop and trend platelets.</div>
+          <div class="calc-line"><strong>Daily reassessment</strong> — repeat leukapheresis if WBC remains &gt; 100 ×10³/µL or symptoms persist.</div>
+          <div class="calc-line"><strong>Cytoreductive chemo</strong> (hydroxyurea 50–100 mg/kg/day) and induction should NOT be delayed for apheresis.</div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <div class="foot">
+    <span>DART Tools · Leukapheresis (Optia CMNC)</span>
+    <span>ASFA 2023 Category III · Educational support only</span>
+  </div>
+
+</div>
+
+<script>
+/* ─── diagnosis library (Leukapheresis indications) ─── */
+const diagnosisLibrary = {
+  "aml-leukostasis":{
+    label:"AML with hyperleukocytosis + leukostasis",
+    category:"ASFA Category III · Grade 1B (symptomatic)",
+    emergency:true,
+    rationale:"Leukapheresis rapidly reduces circulating myeloblasts to relieve microvascular obstruction. AML blasts are large and rigid — leukostasis can occur at WBC as low as ~50,000/µL and is life-threatening when symptomatic (pulmonary infiltrates, neuro deficits, AKI).",
+    nurse:"Treat as an emergency. Coordinate with hematology for immediate cytoreductive chemo (hydroxyurea 50–100 mg/kg/day) and induction. Avoid pre-procedure RBC transfusion unless severely anemic — increases viscosity. Monitor for tumor lysis (K, phos, uric acid, Cr).",
+    goal:"Reduce WBC <100 ×10³/µL or until symptoms resolve. Daily leukapheresis if persistent symptoms."
+  },
+  "aml-asymptomatic":{
+    label:"AML hyperleukocytosis, asymptomatic",
+    category:"ASFA Category III · Grade 2C",
+    emergency:false,
+    rationale:"Prophylactic leukapheresis without leukostasis symptoms is NOT routinely supported by ASFA 2023 — no consistent mortality benefit. Cytoreductive chemotherapy (hydroxyurea, then induction) is the cornerstone.",
+    nurse:"Verify the indication with the team. Ensure cytoreduction is started — the procedure should not delay induction chemo. Monitor for symptom development.",
+    goal:"Discuss target with hematology; default cutoff 100 ×10³/µL with cytoreductive chemo as primary therapy."
+  },
+  "apl":{
+    label:"Acute promyelocytic leukemia (APL)",
+    category:"ASFA Category IV · Grade 1C — generally avoided",
+    emergency:false,
+    rationale:"Leukapheresis is generally CONTRAINDICATED in APL — it can worsen DIC and coagulopathy. ATRA / ATO is the priority.",
+    nurse:"Confirm APL status before proceeding. Coagulation profile, fibrinogen, platelets must be assessed and aggressively replaced. ATRA should be initiated immediately by hematology.",
+    goal:"Avoid leukapheresis unless absolutely necessary. Start ATRA + supportive transfusion (FFP, cryo, platelets) immediately."
+  },
+  "cml-blast-crisis":{
+    label:"CML — blast crisis",
+    category:"ASFA Category III",
+    emergency:true,
+    rationale:"Blast crisis behaves like acute leukemia — myeloblasts cause leukostasis. Leukapheresis reduces blast burden while TKI / cytoreduction is initiated.",
+    nurse:"Treat as emergency if symptomatic. Coordinate hydroxyurea + TKI selection with hematology. Tumor lysis prophylaxis.",
+    goal:"WBC <100 ×10³/µL or symptom resolution. TKI is definitive therapy."
+  },
+  "cml-chronic":{
+    label:"CML chronic phase, symptomatic hyperleukocytosis",
+    category:"ASFA Category III · Grade 2B",
+    emergency:false,
+    rationale:"Mature myeloid cells are smaller and more deformable than blasts — leukostasis is uncommon despite very high WBC. TKI is definitive; leukapheresis reserved for symptomatic patients or while awaiting TKI.",
+    nurse:"Confirm symptoms before initiating. TKI should not be delayed. Hydroxyurea bridges to TKI confirmation when needed.",
+    goal:"Symptom relief; bridge to TKI. WBC <100 ×10³/µL is a reasonable target if symptomatic."
+  },
+  "all-hyperleuk":{
+    label:"ALL with extreme hyperleukocytosis",
+    category:"ASFA Category III · Grade 2C",
+    emergency:false,
+    rationale:"Lymphoblasts are smaller and less rigid than myeloblasts — leukostasis is rare. Threshold for leukapheresis is much higher (typically WBC >400 ×10³/µL with symptoms). Cytoreductive chemo is primary.",
+    nurse:"Verify symptoms — most ALL patients do not need leukapheresis even at very high WBC. Tumor lysis is a major concern at induction.",
+    goal:"Aggressive tumor lysis prophylaxis. Leukapheresis only if symptomatic AND WBC very high."
+  },
+  "cll-symptomatic":{
+    label:"CLL — symptomatic hyperleukocytosis (rare)",
+    category:"ASFA Category III",
+    emergency:false,
+    rationale:"Leukostasis in CLL is exceedingly rare due to mature, deformable lymphocytes. Leukapheresis is rarely indicated; chemotherapy / targeted therapy is primary.",
+    nurse:"Confirm true leukostasis vs hyperviscosity from other cause. Coordinate with hem-onc.",
+    goal:"Symptom relief while definitive therapy is initiated."
+  },
+  "priapism-leukostasis":{
+    label:"Priapism from leukostasis",
+    category:"ASFA Category III · Grade 2C",
+    emergency:true,
+    rationale:"Persistent ischemic priapism in a patient with hyperleukocytosis (most often CML) — leukapheresis can relieve mechanical obstruction while cytoreduction is initiated.",
+    nurse:"Time-sensitive. Coordinate with urology and hematology. Monitor pain, perfusion, and reduction in WBC.",
+    goal:"Detumescence and WBC reduction. Symptom-driven endpoint."
+  },
+  "other":{
+    label:"Other / not listed",
+    category:"Verify with current ASFA guideline",
+    emergency:false,
+    rationale:"Indication not mapped here. Verify role of leukapheresis with current ASFA guideline, hematology, and local protocol.",
+    nurse:"Document indication, target endpoint, and concurrent therapy clearly.",
+    goal:"Per physician order and institutional protocol."
+  }
+};
+
+/* ─── state + refs ─── */
+const state = {heightMode:'cm', weightMode:'kg', weightBasis:'actual', bv:2.0, acd:12};
+const $ = (id) => document.getElementById(id);
+const el = {
+  sex:$('sex'), wbc:$('wbc'), hct:$('hct'), goalWbc:$('goalWbc'),
+  heightCm:$('heightCm'), heightFt:$('heightFt'), heightIn:$('heightIn'),
+  weightKg:$('weightKg'), weightLb:$('weightLb'),
+  diagnosis:$('diagnosis'), diagnosisInfoCard:$('diagnosisInfoCard'),
+  results:$('results'),
+  calculateBtn:$('calculateBtn'), resetBtn:$('resetBtn'),
+  heightMetricBtn:$('heightMetricBtn'), heightEnglishBtn:$('heightEnglishBtn'),
+  weightMetricBtn:$('weightMetricBtn'), weightEnglishBtn:$('weightEnglishBtn'),
+  heightCmWrap:$('heightCmWrap'), heightEnglishWrap:$('heightEnglishWrap'),
+  weightKgWrap:$('weightKgWrap'), weightLbWrap:$('weightLbWrap'),
+  ibwUseWrap:$('ibwUseWrap'), actualBasisBtn:$('actualBasisBtn'), ibwBasisBtn:$('ibwBasisBtn'),
+  bvToggle:$('bvToggle'), acdToggle:$('acdToggle')
+};
+
+/* ─── helpers ─── */
+function setActive(buttons, activeButton){ buttons.forEach(b=>b.classList.remove('active')); activeButton.classList.add('active'); }
+function fmt(num, digits=1){ return Number(num).toLocaleString(undefined,{minimumFractionDigits:digits, maximumFractionDigits:digits}); }
+function fmt0(num){ return Math.round(num).toLocaleString(); }
+function heightToCm(){ if(state.heightMode==='cm') return parseFloat(el.heightCm.value); const ft=parseFloat(el.heightFt.value||0); const inches=parseFloat(el.heightIn.value||0); return ((ft*12)+inches)*2.54; }
+function heightToInches(){ return heightToCm()/2.54; }
+function weightToKg(){ if(state.weightMode==='kg') return parseFloat(el.weightKg.value); return parseFloat(el.weightLb.value)*0.45359237; }
+function devineIBWKg(sex, heightInches){ return sex==='male' ? 50 + 2.3*(heightInches-60) : 45.5 + 2.3*(heightInches-60); }
+function nadlerTBVml(sex, heightCm, weightKg){ const h=heightCm/100; return sex==='male' ? 604 + (367*Math.pow(h,3)) + (32.2*weightKg) : 183 + (356*Math.pow(h,3)) + (33.1*weightKg); }
+function validatePositive(v, n){ if(!Number.isFinite(v) || v<=0) throw new Error(`Please enter a valid ${n}.`); }
+function selectedSymptoms(){
+  return Array.from(document.querySelectorAll('.symptom:checked')).map(c=>c.dataset.symptom);
+}
+
+/* ─── diagnosis preview ─── */
+function renderDiagnosisInfo(){
+  const key = el.diagnosis.value;
+  if(!key){ el.diagnosisInfoCard.classList.add('hidden'); el.diagnosisInfoCard.innerHTML=''; return; }
+  const d = diagnosisLibrary[key];
+  el.diagnosisInfoCard.classList.remove('hidden');
+  el.diagnosisInfoCard.innerHTML = `
+    <div class="calc-line"><strong>${d.category}</strong>${d.emergency ? ' · <span style="color:#ffb4b4">EMERGENCY</span>' : ''}</div>
+    <div class="calc-line"><strong>Rationale:</strong> ${d.rationale}</div>
+    <div class="calc-line"><strong>Nurse focus:</strong> ${d.nurse}</div>
+    <div class="calc-line"><strong>Goal:</strong> ${d.goal}</div>
+  `;
+}
+
+/* ─── calcium chloride (on demand) ─── */
+function showCalciumChloride(show, processedMl=0){
+  const box = document.getElementById('cacl2Box');
+  if(!box) return;
+  if(!show){ box.classList.add('hidden'); box.innerHTML=''; return; }
+  // CaCl2 ≈ 1/3 of gluconate dose by mass for equivalent elemental Ca
+  const gluconateLow = (processedMl/4000) * 1500;
+  const gluconateHigh = (processedMl/4000) * 2000;
+  const caclLow = gluconateLow/3;
+  const caclHigh = gluconateHigh/3;
+  box.classList.remove('hidden');
+  box.innerHTML = `
+    <div class="math-box">
+      <div class="calc-line"><strong>Calcium chloride (equivalent elemental Ca)</strong></div>
+      <div class="calc-line">Approx 1/3 of gluconate dose by mass · 100 mg/mL (10% CaCl₂)</div>
+      <div class="calc-line">Range: <strong>${fmt0(caclLow)} – ${fmt0(caclHigh)} mg</strong></div>
+      <div class="calc-line">Volume: <strong>${fmt(caclLow/100,1)} – ${fmt(caclHigh/100,1)} mL</strong></div>
+      <div class="calc-line" style="color:#ffe8b6">Per local policy — CaCl₂ is generally given via central line.</div>
+    </div>`;
+}
+
+/* ─── result render ─── */
+function createResultHTML(d){
+  // Calcium gluconate: 1.5–2 g per 4000 mL processed
+  const caGlucLow = (d.processedMl/4000) * 1500;
+  const caGlucHigh = (d.processedMl/4000) * 2000;
+  const caGlucMid = (d.processedMl/4000) * 1750;
+  const caGlucMlLow = caGlucLow / 100;
+  const caGlucMlHigh = caGlucHigh / 100;
+
+  // ACD volume = inlet volume / AC ratio
+  const acdMl = d.processedMl / d.acd;
+
+  // Predicted WBC reduction (empirical: ~30% per procedure at 2 TBV; range 25-40%)
+  const reductionLow = 0.25 * (d.bv/2);
+  const reductionMid = 0.35 * (d.bv/2);
+  const reductionHigh = 0.45 * (d.bv/2);
+  const postWbcLow = d.preWbc * (1 - Math.min(reductionHigh, 0.7));
+  const postWbcMid = d.preWbc * (1 - Math.min(reductionMid, 0.6));
+  const postWbcHigh = d.preWbc * (1 - Math.min(reductionLow, 0.5));
+
+  const meetsGoalMid = postWbcMid <= d.goalWbc;
+  const symptomsArr = d.symptoms;
+  const symptomLabels = {pulm:'Dyspnea/hypoxia', neuro:'Confusion/vision change', priapism:'Priapism', aki:'AKI', bleed:'Bleeding', seizure:'Seizure/stroke'};
+  const hasSymptoms = symptomsArr.length > 0;
+  const isEmergency = (d.diagnosis && d.diagnosis.emergency) || hasSymptoms;
+  const removalPercent = (d.processedMl * 0.05 / d.tbvMl) * 100; // approx product volume ~5% of inlet
+  const productVolMl = Math.min(d.processedMl * 0.05, 1500); // typical ~50-100 mL/L processed; cap 1.5 L
+  const removalOver15 = (productVolMl / d.tbvMl) * 100 > 15;
+
+  return `
+    ${isEmergency ? `
+    <div class="alert-banner">
+      <div class="alert-icon">⚠</div>
+      <div>
+        <strong>EMERGENCY indication flagged.</strong> ${hasSymptoms ? 'Active leukostasis symptoms reported: ' + symptomsArr.map(s=>symptomLabels[s]).join(', ') + '. ' : ''}Coordinate immediate cytoreductive chemotherapy with hematology. Do NOT delay induction for the procedure.
+      </div>
+    </div>` : ''}
+
+    ${d.diagnosis ? `
+    <div class="result-card">
+      <div class="result-kicker">Diagnosis Context</div>
+      <div class="result-value" style="font-size:17px">${d.diagnosis.label}</div>
+      <div class="result-meta">${d.diagnosis.category}</div>
+    </div>` : ''}
+
+    <div class="mini-grid">
+      <div class="result-card">
+        <div class="result-kicker">BMI</div>
+        <div class="result-value">${fmt(d.bmi,1)}</div>
+        <div class="result-meta">Basis: <strong>${d.weightBasisLabel}</strong></div>
+      </div>
+      <div class="result-card">
+        <div class="result-kicker">Total Blood Volume</div>
+        <div class="result-value">${fmt0(d.tbvMl)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">mL</span></div>
+        <div class="result-meta">Nadler equation</div>
+      </div>
+    </div>
+
+    ${d.bmi > 30 ? `<div class="note warning">BMI &gt; 30. Calculation currently using <strong>${d.weightBasisLabel}</strong>.</div>` : ''}
+
+    <div class="result-card" style="border-color:rgba(126,240,210,.32);background:linear-gradient(180deg, rgba(126,240,210,.06), rgba(97,168,255,.04));">
+      <div class="result-kicker">Total Inlet Volume to Process @ ${fmt(d.bv,1)} TBV</div>
+      <div class="result-value">${fmt0(d.processedMl)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">mL</span></div>
+      <div class="result-meta">Optia CMNC standard: 2.0 TBV processed per procedure.</div>
+    </div>
+
+    <div class="mini-grid">
+      <div class="result-card">
+        <div class="result-kicker">ACD-A Volume Needed</div>
+        <div class="result-value">${fmt0(acdMl)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">mL</span></div>
+        <div class="result-meta">Inlet ÷ AC ratio (${d.acd}:1)</div>
+      </div>
+      <div class="result-card">
+        <div class="result-kicker">Est. Run Time</div>
+        <div class="result-value">${fmt(d.processedMl/60/60*1000,1)}<span style="font-size:.48em;font-weight:800;color:var(--muted)"> hr</span></div>
+        <div class="result-meta">@ inlet 60 mL/min (typical 50–80)</div>
+      </div>
+    </div>
+
+    <div class="result-card" style="border-color:${meetsGoalMid?'rgba(126,240,210,.32)':'rgba(255,205,112,.32)'};background:linear-gradient(180deg, ${meetsGoalMid?'rgba(126,240,210,.06)':'rgba(255,205,112,.06)'}, rgba(255,255,255,.015));">
+      <div class="result-kicker">Predicted Post-Procedure WBC</div>
+      <div class="result-value">${fmt(postWbcMid,1)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">×10³/µL</span></div>
+      <div class="result-meta">Range: ${fmt(postWbcLow,1)} – ${fmt(postWbcHigh,1)} ×10³/µL · Goal ${fmt(d.goalWbc,1)} · ${meetsGoalMid ? '✓ Likely meets goal in single procedure' : '⚠ May require additional procedure(s) or cytoreductive chemo'}</div>
+    </div>
+
+    <div class="math-box">
+      <div class="calc-line"><strong>WBC reduction estimate</strong></div>
+      <div class="calc-line">Empirical: ~25–45% reduction per procedure (literature 14–36%; varies with cell type and baseline).</div>
+      <div class="calc-line">Pre-WBC ${fmt(d.preWbc,1)} → Post (mid) ${fmt(postWbcMid,1)} ×10³/µL</div>
+      <div class="calc-line">Reduction: <strong>${fmt(reductionMid*100,0)}%</strong> (range ${fmt(reductionLow*100,0)}–${fmt(reductionHigh*100,0)}%)</div>
+    </div>
+
+    <div class="result-card" style="border-color:rgba(207,169,95,.32);">
+      <div class="result-kicker">Calcium Gluconate · 1.5–2 g per 4000 mL processed</div>
+      <div class="result-value" style="font-size:22px">${fmt0(caGlucLow)} – ${fmt0(caGlucHigh)} <span style="font-size:.55em;font-weight:800;color:var(--muted)">mg</span></div>
+      <div class="result-meta">Midpoint: ${fmt0(caGlucMid)} mg · Volume: ${fmt(caGlucMlLow,1)} – ${fmt(caGlucMlHigh,1)} mL (1000 mg / 10 mL)</div>
+      <div style="height:8px"></div>
+      <div class="math-box">
+        <div class="calc-line">Low: (${fmt0(d.processedMl)} ÷ 4000) × 1500 = <strong>${fmt0(caGlucLow)} mg</strong> (${fmt(caGlucMlLow,1)} mL)</div>
+        <div class="calc-line">High: (${fmt0(d.processedMl)} ÷ 4000) × 2000 = <strong>${fmt0(caGlucHigh)} mg</strong> (${fmt(caGlucMlHigh,1)} mL)</div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-kicker">Calcium Chloride Option</div>
+      <div class="result-meta" style="margin-bottom:10px">Calculate calcium chloride equivalent instead?</div>
+      <div class="calc-row" style="margin-top:0">
+        <button class="btn btn-secondary" type="button" onclick="showCalciumChloride(false)">No</button>
+        <button class="btn btn-primary" type="button" onclick="showCalciumChloride(true, ${d.processedMl})">Yes, calculate CaCl₂</button>
+      </div>
+      <div id="cacl2Box" class="hidden" style="margin-top:12px"></div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-kicker">Replacement Fluid Guidance</div>
+      <div class="result-meta">
+        ${removalOver15
+          ? `<strong style="color:#ffcd70">⚠ Estimated product volume may exceed 15% of TBV.</strong> Consider 5% albumin colloid replacement (esp. pediatric, low-weight, or hemodynamic concern).<br><br>`
+          : `Estimated product volume is &lt;15% of TBV. Routine saline + AC priming is usually sufficient — net fluid balance is often even or positive at procedure end.<br><br>`
+        }
+        ${d.hct && d.hct < 25
+          ? `<strong style="color:#ffcd70">⚠ Hct ${fmt(d.hct,1)}% — anemic.</strong> Consider RBC priming the circuit rather than transfusing PRBCs pre-procedure (undiluted RBCs increase blood viscosity and worsen leukostasis).`
+          : `Hct adequate. Avoid pre-procedure PRBC transfusion in symptomatic hyperleukocytosis — increased viscosity worsens leukostasis. If transfusion is required, infuse slowly during/after the procedure.`
+        }
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-kicker">Concurrent Cytoreductive Therapy</div>
+      <div class="result-meta">
+        Leukapheresis alone does not improve mortality — <strong>cytoreductive chemotherapy is the cornerstone</strong>:
+        <br>· <strong>Hydroxyurea</strong> 50–100 mg/kg/day PO/IV is commonly initiated immediately at diagnosis.
+        <br>· <strong>Induction chemotherapy</strong> (cytarabine + anthracycline for AML) should NOT be delayed by the procedure.
+        <br>· <strong>Tumor lysis prophylaxis:</strong> aggressive IV fluids, allopurinol or rasburicase, K/phos/uric acid/Cr monitoring.
+        <br>· <strong>APL exception:</strong> ATRA + ATO is the priority — leukapheresis is generally avoided due to DIC risk.
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-kicker">Treatment Goals (Gold Standard, US)</div>
+      <div class="result-meta">
+        · Reduce WBC to <strong>&lt;100 ×10³/µL</strong> or until leukostasis symptoms resolve.
+        <br>· <strong>Daily leukapheresis</strong> while symptoms persist.
+        <br>· Monitor: serial CBC, electrolytes (K, phos, Ca, Mg), uric acid, Cr, fibrinogen, coags.
+        <br>· Watch for citrate toxicity, hypocalcemia symptoms (perioral / fingertip paresthesia).
+        <br>· Do not start the procedure on platelets &lt;20 ×10³/µL without transfusion support.
+      </div>
+    </div>
+  `;
+}
+
+/* ─── calculate ─── */
+function calculate(){
+  try{
+    const sex = el.sex.value;
+    const preWbc = parseFloat(el.wbc.value);
+    const heightCm = heightToCm();
+    const weightKgActual = weightToKg();
+    const heightInches = heightToInches();
+    const hct = parseFloat(el.hct.value);
+    const goalWbc = parseFloat(el.goalWbc.value) || 100;
+
+    if(!sex) throw new Error('Please select sex.');
+    validatePositive(preWbc, 'pre-procedure WBC');
+    validatePositive(heightCm, 'height');
+    validatePositive(weightKgActual, 'weight');
+
+    const bmi = weightKgActual / Math.pow(heightCm/100, 2);
+    const ibwKg = devineIBWKg(sex, heightInches);
+    const ibwLb = ibwKg / 0.45359237;
+
+    if(bmi > 30){
+      el.ibwUseWrap.classList.remove('hidden');
+    } else {
+      el.ibwUseWrap.classList.add('hidden');
+      state.weightBasis = 'actual';
+      setActive([el.actualBasisBtn, el.ibwBasisBtn], el.actualBasisBtn);
+    }
+
+    const calcWeightKg = (bmi > 30 && state.weightBasis === 'ibw') ? ibwKg : weightKgActual;
+    const tbvMl = nadlerTBVml(sex, heightCm, calcWeightKg);
+    const processedMl = tbvMl * state.bv;
+
+    const diagnosisKey = el.diagnosis.value;
+    const data = {
+      bmi, ibwKg, ibwLb, tbvMl, processedMl, preWbc, goalWbc, hct: Number.isFinite(hct) ? hct : null,
+      bv: state.bv, acd: state.acd,
+      weightBasisLabel: (bmi > 30 && state.weightBasis === 'ibw') ? 'Ideal Body Weight' : 'Entered Weight',
+      diagnosis: diagnosisKey ? diagnosisLibrary[diagnosisKey] : null,
+      symptoms: selectedSymptoms()
+    };
+
+    el.results.innerHTML = createResultHTML(data);
+  } catch(err){
+    el.results.innerHTML = `
+      <div class="result-card">
+        <div class="result-kicker">Input Error</div>
+        <div class="result-value" style="font-size:18px;color:#ffb4b4">Unable to calculate</div>
+        <div class="result-meta">${err.message}</div>
+      </div>`;
+  }
+}
+
+/* ─── reset ─── */
+function resetForm(){
+  el.sex.value=''; el.wbc.value=''; el.hct.value=''; el.goalWbc.value='100';
+  el.heightCm.value=''; el.heightFt.value=''; el.heightIn.value='';
+  el.weightKg.value=''; el.weightLb.value='';
+  el.diagnosis.value='';
+  el.diagnosisInfoCard.classList.add('hidden'); el.diagnosisInfoCard.innerHTML='';
+  document.querySelectorAll('.symptom').forEach(c=>c.checked=false);
+  el.ibwUseWrap.classList.add('hidden');
+  state.heightMode='cm'; state.weightMode='kg'; state.weightBasis='actual'; state.bv=2.0; state.acd=12;
+  setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightMetricBtn);
+  setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightMetricBtn);
+  setActive([el.actualBasisBtn, el.ibwBasisBtn], el.actualBasisBtn);
+  el.bvToggle.querySelectorAll('[data-bv]').forEach(b=>b.classList.toggle('active', parseFloat(b.dataset.bv)===2));
+  el.acdToggle.querySelectorAll('[data-acd]').forEach(b=>b.classList.toggle('active', parseFloat(b.dataset.acd)===12));
+  el.heightCmWrap.classList.remove('hidden'); el.heightEnglishWrap.classList.add('hidden');
+  el.weightKgWrap.classList.remove('hidden'); el.weightLbWrap.classList.add('hidden');
+  el.results.innerHTML = `<div class="result-card"><div class="result-kicker">Awaiting inputs</div><div class="result-value">—</div><div class="result-meta">Fill the form and press Calculate.</div></div>`;
+}
+
+/* ─── wiring ─── */
+el.heightMetricBtn.addEventListener('click', ()=>{ state.heightMode='cm'; setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightMetricBtn); el.heightCmWrap.classList.remove('hidden'); el.heightEnglishWrap.classList.add('hidden'); });
+el.heightEnglishBtn.addEventListener('click', ()=>{ state.heightMode='ftin'; setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightEnglishBtn); el.heightCmWrap.classList.add('hidden'); el.heightEnglishWrap.classList.remove('hidden'); });
+el.weightMetricBtn.addEventListener('click', ()=>{ state.weightMode='kg'; setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightMetricBtn); el.weightKgWrap.classList.remove('hidden'); el.weightLbWrap.classList.add('hidden'); });
+el.weightEnglishBtn.addEventListener('click', ()=>{ state.weightMode='lb'; setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightEnglishBtn); el.weightKgWrap.classList.add('hidden'); el.weightLbWrap.classList.remove('hidden'); });
+el.actualBasisBtn.addEventListener('click', ()=>{ state.weightBasis='actual'; setActive([el.actualBasisBtn, el.ibwBasisBtn], el.actualBasisBtn); });
+el.ibwBasisBtn.addEventListener('click', ()=>{ state.weightBasis='ibw'; setActive([el.actualBasisBtn, el.ibwBasisBtn], el.ibwBasisBtn); });
+
+el.bvToggle.querySelectorAll('[data-bv]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    el.bvToggle.querySelectorAll('[data-bv]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    state.bv = parseFloat(btn.dataset.bv);
+  });
+});
+
+el.acdToggle.querySelectorAll('[data-acd]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    el.acdToggle.querySelectorAll('[data-acd]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    state.acd = parseFloat(btn.dataset.acd);
+  });
+});
+
+el.diagnosis.addEventListener('change', renderDiagnosisInfo);
+el.calculateBtn.addEventListener('click', calculate);
+el.resetBtn.addEventListener('click', resetForm);
+
+/* Enter key calculates */
+document.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); calculate(); } });
+</script>
+</body>
+</html>

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DART Tools — Extracorporeal Photopheresis (Therakos CELLEX)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070b11; --card:#111a27; --card2:#0f1722;
+  --border:rgba(149,173,205,.14); --border-strong:rgba(122,162,255,.28);
+  --text:#e9f0fa; --muted:#96a7bf;
+  --primary:#61a8ff; --primary2:#3b82f6; --accent:#7ef0d2;
+  --gold:#cfa95f; --warn:#ffcd70; --danger:#ff6f6f;
+  --shadow:0 20px 60px rgba(0,0,0,.35);
+  --nav-bg:rgba(7,11,17,.82); --grid:rgba(255,255,255,.03);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:radial-gradient(circle at top, rgba(97,168,255,.10), transparent 30%),radial-gradient(circle at 80% 20%, rgba(126,240,210,.08), transparent 24%),linear-gradient(180deg, var(--bg), #05080d 100%);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(var(--grid) 1px, transparent 1px),linear-gradient(90deg, var(--grid) 1px, transparent 1px);background-size:40px 40px;opacity:.45;mask-image:linear-gradient(to bottom, rgba(0,0,0,.35), transparent 80%)}
+a{text-decoration:none;color:inherit}
+.container{width:min(1280px, calc(100% - 28px));margin:0 auto}
+
+nav{position:sticky;top:0;z-index:200;backdrop-filter:blur(18px);background:var(--nav-bg);border-bottom:1px solid var(--border)}
+.nav-inner{min-height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:8px 0}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-size:16px;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--primary),var(--accent));box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 24px rgba(59,130,246,.24)}
+.brand-title{font-size:15px;font-weight:900;letter-spacing:-.02em;line-height:1.15}
+.brand-sub{font-size:9.5px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700}
+.nav-right{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.02);color:var(--muted);font-size:12px;font-weight:700;transition:all .2s ease}
+.chip-home{background:linear-gradient(135deg,rgba(97,168,255,.14),rgba(126,240,210,.10));border-color:rgba(97,168,255,.3);color:#d8ecff}
+.chip-home:hover{border-color:rgba(97,168,255,.55);color:#fff;transform:translateY(-1px)}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px rgba(126,240,210,.6);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.5}}
+
+.head-bar{padding:22px 0 14px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--border);margin-bottom:18px}
+.head-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--accent);font-weight:800;margin-bottom:6px}
+.head-title{font-size:clamp(22px,3.4vw,32px);line-height:1.05;letter-spacing:-.03em;font-weight:900}
+.head-title .accent{background:linear-gradient(135deg,#eaf3ff 0%,#99c9ff 45%,#7ef0d2 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.head-meta{font-size:13px;color:var(--muted);max-width:520px;line-height:1.65;text-align:right}
+
+.grid-wrap{display:grid;grid-template-columns:1.02fr .98fr;gap:18px;padding-bottom:44px}
+.panel{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:var(--shadow)}
+.panel-title{font-size:16px;font-weight:900;margin-bottom:4px}
+.panel-sub{font-size:12.5px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field.full{grid-column:1 / -1}
+.label{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.11em;color:var(--muted)}
+
+input,select,button{font:inherit}
+input,select{width:100%;min-height:42px;border-radius:11px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);padding:0 12px;outline:none;transition:border-color .2s ease, box-shadow .2s ease}
+input:focus,select:focus{border-color:rgba(97,168,255,.45);box-shadow:0 0 0 3px rgba(97,168,255,.12)}
+input::placeholder{color:#70829a}
+select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg, transparent 50%, var(--muted) 50%),linear-gradient(135deg, var(--muted) 50%, transparent 50%);background-position:calc(100% - 16px) 50%, calc(100% - 11px) 50%;background-size:5px 5px, 5px 5px;background-repeat:no-repeat;padding-right:30px}
+
+.inline-toggle{display:flex;gap:6px;flex-wrap:wrap}
+.toggle-btn{flex:1;min-width:60px;min-height:40px;padding:0 10px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);font-weight:700;font-size:13px;cursor:pointer;transition:all .2s ease}
+.toggle-btn:hover{border-color:rgba(97,168,255,.34)}
+.toggle-btn.active{background:linear-gradient(135deg,rgba(97,168,255,.22),rgba(126,240,210,.14));border-color:rgba(97,168,255,.45);color:#eaf3ff;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.sub-grid,.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.note{border:1px solid rgba(126,240,210,.18);background:rgba(126,240,210,.06);color:#d5fff2;border-radius:12px;padding:10px 12px;font-size:12.5px;line-height:1.65}
+.note.warning{border-color:rgba(255,205,112,.20);background:rgba(255,205,112,.08);color:#ffe8b6}
+.note.info{border-color:rgba(97,168,255,.2);background:rgba(97,168,255,.05);color:#cfe2ff}
+.note.danger{border-color:rgba(255,111,111,.30);background:rgba(255,111,111,.08);color:#ffd2d2}
+
+.calc-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 20px;border-radius:12px;border:1px solid transparent;font-weight:800;font-size:14px;cursor:pointer;transition:all .22s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary2));box-shadow:0 10px 26px rgba(59,130,246,.26)}
+.btn-primary:hover{box-shadow:0 14px 32px rgba(59,130,246,.38)}
+.btn-secondary{color:var(--text);background:rgba(255,255,255,.03);border-color:var(--border)}
+.btn-secondary:hover{border-color:rgba(97,168,255,.34)}
+
+.result-stack{display:grid;gap:12px}
+.result-card{border:1px solid var(--border);border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));padding:14px 16px}
+.result-kicker{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);font-weight:800;margin-bottom:6px}
+.result-value{font-size:clamp(20px,3vw,30px);letter-spacing:-.04em;line-height:1;font-weight:900;color:#f4f8ff;margin-bottom:6px}
+.result-meta{color:var(--muted);font-size:12px;line-height:1.6}
+.math-box{border:1px solid rgba(97,168,255,.18);background:rgba(97,168,255,.05);color:#d8e9ff;border-radius:14px;padding:12px 14px;font-size:12.5px;line-height:1.7}
+.math-box strong{color:#fff}
+.calc-line{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.calc-line:last-child{border-bottom:none}
+.hidden{display:none!important}
+
+.banner{border-radius:14px;padding:12px 14px;font-size:13px;font-weight:700;line-height:1.5;display:flex;gap:10px;align-items:flex-start}
+.banner.warning{border:1px solid rgba(255,205,112,.32);background:rgba(255,205,112,.08);color:#ffe8b6}
+.banner.danger{border:1px solid rgba(255,111,111,.32);background:rgba(255,111,111,.10);color:#ffd2d2}
+.banner.proceed{border:1px solid rgba(126,240,210,.32);background:rgba(126,240,210,.08);color:#cdfaea}
+.banner-icon{font-size:18px;line-height:1}
+
+details{margin-top:2px}
+details summary{cursor:pointer;list-style:none;padding:10px 12px;border-radius:11px;border:1px dashed var(--border);background:rgba(255,255,255,.02);font-size:12px;font-weight:700;color:var(--muted);display:flex;align-items:center;justify-content:space-between;transition:all .2s ease}
+details summary:hover{color:var(--text);border-color:rgba(97,168,255,.3)}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";font-size:16px;color:var(--accent);font-weight:900}
+details[open] summary::after{content:"−"}
+details[open] summary{margin-bottom:10px;border-style:solid}
+
+.foot{padding:18px 0 32px;border-top:1px solid var(--border);color:var(--muted);font-size:11.5px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:8px}
+
+@media (max-width:980px){.grid-wrap{grid-template-columns:1fr}.head-meta{text-align:left}}
+@media (max-width:540px){.form-grid,.sub-grid,.mini-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">D</div>
+      <div>
+        <div class="brand-title">DART Tools</div>
+        <div class="brand-sub">Clinical calculator suite</div>
+      </div>
+    </a>
+    <div class="nav-right">
+      <span class="chip"><span class="dot"></span>ECP · Therakos CELLEX</span>
+      <a class="chip chip-home" href="index.html">← Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="head-bar">
+    <div>
+      <div class="head-kicker">Extracorporeal Photopheresis · Therakos CELLEX</div>
+      <div class="head-title"><span class="accent">ECP Calculator</span></div>
+    </div>
+    <div class="head-meta">ECV vs TBV check, methoxsalen dose (ECV × 0.017), heparin, total blood max 1500 mL, indication-specific schedules.</div>
+  </div>
+
+  <div class="grid-wrap">
+
+    <section class="panel">
+      <div class="form-grid">
+
+        <div class="field">
+          <label class="label" for="sex">Sex</label>
+          <select id="sex" autofocus>
+            <option value="">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label" for="hct">Hematocrit (%)</label>
+          <input id="hct" type="number" step="0.1" min="0" placeholder="e.g. 35" />
+        </div>
+
+        <div class="field">
+          <label class="label">Height Unit</label>
+          <div class="inline-toggle">
+            <button class="toggle-btn active" type="button" id="heightMetricBtn">cm</button>
+            <button class="toggle-btn" type="button" id="heightEnglishBtn">ft + in</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Weight Unit</label>
+          <div class="inline-toggle">
+            <button class="toggle-btn active" type="button" id="weightMetricBtn">kg</button>
+            <button class="toggle-btn" type="button" id="weightEnglishBtn">lb</button>
+          </div>
+        </div>
+
+        <div class="field" id="heightCmWrap">
+          <label class="label" for="heightCm">Height (cm)</label>
+          <input id="heightCm" type="number" step="0.1" min="0" placeholder="e.g. 170" />
+        </div>
+        <div class="field hidden" id="heightEnglishWrap">
+          <label class="label">Height (ft + in)</label>
+          <div class="sub-grid">
+            <input id="heightFt" type="number" step="1" min="0" placeholder="ft" />
+            <input id="heightIn" type="number" step="0.1" min="0" placeholder="in" />
+          </div>
+        </div>
+
+        <div class="field" id="weightKgWrap">
+          <label class="label" for="weightKg">Weight (kg)</label>
+          <input id="weightKg" type="number" step="0.1" min="0" placeholder="e.g. 70" />
+        </div>
+        <div class="field hidden" id="weightLbWrap">
+          <label class="label" for="weightLb">Weight (lb)</label>
+          <input id="weightLb" type="number" step="0.1" min="0" placeholder="e.g. 154" />
+        </div>
+
+        <div class="field">
+          <label class="label">Needle Mode</label>
+          <div class="inline-toggle" id="needleToggle">
+            <button class="toggle-btn active" type="button" data-needle="single">Single Needle</button>
+            <button class="toggle-btn" type="button" data-needle="double">Double Needle</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="cassetteMl">Cassette / ECV (mL) — CELLEX ≈ 240</label>
+          <input id="cassetteMl" type="number" step="10" min="0" value="240" />
+        </div>
+
+        <div class="field full">
+          <label class="label">Total Blood to Process (mL)</label>
+          <div class="inline-toggle" id="processToggle">
+            <button class="toggle-btn" type="button" data-proc="1000">1000 mL</button>
+            <button class="toggle-btn" type="button" data-proc="1250">1250 mL</button>
+            <button class="toggle-btn active" type="button" data-proc="1500">1500 mL (max)</button>
+            <button class="toggle-btn" type="button" data-proc="custom">Custom</button>
+          </div>
+        </div>
+
+        <div class="field full hidden" id="customProcWrap">
+          <label class="label" for="customProc">Custom blood-processed volume (mL) — CELLEX max 1500</label>
+          <input id="customProc" type="number" step="50" min="0" placeholder="e.g. 1200" />
+        </div>
+
+        <div class="field full">
+          <details>
+            <summary>Optional — Indication / treatment schedule</summary>
+            <select id="diagnosis">
+              <option value="">Select indication (optional)</option>
+              <option value="ctcl">CTCL — FDA-approved (palliative skin)</option>
+              <option value="agvhd-skin">Acute GVHD — skin (steroid-refractory)</option>
+              <option value="agvhd-gi">Acute GVHD — GI / liver (steroid-refractory)</option>
+              <option value="cgvhd-skin">Chronic GVHD — skin / sclerotic</option>
+              <option value="cgvhd-multi">Chronic GVHD — multi-organ</option>
+              <option value="lung-tx-blas">Lung transplant — CLAD / BOS</option>
+              <option value="cardiac-tx-rej">Cardiac transplant — recurrent rejection</option>
+              <option value="crohn-other">Other / off-label</option>
+            </select>
+            <div id="diagnosisInfoCard" class="math-box hidden" style="margin-top:10px"></div>
+          </details>
+        </div>
+
+        <div class="field full">
+          <div class="note info">Not an order. Verify total blood processed, methoxsalen dose, and schedule with physician.</div>
+        </div>
+
+      </div>
+
+      <div class="calc-row">
+        <button class="btn btn-primary" id="calculateBtn" type="button">Calculate</button>
+        <button class="btn btn-secondary" id="resetBtn" type="button">Reset</button>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panel-title">Results</div>
+      <div class="panel-sub">ECV/TBV ratio, Uvadex (methoxsalen 200 mcg/mL) volume = ECV × 0.017, heparin guidance, schedule.</div>
+      <div class="result-stack" id="results">
+        <div class="result-card">
+          <div class="result-kicker">Awaiting inputs</div>
+          <div class="result-value">—</div>
+          <div class="result-meta">Fill the form and press Calculate.</div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Tip Sheet Section -->
+  <section class="panel" style="margin-bottom:18px">
+    <div class="panel-title" style="margin-bottom:6px">Therakos CELLEX — Treatment Tips</div>
+    <div class="panel-sub">Reference: Therakos hotline <strong>(877) 566-9466</strong>. Always follow the laminated machine guide.</div>
+
+    <div class="mini-grid">
+      <details open>
+        <summary>Standard Medications</summary>
+        <div class="math-box">
+          <div class="calc-line">NS 500 mL × 1</div>
+          <div class="calc-line">Heparin 10,000 units in 500 mL NS × 1 (20 units/mL)</div>
+          <div class="calc-line">Methoxsalen (Uvadex) 200 mcg in 10 mL — single-use vial</div>
+        </div>
+      </details>
+      <details open>
+        <summary>Pre-Procedure Considerations</summary>
+        <div class="math-box">
+          <div class="calc-line">CBC HCT checked within 48 h.</div>
+          <div class="calc-line">Patient must exercise <strong>UV precautions</strong> × 24 h: sunglasses, long sleeves, stay indoors.</div>
+          <div class="calc-line">ECV + threshold bag <strong>vs</strong> patient TBV — flag if &gt; 15%.</div>
+          <div class="calc-line">CELLEX cassette volume: <strong>240 mL</strong>.</div>
+          <div class="calc-line">Peripheral IV: hot packs / tourniquet to optimize flow.</div>
+          <div class="calc-line">Verify lamp life <strong>&gt; 10 hours</strong> remaining.</div>
+        </div>
+      </details>
+    </div>
+
+    <div style="height:10px"></div>
+
+    <details>
+      <summary>Machine Setup (follow laminated guide)</summary>
+      <div class="math-box">
+        <div class="calc-line">Install tubing <strong>from the bottom up</strong>.</div>
+        <div class="calc-line">UV glass → hang bags → clip on cassette: <strong>C-R-Y</strong> (clear, red, yellow) → bowl.</div>
+        <div class="calc-line">Install tubing around motors — make sure tubing does not get pinched.</div>
+        <div class="calc-line"><strong>LAST:</strong> install the pressure pods (important).</div>
+        <div class="calc-line">Spike Saline (<strong>WHITE spike</strong>) and Heparin bag (<strong>ORANGE spike</strong>).</div>
+        <div class="calc-line">Connect <strong>Blue → Red</strong> as prompted.</div>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details>
+      <summary>Priming &amp; Testing (auto ≈ 7 minutes)</summary>
+      <div class="math-box">
+        <div class="calc-line">1. "Prime Access" button.</div>
+        <div class="calc-line">2. Hit "Single" or "Double" needle to match access setup.</div>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details>
+      <summary>Machine Programming — verify "13 zeros"</summary>
+      <div class="math-box">
+        <div class="calc-line">Return Bag Threshold = <strong>100 mL</strong></div>
+        <div class="calc-line">Max speed collect = <strong>50 mL/min</strong></div>
+        <div class="calc-line">Max speed return = <strong>50 mL/min</strong></div>
+        <div class="calc-line">Collect Pressure Limit = <strong>200</strong></div>
+        <div class="calc-line">Return Pressure Limit = <strong>200</strong></div>
+        <div class="calc-line">Total blood processed = <strong>1500 mL max</strong></div>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details>
+      <summary>Starting Treatment &amp; Phases</summary>
+      <div class="math-box">
+        <div class="calc-line"><strong>Start slow:</strong> Collect 25, Return 10.</div>
+        <div class="calc-line"><strong>COLLECT — Phase 1:</strong> Purging Air.</div>
+        <div class="calc-line"><strong>COLLECT — Phase 2:</strong> Drawing / Recirculating.</div>
+        <div class="calc-line">When you hear "BEEP," NET balance ≤ −100, OR blood processed &gt; 300 mL → <strong>increase</strong>: Collect 30–40, Return 35–45.</div>
+        <div class="calc-line"><strong>Buffy coat phase</strong>: Open Graph → watch the S-wave (Hct rises) → look for "<strong>END BUFFY</strong>".</div>
+        <div class="calc-line"><strong>UVA – Pause – Elutriate – Empty Bowl – Rinse</strong> follow as prompted.</div>
+      </div>
+    </details>
+
+    <div style="height:10px"></div>
+
+    <details>
+      <summary>Methoxsalen (Uvadex) Mixing</summary>
+      <div class="math-box">
+        <div class="calc-line"><strong>Formula:</strong> Methoxsalen volume (mL) = treatment volume (mL) × 0.017</div>
+        <div class="calc-line">Inject Uvadex into the photoactivation bag per CELLEX prompt before UVA cycle.</div>
+        <div class="calc-line">Single-use 200 mcg / 10 mL vial. Discard remainder.</div>
+      </div>
+    </details>
+  </section>
+
+  <div class="foot">
+    <span>DART Tools · ECP (CELLEX)</span>
+    <span>Therakos CELLEX · TBV: Nadler · UVADEX 200 mcg/mL · Educational</span>
+  </div>
+
+</div>
+
+<script>
+const diagnosisLibrary = {
+  "ctcl": {
+    label:"Cutaneous T-Cell Lymphoma (CTCL)",
+    fda:"FDA-approved indication for CELLEX (palliative skin manifestations).",
+    schedule:"Typical induction: 2 consecutive days every 2–4 weeks for 6 months, then taper based on response.",
+    rationale:"ECP induces apoptosis of pathogenic T-cells; cross-presentation of apoptotic cells modulates anti-tumor immunity.",
+    nurse:"Trend skin score (mSWAT), photo documentation, monitor for transient erythroderma/fever 6–8 h post."
+  },
+  "agvhd-skin": {
+    label:"Acute GVHD — skin (steroid-refractory)",
+    fda:"Standard-of-care second-line option in steroid-refractory aGVHD.",
+    schedule:"2 consecutive days per week × 4–8 weeks; then taper based on response.",
+    rationale:"Tregs expanded by ECP suppress alloreactive T-cell response without broad immunosuppression.",
+    nurse:"Watch hemodynamics — citrate/heparin tolerance, fluid balance, line care, infection precautions."
+  },
+  "agvhd-gi": {
+    label:"Acute GVHD — GI / liver (steroid-refractory)",
+    fda:"Used in steroid-refractory disease; visceral aGVHD often less responsive than skin.",
+    schedule:"2 consecutive days per week, may extend duration; combine with other lines.",
+    rationale:"Same immunomodulation; visceral disease may need adjunct therapy (ruxolitinib).",
+    nurse:"Critical fluid/electrolyte monitoring, stool output, LFT trends, opportunistic-infection vigilance."
+  },
+  "cgvhd-skin": {
+    label:"Chronic GVHD — skin / sclerotic",
+    fda:"Established second-line/adjunct for steroid-dependent or refractory cGVHD.",
+    schedule:"2 consecutive days q2 weeks for 3 months → q2–4 weeks → monthly, often for ≥ 1 year.",
+    rationale:"Improves skin scores and allows steroid taper; well-tolerated long-term.",
+    nurse:"Skin score, ROM/photographs, immunosuppression taper coordination, infection screen."
+  },
+  "cgvhd-multi": {
+    label:"Chronic GVHD — multi-organ",
+    fda:"Adjunct second/third-line; combine with ruxolitinib or other systemic agents.",
+    schedule:"Initially 2/week × 2 mo → q2 wk × 2 mo → monthly × ≥ 1 year (NIH consensus pattern).",
+    rationale:"Broad immunomodulation; sparing effect on overall immunity.",
+    nurse:"Multi-system assessment each visit, organ-specific scores, immunosuppression compliance."
+  },
+  "lung-tx-blas": {
+    label:"Lung transplant — CLAD / BOS",
+    fda:"Off-label; established practice for chronic lung-allograft dysfunction.",
+    schedule:"2/week induction × 6–12 weeks → q2 weeks → monthly, individualized.",
+    rationale:"Slows FEV1 decline and stabilizes CLAD in many patients.",
+    nurse:"PFT trending, infection precautions, line care, immunosuppression dose check."
+  },
+  "cardiac-tx-rej": {
+    label:"Cardiac transplant — recurrent rejection",
+    fda:"Off-label for recurrent / steroid-resistant cellular rejection.",
+    schedule:"2 consecutive days every 1–2 weeks initially.",
+    rationale:"Reduces T-cell-mediated allograft rejection.",
+    nurse:"Endomyocardial biopsy schedule, hemodynamic monitoring, fluid balance."
+  },
+  "crohn-other": {
+    label:"Other / off-label",
+    fda:"Verify center protocol and payer coverage.",
+    schedule:"Confirm cadence with physician.",
+    rationale:"Indication not mapped here.",
+    nurse:"Document indication, target endpoints, schedule."
+  }
+};
+
+const state = {heightMode:'cm', weightMode:'kg', needle:'single', proc:1500, isCustomProc:false};
+const $ = (id) => document.getElementById(id);
+const el = {
+  sex:$('sex'), hct:$('hct'),
+  heightCm:$('heightCm'), heightFt:$('heightFt'), heightIn:$('heightIn'),
+  weightKg:$('weightKg'), weightLb:$('weightLb'),
+  cassetteMl:$('cassetteMl'),
+  customProc:$('customProc'), customProcWrap:$('customProcWrap'),
+  diagnosis:$('diagnosis'), diagnosisInfoCard:$('diagnosisInfoCard'),
+  results:$('results'),
+  calculateBtn:$('calculateBtn'), resetBtn:$('resetBtn'),
+  heightMetricBtn:$('heightMetricBtn'), heightEnglishBtn:$('heightEnglishBtn'),
+  weightMetricBtn:$('weightMetricBtn'), weightEnglishBtn:$('weightEnglishBtn'),
+  heightCmWrap:$('heightCmWrap'), heightEnglishWrap:$('heightEnglishWrap'),
+  weightKgWrap:$('weightKgWrap'), weightLbWrap:$('weightLbWrap'),
+  needleToggle:$('needleToggle'), processToggle:$('processToggle')
+};
+
+function setActive(buttons, activeButton){ buttons.forEach(b=>b.classList.remove('active')); activeButton.classList.add('active'); }
+function fmt(num, digits=1){ return Number(num).toLocaleString(undefined,{minimumFractionDigits:digits, maximumFractionDigits:digits}); }
+function fmtInt(num){ return Math.round(Number(num)).toLocaleString(); }
+function heightToCm(){ if(state.heightMode==='cm') return parseFloat(el.heightCm.value); const ft=parseFloat(el.heightFt.value||0); const inches=parseFloat(el.heightIn.value||0); return ((ft*12)+inches)*2.54; }
+function weightToKg(){ if(state.weightMode==='kg') return parseFloat(el.weightKg.value); return parseFloat(el.weightLb.value)*0.45359237; }
+function nadlerTBVml(sex, heightCm, weightKg){ const h=heightCm/100; return sex==='male' ? 604 + (367*Math.pow(h,3)) + (32.2*weightKg) : 183 + (356*Math.pow(h,3)) + (33.1*weightKg); }
+function validatePositive(v, n){ if(!Number.isFinite(v) || v<=0) throw new Error(`Please enter a valid ${n}.`); }
+
+function renderDiagnosisInfo(){
+  const key = el.diagnosis.value;
+  if(!key){ el.diagnosisInfoCard.classList.add('hidden'); el.diagnosisInfoCard.innerHTML=''; return; }
+  const d = diagnosisLibrary[key];
+  el.diagnosisInfoCard.classList.remove('hidden');
+  el.diagnosisInfoCard.innerHTML = `
+    <div class="calc-line"><strong>Indication:</strong> ${d.label}</div>
+    <div class="calc-line"><strong>FDA / status:</strong> ${d.fda}</div>
+    <div class="calc-line"><strong>Schedule:</strong> ${d.schedule}</div>
+    <div class="calc-line"><strong>Rationale:</strong> ${d.rationale}</div>
+    <div class="calc-line"><strong>Nurse focus:</strong> ${d.nurse}</div>
+  `;
+}
+
+function createResultHTML(d){
+  // ECV/TBV check
+  const ecvPct = (d.cassetteMl / d.tbvMl) * 100;
+  let ecvBanner = '';
+  if(ecvPct > 15){
+    ecvBanner = `<div class="banner danger"><span class="banner-icon">⚠</span><div><strong>ECV &gt; 15% of TBV (${fmt(ecvPct,1)}%).</strong> Standard adult CELLEX may exceed safe extracorporeal volume — consider RBC priming, smaller circuit, or pediatric mini-ECP protocol. Confirm with physician.</div></div>`;
+  } else if(ecvPct > 10){
+    ecvBanner = `<div class="banner warning"><span class="banner-icon">▲</span><div><strong>ECV ${fmt(ecvPct,1)}% of TBV.</strong> Within range but monitor closely; consider hot packs / pre-warm and slow start.</div></div>`;
+  } else {
+    ecvBanner = `<div class="banner proceed"><span class="banner-icon">●</span><div><strong>ECV ${fmt(ecvPct,1)}% of TBV.</strong> Within typical safety margin.</div></div>`;
+  }
+
+  // Methoxsalen volume = treatment volume × 0.017 (using cassette/ECV per user's standard formula)
+  const methoxMl = d.cassetteMl * 0.017;
+  const methoxMcg = methoxMl * 200; // 200 mcg/mL Uvadex
+
+  // Heparin: load + maintenance — typical 5,000–10,000 U total in 500 mL NS over the run
+  // Per the IFU and your tip sheet: heparin 10,000 U in 500 mL NS = 20 U/mL; commonly start with 5,000 U load + run
+
+  return `
+    ${ecvBanner}
+
+    ${d.diagnosis ? `
+    <div class="result-card">
+      <div class="result-kicker">Indication Context</div>
+      <div class="result-value" style="font-size:18px">${d.diagnosis.label}</div>
+      <div class="result-meta">${d.diagnosis.fda}</div>
+    </div>` : ''}
+
+    <div class="mini-grid">
+      <div class="result-card">
+        <div class="result-kicker">Total Blood Volume</div>
+        <div class="result-value">${fmtInt(d.tbvMl)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">mL</span></div>
+        <div class="result-meta">Nadler equation</div>
+      </div>
+      <div class="result-card">
+        <div class="result-kicker">Cassette / ECV</div>
+        <div class="result-value">${fmtInt(d.cassetteMl)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">mL</span></div>
+        <div class="result-meta">${fmt(ecvPct,1)}% of TBV</div>
+      </div>
+    </div>
+
+    <div class="result-card" style="border-color:rgba(126,240,210,.32);background:linear-gradient(180deg, rgba(126,240,210,.06), rgba(97,168,255,.04));">
+      <div class="result-kicker">Methoxsalen (Uvadex) Volume</div>
+      <div class="result-value">${fmt(methoxMl,2)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">mL</span></div>
+      <div class="result-meta">≈ ${fmtInt(methoxMcg)} mcg of Uvadex (200 mcg/mL) · inject into photoactivation bag per CELLEX prompt</div>
+    </div>
+
+    <div class="math-box">
+      <div class="calc-line"><strong>Methoxsalen formula:</strong> ECV × 0.017 = mL of Uvadex (200 mcg/mL)</div>
+      <div class="calc-line">${fmtInt(d.cassetteMl)} × 0.017 = <strong>${fmt(methoxMl,2)} mL</strong> ≈ <strong>${fmtInt(methoxMcg)} mcg</strong></div>
+    </div>
+
+    <div class="mini-grid">
+      <div class="result-card">
+        <div class="result-kicker">Total Blood Processed</div>
+        <div class="result-value" style="font-size:22px">${fmtInt(d.procMl)} mL</div>
+        <div class="result-meta">CELLEX max 1500 mL</div>
+      </div>
+      <div class="result-card">
+        <div class="result-kicker">Needle Mode</div>
+        <div class="result-value" style="font-size:22px">${d.needle === 'single' ? 'Single' : 'Double'}</div>
+        <div class="result-meta">${d.needle === 'single' ? 'Single-needle access' : 'Double-needle access (faster cycle)'}</div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-kicker">Heparin (per tip sheet)</div>
+      <div class="math-box">
+        <div class="calc-line"><strong>Mix:</strong> Heparin 10,000 U in 500 mL NS = <strong>20 U/mL</strong></div>
+        <div class="calc-line">Typical institutional protocols: bolus 5,000 U then run via heparin pump per CELLEX prompt; verify your center's heparin protocol.</div>
+        <div class="calc-line">Consider extra anticoagulation in GVHD patients (per Therakos labeling — DVT/PE reported with UVADEX in GVHD).</div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-kicker">Pre-Procedure Checklist</div>
+      <div class="math-box">
+        <div class="calc-line"><strong>Labs:</strong> CBC with HCT within 48 h.</div>
+        <div class="calc-line"><strong>Lamp life:</strong> verify &gt; 10 hours remaining.</div>
+        <div class="calc-line"><strong>Access:</strong> peripheral IV — hot packs / tourniquet to optimize. Central if peripheral inadequate.</div>
+        <div class="calc-line"><strong>Patient education:</strong> UV precautions × 24 h post-treatment (sunglasses, long sleeves, indoors).</div>
+        <div class="calc-line"><strong>Spike colors:</strong> NS = WHITE spike · Heparin = ORANGE spike.</div>
+        <div class="calc-line"><strong>Cassette install:</strong> C-R-Y order (clear, red, yellow), then bowl. Pressure pods LAST.</div>
+      </div>
+    </div>
+
+    ${d.diagnosis ? `
+    <div class="math-box">
+      <div class="calc-line"><strong>Why ECP for this indication:</strong> ${d.diagnosis.rationale}</div>
+      <div class="calc-line"><strong>Schedule:</strong> ${d.diagnosis.schedule}</div>
+      <div class="calc-line"><strong>Nurse focus:</strong> ${d.diagnosis.nurse}</div>
+    </div>` : ''}
+  `;
+}
+
+function calculate(){
+  try{
+    const sex = el.sex.value;
+    const hctRaw = parseFloat(el.hct.value);
+    const heightCm = heightToCm();
+    const weightKg = weightToKg();
+    const cassetteMl = parseFloat(el.cassetteMl.value);
+
+    if(!sex) throw new Error('Please select sex.');
+    validatePositive(hctRaw, 'hematocrit');
+    validatePositive(heightCm, 'height');
+    validatePositive(weightKg, 'weight');
+    validatePositive(cassetteMl, 'cassette / ECV');
+    if(hctRaw >= 100) throw new Error('Hematocrit must be less than 100.');
+
+    let procMl;
+    if(state.isCustomProc){
+      const ct = parseFloat(el.customProc.value);
+      if(!Number.isFinite(ct) || ct<=0) throw new Error('Please enter a valid custom blood-processed volume.');
+      if(ct > 1500) throw new Error('CELLEX maximum is 1500 mL processed.');
+      procMl = ct;
+    } else {
+      procMl = state.proc;
+    }
+
+    const tbvMl = nadlerTBVml(sex, heightCm, weightKg);
+
+    const data = {
+      tbvMl, cassetteMl, procMl, weightKg,
+      needle: state.needle,
+      diagnosis: el.diagnosis.value ? diagnosisLibrary[el.diagnosis.value] : null
+    };
+
+    el.results.innerHTML = createResultHTML(data);
+  } catch(err){
+    el.results.innerHTML = `
+      <div class="result-card">
+        <div class="result-kicker">Input Error</div>
+        <div class="result-value" style="font-size:18px;color:#ffb4b4">Unable to calculate</div>
+        <div class="result-meta">${err.message}</div>
+      </div>`;
+  }
+}
+
+function resetForm(){
+  el.sex.value=''; el.hct.value='';
+  el.heightCm.value=''; el.heightFt.value=''; el.heightIn.value='';
+  el.weightKg.value=''; el.weightLb.value='';
+  el.cassetteMl.value='240';
+  el.customProc.value=''; el.customProcWrap.classList.add('hidden');
+  el.diagnosis.value='';
+  el.diagnosisInfoCard.classList.add('hidden'); el.diagnosisInfoCard.innerHTML='';
+  state.heightMode='cm'; state.weightMode='kg'; state.needle='single'; state.proc=1500; state.isCustomProc=false;
+  setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightMetricBtn);
+  setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightMetricBtn);
+  el.needleToggle.querySelectorAll('[data-needle]').forEach(b=>b.classList.toggle('active', b.dataset.needle==='single'));
+  el.processToggle.querySelectorAll('[data-proc]').forEach(b=>b.classList.toggle('active', b.dataset.proc==='1500'));
+  el.heightCmWrap.classList.remove('hidden'); el.heightEnglishWrap.classList.add('hidden');
+  el.weightKgWrap.classList.remove('hidden'); el.weightLbWrap.classList.add('hidden');
+  el.results.innerHTML = `<div class="result-card"><div class="result-kicker">Awaiting inputs</div><div class="result-value">—</div><div class="result-meta">Fill the form and press Calculate.</div></div>`;
+}
+
+el.heightMetricBtn.addEventListener('click', ()=>{ state.heightMode='cm'; setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightMetricBtn); el.heightCmWrap.classList.remove('hidden'); el.heightEnglishWrap.classList.add('hidden'); });
+el.heightEnglishBtn.addEventListener('click', ()=>{ state.heightMode='ftin'; setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightEnglishBtn); el.heightCmWrap.classList.add('hidden'); el.heightEnglishWrap.classList.remove('hidden'); });
+el.weightMetricBtn.addEventListener('click', ()=>{ state.weightMode='kg'; setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightMetricBtn); el.weightKgWrap.classList.remove('hidden'); el.weightLbWrap.classList.add('hidden'); });
+el.weightEnglishBtn.addEventListener('click', ()=>{ state.weightMode='lb'; setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightEnglishBtn); el.weightKgWrap.classList.add('hidden'); el.weightLbWrap.classList.remove('hidden'); });
+
+el.needleToggle.querySelectorAll('[data-needle]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    el.needleToggle.querySelectorAll('[data-needle]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    state.needle = btn.dataset.needle;
+  });
+});
+
+el.processToggle.querySelectorAll('[data-proc]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    el.processToggle.querySelectorAll('[data-proc]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    if(btn.dataset.proc==='custom'){
+      state.isCustomProc = true;
+      el.customProcWrap.classList.remove('hidden');
+      el.customProc.focus();
+    } else {
+      state.isCustomProc = false;
+      el.customProcWrap.classList.add('hidden');
+      state.proc = parseFloat(btn.dataset.proc);
+    }
+  });
+});
+
+el.diagnosis.addEventListener('change', renderDiagnosisInfo);
+el.calculateBtn.addEventListener('click', calculate);
+el.resetBtn.addEventListener('click', resetForm);
+
+document.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); calculate(); } });
+</script>
+</body>
+</html>
