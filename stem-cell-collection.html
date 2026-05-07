@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DART Tools — Stem Cell Collection (CMNC)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070b11;
+  --card:#111a27;
+  --card2:#0f1722;
+  --border:rgba(149,173,205,.14);
+  --border-strong:rgba(122,162,255,.28);
+  --text:#e9f0fa;
+  --muted:#96a7bf;
+  --primary:#61a8ff;
+  --primary2:#3b82f6;
+  --accent:#7ef0d2;
+  --gold:#cfa95f;
+  --warn:#ffcd70;
+  --danger:#ff6f6f;
+  --shadow:0 20px 60px rgba(0,0,0,.35);
+  --nav-bg:rgba(7,11,17,.82);
+  --grid:rgba(255,255,255,.03);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(97,168,255,.10), transparent 30%),
+    radial-gradient(circle at 80% 20%, rgba(126,240,210,.08), transparent 24%),
+    linear-gradient(180deg, var(--bg), #05080d 100%);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:40px 40px;opacity:.45;
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,.35), transparent 80%);
+}
+a{text-decoration:none;color:inherit}
+.container{width:min(1280px, calc(100% - 28px));margin:0 auto}
+
+/* ── compact sticky nav ───────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:200;
+  backdrop-filter:blur(18px);
+  background:var(--nav-bg);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{
+  min-height:58px;display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;padding:8px 0;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{
+  width:36px;height:36px;border-radius:11px;
+  display:grid;place-items:center;
+  font-size:16px;font-weight:900;color:#fff;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 24px rgba(59,130,246,.24);
+}
+.brand-title{font-size:15px;font-weight:900;letter-spacing:-.02em;line-height:1.15}
+.brand-sub{font-size:9.5px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700}
+.nav-right{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 13px;border-radius:999px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.02);
+  color:var(--muted);font-size:12px;font-weight:700;
+  transition:all .2s ease;
+}
+.chip-home{
+  background:linear-gradient(135deg,rgba(97,168,255,.14),rgba(126,240,210,.10));
+  border-color:rgba(97,168,255,.3); color:#d8ecff;
+}
+.chip-home:hover{border-color:rgba(97,168,255,.55);color:#fff;transform:translateY(-1px)}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px rgba(126,240,210,.6);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.5}}
+
+/* ── title bar ────────────────────────────────────── */
+.head-bar{
+  padding:22px 0 14px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  border-bottom:1px solid var(--border);margin-bottom:18px;
+}
+.head-kicker{
+  font-size:11px;text-transform:uppercase;letter-spacing:.16em;
+  color:var(--accent);font-weight:800;margin-bottom:6px;
+}
+.head-title{
+  font-size:clamp(22px,3.4vw,32px);
+  line-height:1.05;letter-spacing:-.03em;font-weight:900;
+}
+.head-title .accent{
+  background:linear-gradient(135deg,#eaf3ff 0%,#99c9ff 45%,#7ef0d2 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.head-meta{font-size:13px;color:var(--muted);max-width:520px;line-height:1.65;text-align:right}
+
+/* ── layout ───────────────────────────────────────── */
+.grid-wrap{display:grid;grid-template-columns:1.02fr .98fr;gap:18px;padding-bottom:44px}
+.panel{
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border:1px solid var(--border);
+  border-radius:22px;padding:20px;
+  box-shadow:var(--shadow);
+}
+.panel-title{font-size:16px;font-weight:900;margin-bottom:4px}
+.panel-sub{font-size:12.5px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+
+/* ── form ─────────────────────────────────────────── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field.full{grid-column:1 / -1}
+.label{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.11em;color:var(--muted)}
+
+input,select,button{font:inherit}
+input,select{
+  width:100%;min-height:42px;border-radius:11px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.03);
+  color:var(--text);padding:0 12px;outline:none;
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+input:focus,select:focus{border-color:rgba(97,168,255,.45);box-shadow:0 0 0 3px rgba(97,168,255,.12)}
+input::placeholder{color:#70829a}
+select{
+  appearance:none;-webkit-appearance:none;
+  background-image:linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+                   linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+  background-size:5px 5px, 5px 5px;background-repeat:no-repeat;padding-right:30px;
+}
+
+.inline-toggle{display:flex;gap:6px;flex-wrap:wrap}
+.toggle-btn{
+  flex:1;min-width:60px;min-height:40px;padding:0 10px;
+  border-radius:10px;border:1px solid var(--border);
+  background:rgba(255,255,255,.03);color:var(--text);
+  font-weight:700;font-size:13px;cursor:pointer;
+  transition:all .2s ease;
+}
+.toggle-btn:hover{border-color:rgba(97,168,255,.34)}
+.toggle-btn.active{
+  background:linear-gradient(135deg,rgba(97,168,255,.22),rgba(126,240,210,.14));
+  border-color:rgba(97,168,255,.45);color:#eaf3ff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+.sub-grid,.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.note{
+  border:1px solid rgba(126,240,210,.18);
+  background:rgba(126,240,210,.06);color:#d5fff2;
+  border-radius:12px;padding:10px 12px;
+  font-size:12.5px;line-height:1.65;
+}
+.note.warning{border-color:rgba(255,205,112,.20);background:rgba(255,205,112,.08);color:#ffe8b6}
+.note.info{border-color:rgba(97,168,255,.2);background:rgba(97,168,255,.05);color:#cfe2ff}
+.note.danger{border-color:rgba(255,111,111,.28);background:rgba(255,111,111,.08);color:#ffd2d2}
+
+.calc-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:46px;padding:0 20px;border-radius:12px;
+  border:1px solid transparent;font-weight:800;font-size:14px;
+  cursor:pointer;transition:all .22s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{
+  color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary2));
+  box-shadow:0 10px 26px rgba(59,130,246,.26);
+}
+.btn-primary:hover{box-shadow:0 14px 32px rgba(59,130,246,.38)}
+.btn-secondary{
+  color:var(--text);background:rgba(255,255,255,.03);
+  border-color:var(--border);
+}
+.btn-secondary:hover{border-color:rgba(97,168,255,.34)}
+
+/* ── results ──────────────────────────────────────── */
+.result-stack{display:grid;gap:12px}
+.result-card{
+  border:1px solid var(--border);border-radius:16px;
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+  padding:14px 16px;
+}
+.result-kicker{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);font-weight:800;margin-bottom:6px}
+.result-value{font-size:clamp(20px,3vw,30px);letter-spacing:-.04em;line-height:1;font-weight:900;color:#f4f8ff;margin-bottom:6px}
+.result-meta{color:var(--muted);font-size:12px;line-height:1.6}
+.math-box{
+  border:1px solid rgba(97,168,255,.18);
+  background:rgba(97,168,255,.05);color:#d8e9ff;
+  border-radius:14px;padding:12px 14px;
+  font-size:12.5px;line-height:1.7;
+}
+.math-box strong{color:#fff}
+.calc-line{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.calc-line:last-child{border-bottom:none}
+.hidden{display:none!important}
+
+.banner{
+  border-radius:14px;padding:12px 14px;
+  font-size:13px;font-weight:700;line-height:1.5;
+  display:flex;gap:10px;align-items:flex-start;
+}
+.banner.proceed{border:1px solid rgba(126,240,210,.32);background:rgba(126,240,210,.08);color:#cdfaea}
+.banner.marginal{border:1px solid rgba(255,205,112,.32);background:rgba(255,205,112,.08);color:#ffe8b6}
+.banner.poor{border:1px solid rgba(255,111,111,.32);background:rgba(255,111,111,.08);color:#ffd2d2}
+.banner-icon{font-size:18px;line-height:1}
+
+/* ── collapsible ──────────────────────────────────── */
+details{margin-top:2px}
+details summary{
+  cursor:pointer;list-style:none;
+  padding:10px 12px;border-radius:11px;
+  border:1px dashed var(--border);
+  background:rgba(255,255,255,.02);
+  font-size:12px;font-weight:700;color:var(--muted);
+  display:flex;align-items:center;justify-content:space-between;
+  transition:all .2s ease;
+}
+details summary:hover{color:var(--text);border-color:rgba(97,168,255,.3)}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";font-size:16px;color:var(--accent);font-weight:900}
+details[open] summary::after{content:"−"}
+details[open] summary{margin-bottom:10px;border-style:solid}
+
+/* ── footer ──────────────────────────────────────── */
+.foot{
+  padding:18px 0 32px;border-top:1px solid var(--border);
+  color:var(--muted);font-size:11.5px;
+  display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  margin-top:8px;
+}
+
+@media (max-width:980px){
+  .grid-wrap{grid-template-columns:1fr}
+  .head-meta{text-align:left}
+}
+@media (max-width:540px){
+  .form-grid,.sub-grid,.mini-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">D</div>
+      <div>
+        <div class="brand-title">DART Tools</div>
+        <div class="brand-sub">Clinical calculator suite</div>
+      </div>
+    </a>
+    <div class="nav-right">
+      <span class="chip"><span class="dot"></span>Stem Cell Collection · CMNC</span>
+      <a class="chip chip-home" href="index.html">← Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="head-bar">
+    <div>
+      <div class="head-kicker">HPC-A · Spectra Optia CMNC Protocol</div>
+      <div class="head-title"><span class="accent">Stem Cell Collection Calculator</span></div>
+    </div>
+    <div class="head-meta">CMNC defaults: ACD-A 12:1, 2.0 TBV processed, CE2 ~50%. Predicts CD34 yield, days to target, citrate management.</div>
+  </div>
+
+  <div class="grid-wrap">
+
+    <section class="panel">
+      <div class="form-grid">
+
+        <div class="field">
+          <label class="label" for="sex">Sex</label>
+          <select id="sex" autofocus>
+            <option value="">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label" for="hct">Hematocrit (%)</label>
+          <input id="hct" type="number" step="0.1" min="0" placeholder="e.g. 38" />
+        </div>
+
+        <div class="field">
+          <label class="label">Height Unit</label>
+          <div class="inline-toggle">
+            <button class="toggle-btn active" type="button" id="heightMetricBtn">cm</button>
+            <button class="toggle-btn" type="button" id="heightEnglishBtn">ft + in</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Weight Unit</label>
+          <div class="inline-toggle">
+            <button class="toggle-btn active" type="button" id="weightMetricBtn">kg</button>
+            <button class="toggle-btn" type="button" id="weightEnglishBtn">lb</button>
+          </div>
+        </div>
+
+        <div class="field" id="heightCmWrap">
+          <label class="label" for="heightCm">Height (cm)</label>
+          <input id="heightCm" type="number" step="0.1" min="0" placeholder="e.g. 175" />
+        </div>
+        <div class="field hidden" id="heightEnglishWrap">
+          <label class="label">Height (ft + in)</label>
+          <div class="sub-grid">
+            <input id="heightFt" type="number" step="1" min="0" placeholder="ft" />
+            <input id="heightIn" type="number" step="0.1" min="0" placeholder="in" />
+          </div>
+        </div>
+
+        <div class="field" id="weightKgWrap">
+          <label class="label" for="weightKg">Weight (kg) — Patient/Donor</label>
+          <input id="weightKg" type="number" step="0.1" min="0" placeholder="e.g. 75" />
+        </div>
+        <div class="field hidden" id="weightLbWrap">
+          <label class="label" for="weightLb">Weight (lb) — Patient/Donor</label>
+          <input id="weightLb" type="number" step="0.1" min="0" placeholder="e.g. 165" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="preCD34">Pre-Apheresis CD34 (cells/µL)</label>
+          <input id="preCD34" type="number" step="0.1" min="0" placeholder="e.g. 35" />
+        </div>
+
+        <div class="field">
+          <label class="label" for="recipientWeightKg">Recipient Wt (kg) — allo only</label>
+          <input id="recipientWeightKg" type="number" step="0.1" min="0" placeholder="optional" />
+        </div>
+
+        <div class="field full">
+          <label class="label" for="company">Product / Company Protocol</label>
+          <select id="company">
+            <option value="standard">Standard — HPC-A (general)</option>
+            <option value="adaptimmune">Adaptimmune — CAR-T (solid tumor)</option>
+            <option value="bluebird">Bluebird Bio / Genetix — Gene Therapy (SCD, β-Thal)</option>
+            <option value="abecma">BMS Abecma — CAR-T (Multiple Myeloma)</option>
+            <option value="breyanzi">BMS Breyanzi — CAR-T (Leukemia/Lymphoma)</option>
+            <option value="yescarta">Kite Yescarta — CAR-T (Large B-Cell, Follicular)</option>
+            <option value="tecartus">Kite Tecartus — CAR-T (MCL, B-Cell ALL)</option>
+            <option value="kymriah">Novartis Kymriah — CAR-T (Peds Leuk / Adult Lymphoma)</option>
+          </select>
+          <div id="companyInfoCard" class="math-box hidden" style="margin-top:10px"></div>
+          <div id="bluebirdTipsCard" class="hidden" style="margin-top:10px"></div>
+        </div>
+
+        <div class="field full">
+          <label class="label">Target CD34 Dose (×10⁶ / kg)</label>
+          <div class="inline-toggle" id="targetToggle">
+            <button class="toggle-btn" type="button" data-target="2">2.0 · Min</button>
+            <button class="toggle-btn active" type="button" data-target="5">5.0 · Optimal</button>
+            <button class="toggle-btn" type="button" data-target="8">8.0 · Tandem</button>
+            <button class="toggle-btn" type="button" data-target="custom">Custom</button>
+          </div>
+        </div>
+
+        <div class="field full hidden" id="customTargetWrap">
+          <label class="label" for="customTarget">Custom target (×10⁶ CD34/kg)</label>
+          <input id="customTarget" type="number" step="0.1" min="0" placeholder="e.g. 12" />
+        </div>
+
+        <div class="field full">
+          <label class="label">Calculation Mode</label>
+          <div class="inline-toggle" id="modeToggle">
+            <button class="toggle-btn active" type="button" data-mode="tbv">TBV-Based (target multiplier)</button>
+            <button class="toggle-btn" type="button" data-mode="time">Time-Based (inlet × hours)</button>
+          </div>
+        </div>
+
+        <div class="field full" id="tbvToggleWrap">
+          <label class="label">TBV Processed (whole blood)</label>
+          <div class="inline-toggle" id="tbvToggle">
+            <button class="toggle-btn" type="button" data-tbv="1.5">1.5×</button>
+            <button class="toggle-btn active" type="button" data-tbv="2">2.0×</button>
+            <button class="toggle-btn" type="button" data-tbv="2.5">2.5×</button>
+            <button class="toggle-btn" type="button" data-tbv="3">3.0×</button>
+            <button class="toggle-btn" type="button" data-tbv="4">4.0×</button>
+            <button class="toggle-btn" type="button" data-tbv="5">5.0×</button>
+          </div>
+        </div>
+
+        <div class="field full hidden" id="timeToggleWrap">
+          <label class="label">Collection Time (max 8 h)</label>
+          <div class="inline-toggle" id="timeToggle">
+            <button class="toggle-btn" type="button" data-time="6">6 h</button>
+            <button class="toggle-btn" type="button" data-time="7">7 h</button>
+            <button class="toggle-btn" type="button" data-time="7.5">7.5 h</button>
+            <button class="toggle-btn active" type="button" data-time="8">8 h max</button>
+            <button class="toggle-btn" type="button" data-time="custom">Custom</button>
+          </div>
+        </div>
+
+        <div class="field full hidden" id="customTimeWrap">
+          <label class="label" for="customTime">Custom collection hours (≤ 8)</label>
+          <input id="customTime" type="number" step="0.25" min="0" max="8" placeholder="e.g. 6.5" />
+        </div>
+
+        <div class="field full">
+          <label class="label" for="inletFlow">Inlet Flow Set (mL/min) — AIR is auto-displayed in results, machine cap 1.2</label>
+          <input id="inletFlow" type="number" step="1" min="20" max="120" value="70" />
+        </div>
+
+        <div class="field full">
+          <label class="label">ACD-A Ratio (Whole blood : AC)</label>
+          <div class="inline-toggle" id="acdToggle">
+            <button class="toggle-btn" type="button" data-acd="6">6:1</button>
+            <button class="toggle-btn" type="button" data-acd="8">8:1</button>
+            <button class="toggle-btn" type="button" data-acd="10">10:1</button>
+            <button class="toggle-btn active" type="button" data-acd="12">12:1</button>
+            <button class="toggle-btn" type="button" data-acd="13">13:1</button>
+            <button class="toggle-btn" type="button" data-acd="16">16:1</button>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label class="label" for="ce">Collection Efficiency CE2 (%) — typical 40–60</label>
+          <input id="ce" type="number" step="1" min="1" max="100" value="50" />
+        </div>
+
+        <div class="field full">
+          <details>
+            <summary>Optional — Diagnosis / indication</summary>
+            <select id="diagnosis">
+              <option value="">Select diagnosis (optional)</option>
+              <option value="mm">Multiple Myeloma — autologous</option>
+              <option value="mm-tandem">Multiple Myeloma — tandem ASCT planned</option>
+              <option value="hl">Hodgkin Lymphoma — autologous</option>
+              <option value="nhl-dlbcl">DLBCL — autologous</option>
+              <option value="nhl-mcl">Mantle Cell Lymphoma — autologous</option>
+              <option value="amyloidosis">AL Amyloidosis / POEMS — autologous</option>
+              <option value="neuroblastoma">Pediatric Neuroblastoma — autologous</option>
+              <option value="germ-cell">Germ Cell Tumor — autologous (tandem)</option>
+              <option value="allo-aml">Allogeneic donor — for AML/MDS recipient</option>
+              <option value="allo-all">Allogeneic donor — for ALL recipient</option>
+              <option value="allo-aplastic">Allogeneic donor — for severe aplastic anemia</option>
+              <option value="gt-scd">Sickle Cell Disease — gene therapy collection</option>
+              <option value="gt-thal">β-Thalassemia — gene therapy collection</option>
+              <option value="other">Other / not listed</option>
+            </select>
+            <div id="diagnosisInfoCard" class="math-box hidden" style="margin-top:10px"></div>
+          </details>
+        </div>
+
+        <div class="field full">
+          <div class="note info">Not an order. Verify peripheral CD34, target dose, mobilization regimen, and collection plan with physician.</div>
+        </div>
+
+      </div>
+
+      <div class="calc-row">
+        <button class="btn btn-primary" id="calculateBtn" type="button">Calculate</button>
+        <button class="btn btn-secondary" id="resetBtn" type="button">Reset</button>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panel-title">Results</div>
+      <div class="panel-sub">CD34 yield prediction = (Pre-CD34 × volume processed × CE2) ÷ 1000. Targets and decision banners reflect US gold-standard practice.</div>
+      <div class="result-stack" id="results">
+        <div class="result-card">
+          <div class="result-kicker">Awaiting inputs</div>
+          <div class="result-value">—</div>
+          <div class="result-meta">Fill the form and press Calculate.</div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Optimization Tips Section (general HPC-A on Optia CMNC) -->
+  <section class="panel" style="margin-bottom:18px">
+    <div class="panel-title" style="margin-bottom:6px">Optia CMNC — Quality Optimization Tips</div>
+    <div class="panel-sub">Universal best-practice tips for any HPC-A run. Product-specific overrides (e.g., Bluebird "collect dark") appear in the company info card above when selected.</div>
+
+    <div class="mini-grid">
+      <details open>
+        <summary>Collection Preference (color tool)</summary>
+        <div class="math-box">
+          <div class="calc-line"><strong>Where it lives:</strong> the Spectra Optia "Collection Preference Tool" — a printed color strip showing dark red/brown → orange → light peach. Lower numbers = lighter (more plasma in product), higher numbers = darker (more cells in product).</div>
+          <div class="calc-line"><strong>When to adjust:</strong> only after the message bar reads "Collecting MNC". Change in increments of 10, wait ≥ 2 minutes between adjustments, then assess the collect-line color.</div>
+          <div class="calc-line"><strong>Standard / CAR-T (most products):</strong> aim for the <strong>lighter</strong> end (less RBC contamination, cleaner T-cell or MNC product).</div>
+          <div class="calc-line"><strong>Bluebird gene therapy (SCD/TDT):</strong> aim for the <strong>darker</strong> end — the manufacturer requires high CD34 yield per session and tolerates higher product Hct.</div>
+          <div class="calc-line"><strong>Therapeutic WBC depletion:</strong> moderate to slightly darker is reasonable to maximize WBC removal — verify against your institutional protocol.</div>
+        </div>
+      </details>
+      <details open>
+        <summary>Inlet Flow &amp; Alarm Discipline</summary>
+        <div class="math-box">
+          <div class="calc-line"><strong>Steady &gt; fast.</strong> "Slower with NO alarms is more efficient than faster WITH alarms." Each alarm pause interrupts MNC layer formation and degrades CE2.</div>
+          <div class="calc-line"><strong>Aim for stability.</strong> Find the maximum inlet flow that runs continuously without high-pressure or interface alarms. Hold there.</div>
+          <div class="calc-line"><strong>Access matters.</strong> Central catheter ≥ 10 Fr for adults; for peripheral, hot pack + tourniquet, large-bore (16–17 g) with countertraction.</div>
+        </div>
+      </details>
+    </div>
+
+    <div style="height:10px"></div>
+
+    <div class="mini-grid">
+      <details>
+        <summary>Anticoagulation Balance &amp; AIR (the number to watch)</summary>
+        <div class="math-box">
+          <div class="calc-line"><strong>What you set:</strong> inlet flow (mL/min) and ACD-A ratio (whole blood : AC). AIR is <em>not</em> something you set — it's a calculated value displayed on the Optia screen.</div>
+          <div class="calc-line"><strong>What AIR is:</strong> AC Infusion Rate to the patient, in mL/min/L TBV. It tells you the citrate dose-rate. Most runs sit comfortably below 1.0; the closer to <strong>1.2</strong> (machine ceiling), the more likely the patient feels citrate symptoms.</div>
+          <div class="calc-line"><strong>Why the cap matters:</strong> the Optia will not let inlet flow push AIR above 1.2. So if you tighten AC ratio (e.g., 12:1 → 8:1), the machine effectively caps your inlet flow at a lower number — total whole-blood processed in the same time goes <strong>down</strong>.</div>
+          <div class="calc-line"><strong>Math:</strong> Max inlet (mL/min) = 1.2 × AC ratio × TBV(L). Example for a 5 L TBV patient: 12:1 → 72 mL/min cap · 8:1 → 48 mL/min · 6:1 → 36 mL/min.</div>
+          <div class="calc-line"><strong>Standard CMNC start:</strong> 12:1. Drop to 10:1 or 8:1 if clumping. For Bluebird SCD/TDT: start 8:1, drop to 6:1 if needed — but expect throughput to drop with each step tighter.</div>
+          <div class="calc-line"><strong>Watch the line:</strong> visible clumps in the collect line → tighten AC immediately; expect AIR to climb and inlet to drop. Watch the patient for citrate symptoms when AIR creeps over 1.0.</div>
+          <div class="calc-line"><strong>To pull AIR down</strong> without changing inlet → loosen AC ratio. To <strong>recover throughput</strong> when AIR is at 1.2 → loosen AC ratio so the cap permits higher inlet.</div>
+        </div>
+      </details>
+      <details>
+        <summary>Citrate / Electrolyte Management</summary>
+        <div class="math-box">
+          <div class="calc-line"><strong>Calcium gluconate</strong> infusion smooths perioral tingling, cramping, and lightheadedness.</div>
+          <div class="calc-line"><strong>Don't over-correct Ca²⁺.</strong> Excess ionized calcium can <em>contribute to clumping</em>, especially with rich AC ratios.</div>
+          <div class="calc-line"><strong>Mg²⁺ and K⁺ replacement:</strong> consider when symptoms persist despite calcium and magnesium is low — citrate also chelates Mg.</div>
+          <div class="calc-line"><strong>Pre-meal:</strong> a meal + oral calcium ~30 min before start blunts citrate symptoms.</div>
+        </div>
+      </details>
+    </div>
+
+    <div style="height:10px"></div>
+
+    <div class="mini-grid">
+      <details>
+        <summary>Buffy Coat &amp; Centrifuge Care</summary>
+        <div class="math-box">
+          <div class="calc-line"><strong>Watch the buffy coat layer</strong> on the channel as the run progresses — accumulation can predict end-of-run performance and signal need for collect-pref adjustment.</div>
+          <div class="calc-line"><strong>Centrifuge cleanliness:</strong> a dirty / poorly maintained centrifuge degrades CE2. Wipe down between runs; report excess vibration to biomed.</div>
+        </div>
+      </details>
+      <details>
+        <summary>Pre-CD34 / Plerixafor Decision Support</summary>
+        <div class="math-box">
+          <div class="calc-line"><strong>≥ 20 /µL:</strong> proceed; standard 2× TBV expected to reach target.</div>
+          <div class="calc-line"><strong>10–19 /µL:</strong> proceed but consider plerixafor (0.24 mg/kg SQ ~11 h pre next collection) and consider LVL (≥ 3× TBV).</div>
+          <div class="calc-line"><strong>5–9 /µL:</strong> add plerixafor or remobilize.</div>
+          <div class="calc-line"><strong>&lt; 5 /µL:</strong> remobilization recommended — collection unlikely to be productive.</div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <div class="foot">
+    <span>DART Tools · Stem Cell Collection (CMNC)</span>
+    <span>TBV: Nadler · IBW: Devine · Optia CMNC defaults · Educational</span>
+  </div>
+
+</div>
+
+<script>
+/* ─── diagnosis library — HPC-A indications ───────── */
+const diagnosisLibrary = {
+  "mm": {
+    label:"Multiple Myeloma — autologous",
+    type:"Autologous",
+    targetText:"4–6 ×10⁶ CD34/kg (single ASCT)",
+    mobilization:"G-CSF 10 µg/kg/day × 4–5 d ± plerixafor 0.24 mg/kg SQ ~11 h pre-collection. Alternative: cyclophosphamide + G-CSF.",
+    rationale:"Most common HPC-A indication in the US. CD34 ≥3–5 ×10⁶/kg correlates with faster engraftment and improved long-term outcomes.",
+    nurse:"Confirm mobilization day, line patency, peripheral CD34 timing, plerixafor dose timing. Watch citrate symptoms during long runs.",
+    suggestedTarget:5
+  },
+  "mm-tandem": {
+    label:"Multiple Myeloma — tandem ASCT planned",
+    type:"Autologous",
+    targetText:"8–10 ×10⁶ CD34/kg total (collect for two transplants)",
+    mobilization:"G-CSF + plerixafor strongly preferred to maximize yield in one mobilization. Cryopreserve in two equal aliquots.",
+    rationale:"IMWG recommends ≥4 ×10⁶/kg per transplant; tandem requires double. Higher dose associated with optimal hematologic recovery.",
+    nurse:"Plan multi-day collection. Track running CD34 total. Coordinate with cell-processing lab for split aliquots.",
+    suggestedTarget:8
+  },
+  "hl": {
+    label:"Hodgkin Lymphoma — autologous",
+    type:"Autologous",
+    targetText:"2–5 ×10⁶ CD34/kg (minimum 2.0)",
+    mobilization:"Often after salvage chemotherapy + G-CSF. Plerixafor for poor mobilizers.",
+    rationale:"Standard autologous indication in relapsed/refractory disease. Engraftment threshold 2 ×10⁶/kg widely accepted.",
+    nurse:"Recent salvage chemo can suppress mobilization — watch for low pre-CD34 and prepare for plerixafor rescue.",
+    suggestedTarget:5
+  },
+  "nhl-dlbcl": {
+    label:"DLBCL — autologous",
+    type:"Autologous",
+    targetText:"2–5 ×10⁶ CD34/kg",
+    mobilization:"G-CSF ± plerixafor. Heavily pretreated patients (rituximab, multiple lines) often need plerixafor.",
+    rationale:"Standard for relapsed/refractory DLBCL going to BEAM/HDT-ASCT. CAR-T eligibility may also be in consideration.",
+    nurse:"Verify whether collection is for ASCT vs CAR-T pipeline — different products and labeling chains.",
+    suggestedTarget:5
+  },
+  "nhl-mcl": {
+    label:"Mantle Cell Lymphoma — autologous",
+    type:"Autologous",
+    targetText:"3–5 ×10⁶ CD34/kg",
+    mobilization:"R-DHAP / cytarabine-based regimens followed by G-CSF; plerixafor commonly added due to cytarabine-related mobilization difficulty.",
+    rationale:"Consolidation after induction is standard of care in fit patients up to ~65 y.",
+    nurse:"Cytarabine-pretreated patients are notoriously poor mobilizers — anticipate plerixafor and possibly multiple collection days.",
+    suggestedTarget:5
+  },
+  "amyloidosis": {
+    label:"AL Amyloidosis / POEMS — autologous",
+    type:"Autologous",
+    targetText:"3–5 ×10⁶ CD34/kg",
+    mobilization:"G-CSF (often higher dose) ± plerixafor. Avoid cyclophosphamide priming if cardiac amyloid (fluid risk).",
+    rationale:"ASCT remains a key option in selected AL patients. Cardiac/renal involvement creates collection-day fluid management challenges.",
+    nurse:"Tight fluid balance, BP monitoring, watch for hypotension on draw and citrate effects in renal disease.",
+    suggestedTarget:5
+  },
+  "neuroblastoma": {
+    label:"Pediatric Neuroblastoma — autologous",
+    type:"Autologous",
+    targetText:"≥3–5 ×10⁶ CD34/kg per transplant (often tandem)",
+    mobilization:"Post-induction G-CSF ± plerixafor. Pediatric volume management critical.",
+    rationale:"High-risk neuroblastoma standard of care includes tandem ASCT — collection must support both.",
+    nurse:"Pediatric circuit prime considerations, RBC priming if low patient TBV, vigilant calcium and volume monitoring.",
+    suggestedTarget:8
+  },
+  "germ-cell": {
+    label:"Germ Cell Tumor — autologous (tandem)",
+    type:"Autologous",
+    targetText:"≥6–8 ×10⁶ CD34/kg total (tandem)",
+    mobilization:"G-CSF ± plerixafor; chemo-mobilization sometimes used.",
+    rationale:"Salvage tandem ASCT for relapsed/refractory germ-cell tumors requires high cumulative dose.",
+    nurse:"Plan for multi-day collection with cumulative tracking; cryopreservation strategy for two products.",
+    suggestedTarget:8
+  },
+  "allo-aml": {
+    label:"Allogeneic donor — for AML/MDS recipient",
+    type:"Allogeneic",
+    targetText:"4–6 ×10⁶ CD34/kg recipient weight",
+    mobilization:"Healthy-donor G-CSF 10 µg/kg/day × 4–5 d. Collection day 5.",
+    rationale:"Standard allogeneic HSCT for AML/MDS. Higher CD34 doses associated with faster engraftment but may increase chronic GVHD risk.",
+    nurse:"Healthy donor — informed consent, baseline labs, citrate counseling, post-procedure follow-up. Document infusible reactions if any.",
+    suggestedTarget:5
+  },
+  "allo-all": {
+    label:"Allogeneic donor — for ALL recipient",
+    type:"Allogeneic",
+    targetText:"4–6 ×10⁶ CD34/kg recipient weight",
+    mobilization:"Healthy-donor G-CSF protocol.",
+    rationale:"Standard allogeneic HSCT for high-risk or relapsed ALL.",
+    nurse:"Same healthy-donor focus; monitor donor closely for citrate, vasovagal, and venous-access tolerance.",
+    suggestedTarget:5
+  },
+  "allo-aplastic": {
+    label:"Allogeneic donor — for severe aplastic anemia",
+    type:"Allogeneic",
+    targetText:"4–6 ×10⁶ CD34/kg recipient (PBSC) — bone marrow often preferred",
+    mobilization:"Healthy-donor G-CSF if PBSC chosen. Marrow harvest under anesthesia is the historical preference for SAA to reduce GVHD.",
+    rationale:"PBSC has higher GVHD risk than BM in SAA — confirm graft source decision with the team before scheduling apheresis.",
+    nurse:"Confirm PBSC vs BM was the agreed source. Document donor counseling.",
+    suggestedTarget:5
+  },
+  "gt-scd": {
+    label:"Sickle Cell Disease — gene therapy collection",
+    type:"Gene Therapy (Autologous)",
+    targetText:"≥10–20 ×10⁶ CD34/kg (commercial product specs vary)",
+    mobilization:"Plerixafor MONOTHERAPY 0.24 mg/kg SQ. ⚠ G-CSF is contraindicated in SCD — risk of severe vaso-occlusive crisis.",
+    rationale:"Lovo-cel (bluebird), exa-cel (Casgevy), and similar require very high apheresis CD34 dose to support purification, manufacturing, and backup. Multiple mobilization cycles often needed. Pre-collection exchange transfusion to HbS <30% commonly required.",
+    nurse:"Ensure HbS target met pre-collection, hydrate well, monitor for VOC during/after, no G-CSF, plerixafor timing critical (~6 h pre).",
+    suggestedTarget:20
+  },
+  "gt-thal": {
+    label:"β-Thalassemia — gene therapy collection",
+    type:"Gene Therapy (Autologous)",
+    targetText:"≥12–15 ×10⁶ CD34/kg apheresis target (product-specific)",
+    mobilization:"G-CSF + plerixafor commonly used. Multiple cycles often required.",
+    rationale:"Beti-cel and similar gene therapies require high CD34 dose for manufacturing, purification losses, and clinical/backup aliquots.",
+    nurse:"Plan multi-cycle collection schedule, line and chelation status (iron overload), running CD34 cumulative tracking.",
+    suggestedTarget:15
+  },
+  "other": {
+    label:"Other / not listed",
+    type:"—",
+    targetText:"Confirm with physician",
+    mobilization:"Confirm regimen with mobilization plan.",
+    rationale:"Indication not mapped here. Verify CD34 target, mobilization plan, and any product-specific requirements.",
+    nurse:"Document indication, target, mobilization, and product destination.",
+    suggestedTarget:5
+  }
+};
+
+/* ─── company / product protocol library ───────────
+   Source: institutional spreadsheet (DART TOOLS) cross-checked
+   with manufacturer requirements. Always verify the latest
+   electronic traceability guide / product-specific manual.
+*/
+const companyLibrary = {
+  "standard": {
+    label:"Standard HPC-A",
+    type:"HPC-A",
+    indication:"General autologous / allogeneic transplant (e.g., AML, ALL, MM, NHL, HL)",
+    preLabs:"CBC + H&H within 8/24 h, Platelets ≥ 50, BMP, ionized Ca, peripheral CD34 > 10/µL",
+    postLabs:"CBC, BMP",
+    tbvGoal:"2–5 TBV processed",
+    tbvMult:2.0,
+    collectionPref:"light",
+    collectRate:"0.8–1.5 mL/min",
+    acdRatio:"12:1",
+    acdValue:12,
+    bagSeal:"Long product bag seal",
+    considerations:"Default Optia CMNC. Adjust collection preference per product appearance and pre-CD34 yield response.",
+    note:""
+  },
+  "adaptimmune": {
+    label:"Adaptimmune (CAR-T)",
+    type:"CAR-T (T-cell collection)",
+    indication:"T-cell therapy for solid tumor",
+    preLabs:"Per Adaptimmune protocol — typically CBC, BMP, ionized Ca, lymphocyte subsets / CD3 baseline",
+    postLabs:"CBC, BMP",
+    tbvGoal:"≥ 50 kg: 12–15 L processed · &lt; 50 kg: 2× TBV processed",
+    tbvMult:2.0,
+    collectionPref:"light",
+    collectRate:"0.8–1 mL/min",
+    acdRatio:"12:1",
+    acdValue:12,
+    bagSeal:"Long product bag seal",
+    considerations:"Requires manufacturer login / electronic traceability ID. Confirm collection-day labeling chain before spike.",
+    note:"This is a T-cell (CD3) collection, not CD34 — predicted-CD34 metrics here are for reference only; product is judged by CD3 yield. Confirm with collection team."
+  },
+  "bluebird": {
+    label:"Bluebird Bio / Genetix Biotherapeutics",
+    type:"Gene Therapy (autologous CD34)",
+    indication:"Sickle Cell Disease (SCD), Transfusion-Dependent Thalassemia (TDT)",
+    preLabs:"CBC + H&H within 8/24 h, Platelets ≥ 50, BMP, ionized Ca, peripheral CD34 > 10/µL. ⚠ For SCD: HbS &lt; 30% pre-collection (transfusion / exchange as needed).",
+    postLabs:"CBC, BMP",
+    tbvGoal:"2–5 TBV processed (commonly multi-day cycles)",
+    tbvMult:3.0,
+    collectionPref:"DARKER — see optimization tips below",
+    collectRate:"0.8–1 mL/min",
+    acdRatio:"8:1 to 10:1 (start 8:1; decrease to 6:1 if clumping)",
+    acdValue:8,
+    bagSeal:"Long product bag seal",
+    considerations:"Targets per Genetix card: SCD ≥15 ×10⁶ CD34/kg (absolute min 150 ×10⁶ total to ship); TDT ≥25 ×10⁶ CD34/kg. Add ≥1.5 ×10⁶/kg backup. ⚠ For SCD: NO G-CSF (vaso-occlusive crisis risk) — plerixafor monotherapy 0.24 mg/kg SQ ~6 h pre-collection. ⚠ At 8:1 AC ratio, the Optia auto-throttles inlet flow to maintain AIR ≤ 1.2 — expect lower TBV processed than at 12:1.",
+    note:"Requires manufacturer login. Genetix Apheresis Operations: 1-833-777-6378. TerumoBCT device support: 1-877-339-4228."
+  },
+  "abecma": {
+    label:"BMS Abecma",
+    type:"CAR-T (T-cell collection, ide-cel)",
+    indication:"Multiple Myeloma",
+    preLabs:"CBC + H&H within 8/24 h, Platelets ≥ 50, BMP, ionized Ca, baseline CD3 / lymphocyte count",
+    postLabs:"CBC, BMP",
+    tbvGoal:"2–3 TBV processed",
+    tbvMult:2.5,
+    collectionPref:"light",
+    collectRate:"0.8–1 mL/min",
+    acdRatio:"12:1",
+    acdValue:12,
+    bagSeal:"Long product bag seal",
+    considerations:"Requires BMS login / electronic traceability. Confirm patient-specific Apheresis ID label chain.",
+    note:""
+  },
+  "breyanzi": {
+    label:"BMS Breyanzi",
+    type:"CAR-T (T-cell collection, liso-cel)",
+    indication:"Leukemia / Large B-cell Lymphoma (relapsed/refractory)",
+    preLabs:"CBC + H&H within 8/24 h, Platelets ≥ 50, BMP, ionized Ca, baseline CD3",
+    postLabs:"CBC, BMP",
+    tbvGoal:"17 L processed (Breyanzi-specific)",
+    tbvMult:2.5,
+    collectionPref:"light",
+    collectRate:"0.8–1 mL/min",
+    acdRatio:"12:1",
+    acdValue:12,
+    bagSeal:"5-inch seal (2 seals, 3rd cut). Remove the 2 sample bulbs and clamps (refer to product image).",
+    considerations:"At start: add 150 mL plasma to the collect bag. MNC collect volume + plasma volume = total volume. Final product ≤ 540 mL.",
+    note:"Requires BMS login. Volume cap on product bag is critical — overshoot causes manufacturer rejection."
+  },
+  "yescarta": {
+    label:"Kite Yescarta",
+    type:"CAR-T (T-cell collection, axi-cel)",
+    indication:"Large B-cell Lymphoma, Follicular Lymphoma",
+    preLabs:"CBC + H&H within 9/27 h, Platelets ≥ 50, BMP, ionized Ca, baseline CD3",
+    postLabs:"CBC, BMP",
+    tbvGoal:"12–15 L processed",
+    tbvMult:2.0,
+    collectionPref:"light",
+    collectRate:"0.8–1 mL/min",
+    acdRatio:"12:1",
+    acdValue:12,
+    bagSeal:"Long product bag seal",
+    considerations:"Requires Kite KiteKonnect login / electronic traceability. Confirm Apheresis ID stickers before collection.",
+    note:""
+  },
+  "tecartus": {
+    label:"Kite Tecartus",
+    type:"CAR-T (T-cell collection, brexu-cel)",
+    indication:"Mantle Cell Lymphoma, B-Cell ALL",
+    preLabs:"CBC + H&H within 9/27 h, Platelets ≥ 50, BMP, ionized Ca, baseline CD3",
+    postLabs:"CBC, BMP",
+    tbvGoal:"12–15 L processed",
+    tbvMult:2.0,
+    collectionPref:"light",
+    collectRate:"0.8–1 mL/min",
+    acdRatio:"12:1",
+    acdValue:12,
+    bagSeal:"Long product bag seal",
+    considerations:"Requires Kite KiteKonnect login. Tecartus shares many handling rules with Yescarta; verify product-specific specs before collection.",
+    note:""
+  },
+  "kymriah": {
+    label:"Novartis Kymriah",
+    type:"CAR-T (T-cell collection, tisa-cel)",
+    indication:"Pediatric Leukemia, Adult Lymphoma",
+    preLabs:"CBC + H&H within 8/24 h, Platelets ≥ 50, BMP, ionized Ca, baseline CD3",
+    postLabs:"CBC, BMP",
+    tbvGoal:"2–5 TBV processed",
+    tbvMult:2.0,
+    collectionPref:"light",
+    collectRate:"0.8–1 mL/min",
+    acdRatio:"12:1",
+    acdValue:12,
+    bagSeal:"Long product bag seal",
+    considerations:"Pediatric volume management critical for Kymriah peds-leukemia patients. Verify patient-specific Apheresis ID and labeling chain.",
+    note:""
+  }
+};
+
+/* ─── state + refs ─── */
+const state = {
+  heightMode:'cm', weightMode:'kg',
+  target:5, isCustomTarget:false,
+  tbvMult:2.0, acd:12,
+  mode:'tbv',           // 'tbv' or 'time'
+  hours:8.0, isCustomTime:false,
+  inletFlow:70
+};
+const $ = (id) => document.getElementById(id);
+const el = {
+  sex:$('sex'), hct:$('hct'),
+  heightCm:$('heightCm'), heightFt:$('heightFt'), heightIn:$('heightIn'),
+  weightKg:$('weightKg'), weightLb:$('weightLb'),
+  recipientWeightKg:$('recipientWeightKg'),
+  preCD34:$('preCD34'), ce:$('ce'),
+  customTarget:$('customTarget'), customTargetWrap:$('customTargetWrap'),
+  diagnosis:$('diagnosis'), diagnosisInfoCard:$('diagnosisInfoCard'),
+  company:$('company'), companyInfoCard:$('companyInfoCard'), bluebirdTipsCard:$('bluebirdTipsCard'),
+  results:$('results'),
+  calculateBtn:$('calculateBtn'), resetBtn:$('resetBtn'),
+  heightMetricBtn:$('heightMetricBtn'), heightEnglishBtn:$('heightEnglishBtn'),
+  weightMetricBtn:$('weightMetricBtn'), weightEnglishBtn:$('weightEnglishBtn'),
+  heightCmWrap:$('heightCmWrap'), heightEnglishWrap:$('heightEnglishWrap'),
+  weightKgWrap:$('weightKgWrap'), weightLbWrap:$('weightLbWrap'),
+  targetToggle:$('targetToggle'),
+  modeToggle:$('modeToggle'),
+  tbvToggle:$('tbvToggle'), tbvToggleWrap:$('tbvToggleWrap'),
+  timeToggle:$('timeToggle'), timeToggleWrap:$('timeToggleWrap'),
+  customTime:$('customTime'), customTimeWrap:$('customTimeWrap'),
+  inletFlow:$('inletFlow'),
+  acdToggle:$('acdToggle')
+};
+
+/* AIR ceiling is the Optia hard cap — not user-adjustable */
+const AIR_MACHINE_CAP = 1.2;
+
+/* ─── helpers ─── */
+function setActive(buttons, activeButton){ buttons.forEach(b=>b.classList.remove('active')); activeButton.classList.add('active'); }
+function fmt(num, digits=1){ return Number(num).toLocaleString(undefined,{minimumFractionDigits:digits, maximumFractionDigits:digits}); }
+function fmtInt(num){ return Math.round(Number(num)).toLocaleString(); }
+function heightToCm(){ if(state.heightMode==='cm') return parseFloat(el.heightCm.value); const ft=parseFloat(el.heightFt.value||0); const inches=parseFloat(el.heightIn.value||0); return ((ft*12)+inches)*2.54; }
+function heightToInches(){ return heightToCm()/2.54; }
+function weightToKg(){ if(state.weightMode==='kg') return parseFloat(el.weightKg.value); return parseFloat(el.weightLb.value)*0.45359237; }
+function devineIBWKg(sex, heightInches){ return sex==='male' ? 50 + 2.3*(heightInches-60) : 45.5 + 2.3*(heightInches-60); }
+function nadlerTBVml(sex, heightCm, weightKg){ const h=heightCm/100; return sex==='male' ? 604 + (367*Math.pow(h,3)) + (32.2*weightKg) : 183 + (356*Math.pow(h,3)) + (33.1*weightKg); }
+function validatePositive(v, n){ if(!Number.isFinite(v) || v<=0) throw new Error(`Please enter a valid ${n}.`); }
+
+/* ─── diagnosis preview ─── */
+function renderDiagnosisInfo(){
+  const key = el.diagnosis.value;
+  if(!key){ el.diagnosisInfoCard.classList.add('hidden'); el.diagnosisInfoCard.innerHTML=''; return; }
+  const d = diagnosisLibrary[key];
+  el.diagnosisInfoCard.classList.remove('hidden');
+  el.diagnosisInfoCard.innerHTML = `
+    <div class="calc-line"><strong>Type:</strong> ${d.type}</div>
+    <div class="calc-line"><strong>Target:</strong> ${d.targetText}</div>
+    <div class="calc-line"><strong>Mobilization:</strong> ${d.mobilization}</div>
+    <div class="calc-line"><strong>Rationale:</strong> ${d.rationale}</div>
+    <div class="calc-line"><strong>Nurse focus:</strong> ${d.nurse}</div>
+  `;
+  // Auto-suggest target
+  if(d.suggestedTarget && !state.isCustomTarget){
+    const buttons = el.targetToggle.querySelectorAll('[data-target]');
+    let matched = false;
+    buttons.forEach(b=>{
+      if(parseFloat(b.dataset.target)===d.suggestedTarget){
+        buttons.forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        state.target = d.suggestedTarget;
+        matched = true;
+      }
+    });
+    if(!matched){
+      // Use custom field
+      buttons.forEach(x=>x.classList.remove('active'));
+      el.targetToggle.querySelector('[data-target="custom"]').classList.add('active');
+      el.customTargetWrap.classList.remove('hidden');
+      el.customTarget.value = d.suggestedTarget;
+      state.target = d.suggestedTarget;
+      state.isCustomTarget = true;
+    }
+  }
+}
+
+/* ─── company / product preview ─── */
+function renderCompanyInfo(){
+  const key = el.company.value;
+  const c = companyLibrary[key];
+  if(!c){ el.companyInfoCard.classList.add('hidden'); el.companyInfoCard.innerHTML=''; el.bluebirdTipsCard.classList.add('hidden'); el.bluebirdTipsCard.innerHTML=''; return; }
+
+  const prefStyle = c.collectionPref.toLowerCase().includes('dark')
+    ? 'color:#ffd2a8;font-weight:900'
+    : 'color:#cfe2ff;font-weight:700';
+
+  el.companyInfoCard.classList.remove('hidden');
+  el.companyInfoCard.innerHTML = `
+    <div class="calc-line"><strong>Protocol:</strong> ${c.label} · ${c.type}</div>
+    <div class="calc-line"><strong>Indication:</strong> ${c.indication}</div>
+    <div class="calc-line"><strong>Pre labs:</strong> ${c.preLabs}</div>
+    <div class="calc-line"><strong>Post labs:</strong> ${c.postLabs}</div>
+    <div class="calc-line"><strong>TBV process goal:</strong> ${c.tbvGoal}</div>
+    <div class="calc-line"><strong>Collection preference:</strong> <span style="${prefStyle}">${c.collectionPref}</span></div>
+    <div class="calc-line"><strong>Collection rate:</strong> ${c.collectRate}</div>
+    <div class="calc-line"><strong>AC ratio:</strong> ${c.acdRatio}</div>
+    <div class="calc-line"><strong>Bag seal:</strong> ${c.bagSeal}</div>
+    <div class="calc-line"><strong>Considerations:</strong> ${c.considerations}</div>
+    ${c.note ? `<div class="calc-line" style="color:#ffe8b6"><strong>Note:</strong> ${c.note}</div>` : ''}
+  `;
+
+  // Auto-update toggles to match the company defaults (user can still override after)
+  if(c.tbvMult){
+    const tbvButtons = el.tbvToggle.querySelectorAll('[data-tbv]');
+    tbvButtons.forEach(b=>{
+      if(parseFloat(b.dataset.tbv) === c.tbvMult){
+        tbvButtons.forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        state.tbvMult = c.tbvMult;
+      }
+    });
+  }
+  if(c.acdValue){
+    const acdButtons = el.acdToggle.querySelectorAll('[data-acd]');
+    acdButtons.forEach(b=>{
+      if(parseFloat(b.dataset.acd) === c.acdValue){
+        acdButtons.forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        state.acd = c.acdValue;
+      }
+    });
+  }
+
+  // Bluebird-only optimization tips card (Genetix card content)
+  if(key === 'bluebird'){
+    el.bluebirdTipsCard.classList.remove('hidden');
+    el.bluebirdTipsCard.innerHTML = `
+      <div class="result-card" style="border-color:rgba(255,205,112,.32);background:linear-gradient(180deg, rgba(255,205,112,.06), rgba(97,168,255,.04));">
+        <div class="result-kicker" style="color:#ffd9a3">⚡ Bluebird Bio / Genetix — Optia Optimization Tips</div>
+        <div style="font-size:13px;font-weight:900;color:#ffd9a3;margin:6px 0 8px 0">REMEMBER TO COLLECT DARK</div>
+        <div class="math-box" style="background:rgba(126,80,40,.12);border-color:rgba(255,140,80,.28)">
+          <div class="calc-line"><strong>Centrifuge / circuit:</strong> Keep the Optia centrifuge clean and well maintained.</div>
+          <div class="calc-line"><strong>Anticoagulation:</strong> Start Inlet AC at <strong>8:1</strong> (1000 mL or 1× TBV). Monitor for clumping; if seen, decrease to <strong>6:1</strong> immediately.</div>
+          <div class="calc-line"><strong>Collection Preference:</strong> Customize <em>per collection day</em>. Only change after the message bar reads "<strong>Collecting MNC</strong>".</div>
+          <div class="calc-line"><strong>How to adjust:</strong> Decrease in increments of <strong>10</strong>, wait at least <strong>2 minutes</strong>, assess the collect-line color, then make smaller changes as the color gets closer to target.</div>
+          <div class="calc-line"><strong>Color key (Optia Collection Preference Tool):</strong> Aim for the <strong>darker red/brown</strong> end of the color strip — that means denser cell collection. The lighter peach/pink end is too dilute for SCD/TDT manufacturing.</div>
+          <div class="calc-line"><strong>If you can't collect dark:</strong> Contact Genetix Apheresis Operations at <strong>1-833-777-6378</strong>.</div>
+          <div class="calc-line"><strong>Steady inlet flow:</strong> "Slower with NO alarms is more efficient than faster WITH alarms." Manage alarms aggressively to keep flow steady.</div>
+          <div class="calc-line"><strong>Buffy coat:</strong> Watch for accumulation throughout the procedure.</div>
+          <div class="calc-line"><strong>Citrate management:</strong> Keep the patient comfortable, but be mindful — <strong>over-infusing Ca²⁺ contributes to clumping</strong>. Consider Mg²⁺ and K⁺ replacement instead when appropriate.</div>
+          <div class="calc-line"><strong>Targets to confirm yield:</strong> SCD ≥ <strong>15 ×10⁶ CD34/kg</strong> (absolute minimum 150 ×10⁶ total to ship for manufacturing) · TDT ≥ <strong>25 ×10⁶ CD34/kg</strong> · plus ≥ 1.5 ×10⁶/kg for back-up.</div>
+          <div class="calc-line"><strong>Device support:</strong> TerumoBCT 1-877-339-4228 · Genetix 1-833-777-6378.</div>
+        </div>
+      </div>`;
+  } else {
+    el.bluebirdTipsCard.classList.add('hidden');
+    el.bluebirdTipsCard.innerHTML = '';
+  }
+}
+
+/* ─── calcium chloride (on demand) ─── */
+function showCalciumChloride(show, processedMl){
+  const box = document.getElementById('cacl2Box');
+  if(!box) return;
+  if(!show){ box.classList.add('hidden'); box.innerHTML=''; return; }
+  const lowMg  = (processedMl/4000) * 500;
+  const highMg = (processedMl/4000) * 670;
+  const midMg  = (processedMl/4000) * 585;
+  box.classList.remove('hidden');
+  box.innerHTML = `
+    <div class="math-box">
+      <div class="calc-line"><strong>Calcium chloride (≈ 1/3 of Ca-gluconate dose)</strong></div>
+      <div class="calc-line">Range: 0.5–0.67 g per 4000 mL processed</div>
+      <div class="calc-line">Low: ${fmtInt(lowMg)} mg · Mid: ${fmtInt(midMg)} mg · High: ${fmtInt(highMg)} mg</div>
+      <div class="calc-line">CaCl₂ delivers ~3× elemental calcium per gram vs gluconate — central line preferred.</div>
+    </div>`;
+}
+
+/* ─── result render ─── */
+function createResultHTML(d){
+  // Decision banner from pre-CD34
+  let banner = '';
+  if(d.preCD34 >= 20){
+    banner = `<div class="banner proceed"><span class="banner-icon">●</span><div><strong>Proceed.</strong> Pre-CD34 ${fmt(d.preCD34,1)} /µL — good collection day expected. Standard ${fmt(d.tbvMult,1)}× TBV processing.</div></div>`;
+  } else if(d.preCD34 >= 10){
+    banner = `<div class="banner marginal"><span class="banner-icon">▲</span><div><strong>Marginal mobilizer.</strong> Pre-CD34 ${fmt(d.preCD34,1)} /µL — proceed but consider plerixafor 0.24 mg/kg SQ ~11 h pre next collection. Consider large-volume leukapheresis (≥3× TBV) if patient tolerates.</div></div>`;
+  } else if(d.preCD34 >= 5){
+    banner = `<div class="banner poor"><span class="banner-icon">!</span><div><strong>Poor mobilizer.</strong> Pre-CD34 ${fmt(d.preCD34,1)} /µL — add plerixafor or remobilize. Yield will likely be low; discuss with physician before proceeding.</div></div>`;
+  } else {
+    banner = `<div class="banner poor"><span class="banner-icon">!</span><div><strong>Very poor mobilizer.</strong> Pre-CD34 ${fmt(d.preCD34,1)} /µL — collection generally not productive. Recommend remobilization (G-CSF + plerixafor, or chemo-mobilization) before next attempt.</div></div>`;
+  }
+
+  // Calcium gluconate (1.5–2 g per 4000 mL processed)
+  const caGlucLow  = (d.processedMl/4000) * 1500;
+  const caGlucHigh = (d.processedMl/4000) * 2000;
+  const caGlucMid  = (d.processedMl/4000) * 1750;
+
+  return `
+    ${banner}
+
+    ${d.diagnosis ? `
+    <div class="result-card">
+      <div class="result-kicker">Diagnosis Context</div>
+      <div class="result-value" style="font-size:18px">${d.diagnosis.label}</div>
+      <div class="result-meta">${d.diagnosis.type} · Target: ${d.diagnosis.targetText}</div>
+    </div>` : ''}
+
+    <div class="mini-grid">
+      <div class="result-card">
+        <div class="result-kicker">BMI</div>
+        <div class="result-value">${fmt(d.bmi,1)}</div>
+        <div class="result-meta">IBW: ${fmt(d.ibwKg)} kg (Devine)</div>
+      </div>
+      <div class="result-card">
+        <div class="result-kicker">Total Blood Volume</div>
+        <div class="result-value">${fmtInt(d.tbvMl)} <span style="font-size:.48em;font-weight:800;color:var(--muted)">mL</span></div>
+        <div class="result-meta">Nadler equation</div>
+      </div>
+    </div>
+
+    <div class="result-card" style="border-color:rgba(126,240,210,.32);background:linear-gradient(180deg, rgba(126,240,210,.06), rgba(97,168,255,.04));">
+      <div class="result-kicker">Predicted CD34 Yield (per session)</div>
+      <div class="result-value">${fmt(d.cd34PerKg,2)} <span style="font-size:.42em;font-weight:800;color:var(--muted)">×10⁶ / kg</span></div>
+      <div class="result-meta">Total: <strong>${fmt(d.cd34TotalMillion,1)} ×10⁶ cells</strong> · CE2 = ${fmt(d.cePct,0)}% · Wt-basis: <strong>${d.weightBasisLabel}</strong></div>
+    </div>
+
+    ${d.wasThrottled ? `
+      <div class="banner" style="border:1px solid rgba(255,205,112,.32);background:rgba(255,205,112,.08);color:#ffe8b6"><span class="banner-icon">⚙</span><div><strong>Inlet flow capped by Optia AIR ceiling (1.2).</strong> You set <strong>${fmt(d.inletFlowSet,0)} mL/min</strong>, but at AC ${d.acd}:1 the machine will not allow that flow — it caps inlet at <strong>${fmt(d.inletFlow,1)} mL/min</strong> (${fmt(((d.inletFlow/d.inletFlowSet)*100),0)}% of set) so AIR stays at the 1.2 ceiling. Loosen AC ratio (e.g., 12:1 / 13:1) to recover throughput, or accept the lower volume processed.</div></div>
+    ` : ''}
+
+    <div class="result-card" style="border-color:rgba(126,240,210,.28);background:linear-gradient(180deg, rgba(126,240,210,.04), rgba(97,168,255,.03));">
+      <div class="result-kicker">AC Infusion Rate (AIR) — Monitor Only</div>
+      <div class="result-meta" style="margin-bottom:8px;font-size:12px">AIR is auto-calculated and displayed by the Optia. It cannot be set directly — it's a function of your inlet flow + AC ratio + patient TBV. Machine ceiling is <strong>1.2 mL/min/L TBV</strong>; closer to that ceiling, more chance of citrate symptoms.</div>
+      <div class="mini-grid" style="gap:8px;margin-top:6px">
+        <div>
+          <div class="result-meta">AIR displayed</div>
+          <div class="result-value" style="font-size:22px;color:${d.actualAIR >= 1.18 ? '#ffb4b4' : d.actualAIR >= 1.0 ? '#ffd9a3' : d.actualAIR >= 0.8 ? '#ffe8b6' : '#cdfaea'}">${fmt(d.actualAIR,2)} <span style="font-size:.5em;font-weight:800;color:var(--muted)">mL/min/L TBV</span></div>
+          <div class="result-meta" style="font-size:11px">${d.actualAIR >= 1.18 ? 'AT MACHINE CEILING — high symptom risk' : d.actualAIR >= 1.0 ? 'Approaching ceiling — watch for symptoms' : d.actualAIR >= 0.8 ? 'Moderate · typical operating range' : 'Low · symptoms uncommon'}</div>
+        </div>
+        <div>
+          <div class="result-meta">Max inlet flow at this AC ratio</div>
+          <div class="result-value" style="font-size:22px">${fmt(d.maxAllowedInlet,0)} <span style="font-size:.5em;font-weight:800;color:var(--muted)">mL/min</span></div>
+          <div class="result-meta" style="font-size:11px">Anything higher gets capped by the 1.2 ceiling</div>
+        </div>
+      </div>
+      <div class="math-box" style="margin-top:10px">
+        <div class="calc-line"><strong>What AIR is:</strong> AC pump rate (mL/min) ÷ patient TBV (L). Same as inlet flow ÷ (AC ratio × TBV in L). It's the citrate dose-rate to the patient.</div>
+        <div class="calc-line"><strong>Current calc:</strong> ${fmt(d.acFlowMlMin,2)} mL/min ACD-A ÷ ${fmt(d.tbvL,2)} L TBV = <strong>${fmt(d.actualAIR,2)} mL/min/L TBV</strong></div>
+        <div class="calc-line"><strong>Symptom-risk band:</strong> ${d.actualAIR <= 0.85 ? '~10–15% drop in ionized Ca · symptoms uncommon' : d.actualAIR <= 1.05 ? '~15–25% drop in ionized Ca · perioral tingling, mild cramping likely' : '~20–35% drop in ionized Ca · proactive calcium infusion essential, watch for tetany / arrhythmia'}</div>
+        <div class="calc-line"><strong>To lower AIR</strong> without changing throughput → loosen AC ratio (12 → 13 → 16). To <strong>raise throughput</strong> when AIR is hitting 1.2 → loosen AC ratio so the cap allows higher inlet flow.</div>
+      </div>
+    </div>
+
+    <div class="result-card" style="border-color:rgba(97,168,255,.32);">
+      <div class="result-kicker">Run Parameters · ${d.mode === 'time' ? 'Time-Based Mode' : 'TBV-Based Mode'}</div>
+      <div class="mini-grid" style="gap:8px;margin-top:8px">
+        <div>
+          <div class="result-meta">Effective inlet flow</div>
+          <div class="result-value" style="font-size:20px">${fmt(d.inletFlow,1)} <span style="font-size:.55em;font-weight:800;color:var(--muted)">mL/min</span></div>
+          <div class="result-meta" style="font-size:11px">${d.wasThrottled ? `(throttled from ${fmt(d.inletFlowSet,0)})` : '(at or below AIR cap)'}</div>
+        </div>
+        <div>
+          <div class="result-meta">Collection time</div>
+          <div class="result-value" style="font-size:20px">${fmt(d.procedureMinutes/60,2)} <span style="font-size:.55em;font-weight:800;color:var(--muted)">h</span></div>
+          <div class="result-meta" style="font-size:11px">${fmtInt(d.procedureMinutes)} min ${d.mode === 'time' ? '(set)' : '(projected at this inlet)'}</div>
+        </div>
+      </div>
+      <div class="mini-grid" style="gap:8px;margin-top:10px">
+        <div>
+          <div class="result-meta">Whole blood processed</div>
+          <div class="result-value" style="font-size:20px">${fmtInt(d.processedMl)} <span style="font-size:.55em;font-weight:800;color:var(--muted)">mL</span></div>
+          <div class="result-meta" style="font-size:11px">= <strong>${fmt(d.tbvMult,2)}× TBV</strong> ${d.mode === 'time' ? '(derived)' : '(set)'}</div>
+        </div>
+        <div>
+          <div class="result-meta">ACD-A volume infused</div>
+          <div class="result-value" style="font-size:20px">${fmtInt(d.acdMl)} <span style="font-size:.55em;font-weight:800;color:var(--muted)">mL</span></div>
+          <div class="result-meta" style="font-size:11px">${d.acd}:1 ratio · total circuit ${fmtInt(d.totalInletMl)} mL</div>
+        </div>
+      </div>
+      ${d.mode === 'tbv' && d.procedureMinutes > 480 ? `
+        <div class="note warning" style="margin-top:10px"><strong>⚠ Projected time ${fmt(d.procedureMinutes/60,1)} h exceeds 8 h max.</strong> Either increase inlet flow or reduce TBV target. Consider splitting across two collection days.</div>
+      ` : ''}
+      ${d.mode === 'time' && d.tbvMult > 5.5 ? `
+        <div class="note warning" style="margin-top:10px"><strong>Note:</strong> Effective TBV multiplier of ${fmt(d.tbvMult,2)}× is above the typical 5× ceiling for Standard collections — verify tolerance and physician order.</div>
+      ` : ''}
+      <div class="math-box" style="margin-top:10px">
+        <div class="calc-line"><strong>Whole blood</strong> = inlet flow × 60 × hours = ${fmt(d.inletFlow,0)} × 60 × ${fmt(d.procedureMinutes/60,2)} = <strong>${fmtInt(d.processedMl)} mL</strong></div>
+        <div class="calc-line"><strong>ACD-A</strong> = whole blood ÷ AC ratio = ${fmtInt(d.processedMl)} ÷ ${d.acd} = <strong>${fmtInt(d.acdMl)} mL</strong></div>
+        <div class="calc-line"><strong>TBV multiplier</strong> = whole blood ÷ patient TBV = ${fmtInt(d.processedMl)} ÷ ${fmtInt(d.tbvMl)} = <strong>${fmt(d.tbvMult,2)}×</strong></div>
+      </div>
+    </div>
+
+    <div class="result-card" style="border-color:rgba(97,168,255,.32);">
+      <div class="result-kicker">Target & Days to Goal</div>
+      <div class="result-value">${fmt(d.target,1)} <span style="font-size:.42em;font-weight:800;color:var(--muted)">×10⁶/kg target</span></div>
+      <div class="result-meta">
+        Total target: <strong>${fmt(d.targetTotalMillion,1)} ×10⁶ cells</strong> (using ${d.cd34WeightLabel})<br>
+        Estimated collection days at current pre-CD34: <strong>${d.daysNeeded === Infinity ? '—' : d.daysNeeded}</strong>
+      </div>
+    </div>
+
+    <div class="math-box">
+      <div class="calc-line"><strong>CD34 yield formula:</strong> (Pre-CD34 [/µL] × Volume processed [mL] × CE2) ÷ 1000 = total CD34 [×10⁶]</div>
+      <div class="calc-line">(${fmt(d.preCD34,1)} × ${fmtInt(d.processedMl)} × ${fmt(d.ceFraction,2)}) ÷ 1000 = <strong>${fmt(d.cd34TotalMillion,1)} ×10⁶ cells</strong></div>
+      <div class="calc-line">${fmt(d.cd34TotalMillion,1)} ×10⁶ ÷ ${fmt(d.cd34WeightKg,1)} kg = <strong>${fmt(d.cd34PerKg,2)} ×10⁶ /kg per session</strong></div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-kicker">Calcium Gluconate</div>
+      <div class="result-meta" style="margin-bottom:8px">Rule: 1.5–2 g per 4000 mL blood volume processed (citrate prophylaxis during long CMNC runs)</div>
+      <div class="math-box">
+        <div class="calc-line">Low (1.5 g): (${fmtInt(d.processedMl)} ÷ 4000) × 1500 = <strong>${fmtInt(caGlucLow)} mg</strong> (${fmt(caGlucLow/100,1)} mL of 10%)</div>
+        <div class="calc-line">Mid (1.75 g): <strong>${fmtInt(caGlucMid)} mg</strong> (${fmt(caGlucMid/100,1)} mL of 10%)</div>
+        <div class="calc-line">High (2.0 g): <strong>${fmtInt(caGlucHigh)} mg</strong> (${fmt(caGlucHigh/100,1)} mL of 10%)</div>
+        <div class="calc-line">Typically delivered as continuous IV infusion or scheduled boluses through procedure.</div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-kicker">Calcium Chloride Option</div>
+      <div class="result-meta" style="margin-bottom:10px">Calculate calcium chloride instead?</div>
+      <div class="calc-row" style="margin-top:0">
+        <button class="btn btn-secondary" type="button" onclick="showCalciumChloride(false)">No</button>
+        <button class="btn btn-primary" type="button" onclick="showCalciumChloride(true, ${d.processedMl})">Yes, calculate CaCl₂</button>
+      </div>
+      <div id="cacl2Box" class="hidden" style="margin-top:12px"></div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-kicker">Pre-Procedure Checklist</div>
+      <div class="math-box">
+        <div class="calc-line"><strong>Access:</strong> Central catheter with apheresis-rated lumens (≥10 Fr) preferred for adults; verify patency and waste blood draw.</div>
+        <div class="calc-line"><strong>Labs:</strong> CBC with diff, peripheral CD34, ionized Ca, Mg, K, type/screen, coags; baseline weight and vitals.</div>
+        <div class="calc-line"><strong>Mobilization status:</strong> Confirm G-CSF day count, plerixafor dose &amp; timing (~11 h pre for most; ~6 h pre for SCD plerixafor monotherapy).</div>
+        <div class="calc-line"><strong>Patient prep:</strong> Recent meal + oral calcium can blunt citrate symptoms. Consider IV diphenhydramine PRN, antiemetic PRN.</div>
+        <div class="calc-line"><strong>Optia setup:</strong> CMNC kit, ACD-A 1000 mL bags, plasma-divert collection bag, return-line warmer optional.</div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-kicker">Treatment Goals & Stop Criteria</div>
+      <div class="math-box">
+        <div class="calc-line"><strong>Per-session goal:</strong> Process ${fmt(d.tbvMult,1)}× TBV (≈${fmtInt(d.processedMl)} mL) unless instability or product target hit early.</div>
+        <div class="calc-line"><strong>Cumulative goal:</strong> Reach ${fmt(d.target,1)} ×10⁶ CD34/kg (or product spec for gene therapy). Daily collections continue until target met or pre-CD34 falls.</div>
+        <div class="calc-line"><strong>Stop / pause criteria:</strong> Severe citrate symptoms despite calcium · uncontrolled hypotension · access failure · platelet drop &lt; 30 ×10³/µL · arrhythmia · patient request.</div>
+        <div class="calc-line"><strong>Plerixafor consideration:</strong> Pre-CD34 &lt; 20 /µL on day 4 of G-CSF, or yield &lt; expected on day 1 (anticipated poor mobilizer / heavily pretreated).</div>
+        <div class="calc-line"><strong>Remobilization:</strong> If two consecutive days yield negligibly or pre-CD34 &lt; 5 /µL — pause, replan with team.</div>
+      </div>
+    </div>
+
+    ${d.diagnosis ? `
+    <div class="math-box">
+      <div class="calc-line"><strong>Why HPC-A for this indication:</strong> ${d.diagnosis.rationale}</div>
+      <div class="calc-line"><strong>Mobilization approach:</strong> ${d.diagnosis.mobilization}</div>
+      <div class="calc-line"><strong>Nurse focus:</strong> ${d.diagnosis.nurse}</div>
+    </div>` : ''}
+  `;
+}
+
+/* ─── calculate ─── */
+function calculate(){
+  try{
+    const sex = el.sex.value;
+    const hctRaw = parseFloat(el.hct.value);
+    const heightCm = heightToCm();
+    const weightKgActual = weightToKg();
+    const heightInches = heightToInches();
+    const preCD34 = parseFloat(el.preCD34.value);
+    const cePct = parseFloat(el.ce.value);
+    const recipientWtKg = parseFloat(el.recipientWeightKg.value);
+
+    if(!sex) throw new Error('Please select sex.');
+    validatePositive(hctRaw, 'hematocrit');
+    validatePositive(heightCm, 'height');
+    validatePositive(weightKgActual, 'weight');
+    validatePositive(preCD34, 'pre-apheresis CD34');
+    validatePositive(cePct, 'collection efficiency');
+    if(hctRaw >= 100) throw new Error('Hematocrit must be less than 100.');
+    if(cePct > 100) throw new Error('Collection efficiency must be ≤ 100%.');
+
+    // Resolve target
+    let target = state.target;
+    if(state.isCustomTarget){
+      const ct = parseFloat(el.customTarget.value);
+      if(!Number.isFinite(ct) || ct<=0) throw new Error('Please enter a valid custom CD34 target.');
+      target = ct;
+    }
+
+    const ibwKg = devineIBWKg(sex, heightInches);
+    const ibwLb = ibwKg / 0.45359237;
+    const bmi = weightKgActual / Math.pow(heightCm/100, 2);
+
+    const tbvMl = nadlerTBVml(sex, heightCm, weightKgActual);
+    const tbvL = tbvMl / 1000;
+    const inletFlowSet = parseFloat(el.inletFlow.value);
+    if(!Number.isFinite(inletFlowSet) || inletFlowSet <= 0) throw new Error('Please enter a valid inlet flow rate.');
+
+    // ── AIR monitoring logic ────────────────────────────────
+    // AIR (mL/min/L TBV) is computed and DISPLAYED — operator can't adjust it directly.
+    // The Optia hard-caps inlet flow so AIR cannot exceed 1.2.
+    // AIR = inlet flow ÷ (AC ratio × patient TBV in L)
+    // Max allowed inlet = 1.2 × AC ratio × TBV(L)
+    const maxAllowedInlet = AIR_MACHINE_CAP * state.acd * tbvL;
+    const inletFlow = Math.min(inletFlowSet, maxAllowedInlet); // effective inlet (machine-capped)
+    const wasThrottled = inletFlowSet > maxAllowedInlet + 0.01;
+    const acFlowMlMin = inletFlow / state.acd;             // ACD-A pump rate (mL/min)
+    const actualAIR = acFlowMlMin / tbvL;                  // mL/min/L TBV achieved (displayed value)
+
+    // Resolve hours when in time-based mode
+    let hours = state.hours;
+    if(state.mode === 'time' && state.isCustomTime){
+      const ct = parseFloat(el.customTime.value);
+      if(!Number.isFinite(ct) || ct<=0) throw new Error('Please enter a valid custom collection time.');
+      if(ct > 8) throw new Error('Maximum collection time is 8 hours.');
+      hours = ct;
+    }
+
+    // Compute processed volume based on mode (using EFFECTIVE inlet)
+    let processedMl, effectiveTbvMult, procedureMinutes;
+    if(state.mode === 'time'){
+      processedMl = inletFlow * 60 * hours;
+      effectiveTbvMult = processedMl / tbvMl;
+      procedureMinutes = hours * 60;
+    } else {
+      processedMl = tbvMl * state.tbvMult;
+      effectiveTbvMult = state.tbvMult;
+      procedureMinutes = processedMl / inletFlow;
+    }
+
+    const acdMl = processedMl / state.acd;
+    const totalInletMl = processedMl + acdMl; // through-the-circuit volume
+    const ceFraction = cePct / 100;
+
+    // Total CD34 collected (×10⁶) = (CD34/µL × mL × CE) / 1000
+    const cd34TotalMillion = (preCD34 * processedMl * ceFraction) / 1000;
+
+    // Per-kg uses recipient weight if entered, otherwise donor/patient weight
+    const cd34WeightKg = (Number.isFinite(recipientWtKg) && recipientWtKg > 0) ? recipientWtKg : weightKgActual;
+    const cd34WeightLabel = (Number.isFinite(recipientWtKg) && recipientWtKg > 0) ? `recipient ${fmt(recipientWtKg,1)} kg` : `${fmt(weightKgActual,1)} kg`;
+    const cd34PerKg = cd34TotalMillion / cd34WeightKg;
+
+    const targetTotalMillion = target * cd34WeightKg;
+    const daysNeeded = cd34PerKg > 0 ? Math.ceil(targetTotalMillion / cd34TotalMillion) : Infinity;
+
+    const diagnosisKey = el.diagnosis.value;
+    const data = {
+      bmi, ibwKg, ibwLb,
+      tbvMl, tbvL, processedMl, acdMl, totalInletMl, tbvMult: effectiveTbvMult, acd: state.acd,
+      mode: state.mode, hours, inletFlow, inletFlowSet, maxAllowedInlet, wasThrottled,
+      airCap: AIR_MACHINE_CAP, actualAIR, acFlowMlMin, procedureMinutes,
+      preCD34, cePct, ceFraction,
+      cd34TotalMillion, cd34PerKg, cd34WeightKg, cd34WeightLabel,
+      target, targetTotalMillion, daysNeeded,
+      weightBasisLabel: 'Entered Weight',
+      diagnosis: diagnosisKey ? diagnosisLibrary[diagnosisKey] : null
+    };
+
+    el.results.innerHTML = createResultHTML(data);
+  } catch(err){
+    el.results.innerHTML = `
+      <div class="result-card">
+        <div class="result-kicker">Input Error</div>
+        <div class="result-value" style="font-size:18px;color:#ffb4b4">Unable to calculate</div>
+        <div class="result-meta">${err.message}</div>
+      </div>`;
+  }
+}
+
+/* ─── reset ─── */
+function resetForm(){
+  el.sex.value=''; el.hct.value='';
+  el.heightCm.value=''; el.heightFt.value=''; el.heightIn.value='';
+  el.weightKg.value=''; el.weightLb.value='';
+  el.recipientWeightKg.value='';
+  el.preCD34.value=''; el.ce.value='50';
+  el.customTarget.value=''; el.customTargetWrap.classList.add('hidden');
+  el.diagnosis.value='';
+  el.diagnosisInfoCard.classList.add('hidden'); el.diagnosisInfoCard.innerHTML='';
+  el.company.value='standard'; renderCompanyInfo();
+  state.heightMode='cm'; state.weightMode='kg';
+  state.target=5; state.isCustomTarget=false;
+  state.tbvMult=2.0; state.acd=12;
+  state.mode='tbv'; state.hours=8.0; state.isCustomTime=false; state.inletFlow=70;
+  el.inletFlow.value=70;
+  el.customTime.value='';
+  setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightMetricBtn);
+  setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightMetricBtn);
+  el.targetToggle.querySelectorAll('[data-target]').forEach(b=>b.classList.toggle('active', b.dataset.target==='5'));
+  el.tbvToggle.querySelectorAll('[data-tbv]').forEach(b=>b.classList.toggle('active', parseFloat(b.dataset.tbv)===2));
+  el.acdToggle.querySelectorAll('[data-acd]').forEach(b=>b.classList.toggle('active', parseFloat(b.dataset.acd)===12));
+  el.modeToggle.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active', b.dataset.mode==='tbv'));
+  el.timeToggle.querySelectorAll('[data-time]').forEach(b=>b.classList.toggle('active', b.dataset.time==='8'));
+  el.tbvToggleWrap.classList.remove('hidden');
+  el.timeToggleWrap.classList.add('hidden');
+  el.customTimeWrap.classList.add('hidden');
+  el.heightCmWrap.classList.remove('hidden'); el.heightEnglishWrap.classList.add('hidden');
+  el.weightKgWrap.classList.remove('hidden'); el.weightLbWrap.classList.add('hidden');
+  el.results.innerHTML = `<div class="result-card"><div class="result-kicker">Awaiting inputs</div><div class="result-value">—</div><div class="result-meta">Fill the form and press Calculate.</div></div>`;
+}
+
+/* ─── wiring ─── */
+el.heightMetricBtn.addEventListener('click', ()=>{ state.heightMode='cm'; setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightMetricBtn); el.heightCmWrap.classList.remove('hidden'); el.heightEnglishWrap.classList.add('hidden'); });
+el.heightEnglishBtn.addEventListener('click', ()=>{ state.heightMode='ftin'; setActive([el.heightMetricBtn, el.heightEnglishBtn], el.heightEnglishBtn); el.heightCmWrap.classList.add('hidden'); el.heightEnglishWrap.classList.remove('hidden'); });
+el.weightMetricBtn.addEventListener('click', ()=>{ state.weightMode='kg'; setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightMetricBtn); el.weightKgWrap.classList.remove('hidden'); el.weightLbWrap.classList.add('hidden'); });
+el.weightEnglishBtn.addEventListener('click', ()=>{ state.weightMode='lb'; setActive([el.weightMetricBtn, el.weightEnglishBtn], el.weightEnglishBtn); el.weightKgWrap.classList.add('hidden'); el.weightLbWrap.classList.remove('hidden'); });
+
+el.targetToggle.querySelectorAll('[data-target]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    el.targetToggle.querySelectorAll('[data-target]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    if(btn.dataset.target==='custom'){
+      state.isCustomTarget = true;
+      el.customTargetWrap.classList.remove('hidden');
+      el.customTarget.focus();
+    } else {
+      state.isCustomTarget = false;
+      el.customTargetWrap.classList.add('hidden');
+      state.target = parseFloat(btn.dataset.target);
+    }
+  });
+});
+
+el.tbvToggle.querySelectorAll('[data-tbv]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    el.tbvToggle.querySelectorAll('[data-tbv]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    state.tbvMult = parseFloat(btn.dataset.tbv);
+  });
+});
+
+el.modeToggle.querySelectorAll('[data-mode]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    el.modeToggle.querySelectorAll('[data-mode]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    state.mode = btn.dataset.mode;
+    if(state.mode === 'time'){
+      el.tbvToggleWrap.classList.add('hidden');
+      el.timeToggleWrap.classList.remove('hidden');
+      if(state.isCustomTime) el.customTimeWrap.classList.remove('hidden');
+    } else {
+      el.tbvToggleWrap.classList.remove('hidden');
+      el.timeToggleWrap.classList.add('hidden');
+      el.customTimeWrap.classList.add('hidden');
+    }
+  });
+});
+
+el.timeToggle.querySelectorAll('[data-time]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    el.timeToggle.querySelectorAll('[data-time]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    if(btn.dataset.time === 'custom'){
+      state.isCustomTime = true;
+      el.customTimeWrap.classList.remove('hidden');
+      el.customTime.focus();
+    } else {
+      state.isCustomTime = false;
+      el.customTimeWrap.classList.add('hidden');
+      state.hours = parseFloat(btn.dataset.time);
+    }
+  });
+});
+
+el.acdToggle.querySelectorAll('[data-acd]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    el.acdToggle.querySelectorAll('[data-acd]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    state.acd = parseFloat(btn.dataset.acd);
+  });
+});
+
+el.diagnosis.addEventListener('change', renderDiagnosisInfo);
+el.company.addEventListener('change', renderCompanyInfo);
+el.calculateBtn.addEventListener('click', calculate);
+el.resetBtn.addEventListener('click', resetForm);
+
+/* Render the standard protocol info on initial load */
+renderCompanyInfo();
+
+/* Enter key calculates */
+document.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); calculate(); } });
+</script>
+</body>
+</html>
